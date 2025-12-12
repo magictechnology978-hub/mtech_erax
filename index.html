@@ -1,0 +1,3319 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mtech EraX</title>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2NBL6YJJ3K"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-2NBL6YJJ3K');
+</script>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Mtech">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="shortcut icon" href="logo-192x192.png" type="image/x-icon">
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js"></script>
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+        window.OneSignalDeferred = window.OneSignalDeferred || [];
+        OneSignalDeferred.push(async function(OneSignal) {
+            await OneSignal.init({
+                appId: "a69bfd76-ecff-437e-8479-e3222e18b6c7",
+                
+            });
+        });
+    
+    </script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/showdown@2.1.0/dist/showdown.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        
+        :root {
+            --bg-dark: #0f2541;
+            --bg-light: #d8eaff;
+            --card-dark: rgb(7, 36, 75);
+            --card-light: rgba(255, 255, 255, 0.9);
+            --text-dark: #ffffff;
+            --text-light: #020f20;
+            --accent-dark: #007ce9;
+            --accent-light: #095faa;
+            --muted-dark: rgba(255, 255, 255, 0.85); /* Increased contrast */
+            --muted-light: #555;
+            --transition-speed: .4s;
+            --transition: .32s;
+        }
+
+        /* Reset & Body */
+        body {
+            font-family: 'Cairo', sans-serif;
+            margin: 0;
+            padding: 18px;
+            background: var(--bg-dark);
+            color: var(--text-dark);
+            transition: all var(--transition-speed) ease;
+            scroll-behavior: smooth;
+            direction: rtl;
+            font-size: 16px; /* Increased base font size */
+        }
+
+        body.light {
+            background: var(--bg-light);
+            color: var(--text-light);
+        }
+
+        /* Container */
+        .site {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px;
+            border-radius: 14px;
+            background: rgba(2, 37, 90, 0);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all var(--transition-speed);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            margin-bottom: 20px;
+        }
+
+        body.light header {
+            background: rgba(255, 255, 255, 0.4);
+            border-color: #ddd;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: var(--accent-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            color: #000;
+            transition: all var(--transition-speed);
+        }
+
+        body.light .logo {
+            background: var(--accent-light);
+            color: #fff;
+        }
+
+        .brand h1 {
+            font-size: 18px;
+        }
+
+        .brand .tagline {
+            font-size: 14px; /* Increased font size */
+            color: var(--accent-dark);
+            transition: all var(--transition-speed);
+        }
+
+        body.light .brand .tagline {
+            color: var(--accent-light);
+        }
+
+        .nav-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #searchBox {
+            padding: 8px 16px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-dark);
+            outline: none;
+            font-size: 15px; /* Increased font size */
+            width: 180px;
+            transition: all var(--transition-speed);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        #searchBox::placeholder {
+            color: var(--muted-dark);
+        }
+
+        body.light #searchBox {
+            border-color: #aaa;
+            background: rgba(255, 255, 255, 0.8);
+            color: #000;
+        }
+
+        .nav {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .nav a {
+            padding: 8px 12px;
+            border-radius: 10px;
+            color: var(--muted-dark);
+            text-decoration: none;
+            transition: all var(--transition-speed);
+        }
+
+        body.light .nav a {
+            color: var(--muted-light);
+        }
+
+        .nav a:hover {
+            background: rgba(106, 175, 255, 0.15);
+            color: var(--accent-dark);
+            transform: scale(1.05);
+        }
+
+        body.light .nav a:hover {
+            color: var(--accent-light);
+        }
+
+        .burger {
+            display: none;
+        }
+
+        .mode-btn {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 6px 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            color: inherit;
+            transition: all var(--transition-speed);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            font-size: 1.2rem;
+        }
+
+        body.light .mode-btn {
+            border-color: #aaa;
+        }
+
+
+        @media(max-width:899px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 6px;
+                padding: 12px;
+            }
+
+            .brand {
+                flex-direction: row;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .brand h1 {
+                font-size: 20px;
+            }
+
+            .brand .tagline {
+                font-size: 12px;
+            }
+
+            .nav-container {
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            #searchBox {
+                width: 60%;
+                font-size: 14px;
+                padding: 6px 10px;
+            }
+
+            .burger {
+                display: block;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                padding: 6px 10px;
+                border-radius: 10px;
+                cursor: pointer;
+                color: inherit;
+                background: transparent;
+                font-size: 18px;
+            }
+
+            body.light .burger {
+                border-color: #aaa;
+            }
+
+            .nav {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                gap: 6px;
+                margin-top: 6px;
+                text-align: right;
+            }
+
+            .nav.show {
+                display: flex;
+            }
+            
+        }
+
+        
+        /* New Scroll Animation */
+        .scroll-animation {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .scroll-animation.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Card Style */
+        .app-card {
+            background: var(--card-dark);
+            border-radius: 14px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: center;
+            transition: all var(--transition-speed);
+            margin: 20px auto;
+            max-width: 800px;
+        }
+
+        body.light .app-card {
+            background: var(--card-light);
+            border-color: #ddd;
+        }
+
+        .app-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 14px;
+            margin: 0 auto 15px;
+            background: var(--accent-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: #000;
+            font-size: 2.5em;
+            transition: all var(--transition-speed);
+        }
+
+        body.light .app-icon {
+            background: var(--accent-light);
+            color: #fff;
+        }
+
+        h2 {
+            font-size: 30px; /* Increased font size */
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--accent-dark);
+        }
+
+        body.light h2 {
+            color: var(--accent-light);
+        }
+
+        .muted {
+            font-size: 15px; /* Increased font size */
+            color: var(--muted-dark);
+        }
+
+        body.light .muted {
+            color: var(--muted-light);
+        }
+
+        /* Sections Styling */
+        .content-section {
+            padding: 15px;
+            text-align: right;
+        }
+
+        .content-section p {
+            font-size: 16px; /* Increased font size */
+            line-height: 1.7;
+        }
+
+        .features-grid, .projects-grid {
+            display: grid;
+            gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            margin-top: 20px;
+        }
+
+        .feature-item, .project-item {
+            background: var(--bg-dark);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: all var(--transition-speed);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        body.light .feature-item, body.light .project-item {
+            background: var(--bg-light);
+            border-color: #eee;
+        }
+
+        .feature-item:hover, .project-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .project-item a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .feature-item i {
+            font-size: 2.2em; /* Slightly larger icon */
+            color: var(--accent-dark);
+            margin-bottom: 10px;
+        }
+
+        body.light .feature-item i {
+            color: var(--accent-light);
+        }
+
+        /* New Links Section Styling */
+        .links-list {
+            list-style: none;
+            padding: 0;
+            text-align: center;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Better link grid */
+            gap: 10px;
+        }
+
+        .links-list a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: var(--card-dark);
+            padding: 15px;
+            border-radius: 10px;
+            text-decoration: none;
+            color: var(--text-dark);
+            transition: all var(--transition-speed);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            font-weight: 600;
+        }
+
+        body.light .links-list a {
+            background: var(--card-light);
+            color: var(--text-light);
+            border-color: #eee;
+        }
+
+        .links-list a:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            background: var(--accent-dark);
+            color: #000;
+        }
+
+        body.light .links-list a:hover {
+            background: var(--accent-light);
+            color: #fff;
+        }
+
+        footer {
+            text-align: center;
+            color: var(--muted-dark);
+            margin-top: 18px;
+            font-size: 14px;
+        }
+
+        body.light footer {
+            color: var(--muted-light);
+        }
+
+        /* Chat Specific Styles */
+        .chat-container {
+            max-width: 500px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        #chat-history {
+            height: 400px;
+            overflow-y: auto;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            margin-top: 15px;
+            text-align: right; /* RTL chat alignment */
+            direction: rtl; 
+        }
+
+        body.light #chat-history {
+            background: rgba(0, 0, 0, 0.03);
+        }
+
+        .chat-message {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px;
+            border-radius: 15px;
+            margin-bottom: 10px;
+            line-height: 1.5;
+            text-align: right;
+            max-width: 90%;
+            margin-left: auto; /* Push to the right */
+        }
+        
+        /* التنسيق الجديد لرسائل الـAI عشان الـMarkdown */
+        .ai-message p, .ai-message ul, .ai-message ol, .ai-message li {
+            font-size: 16px; 
+            line-height: 1.7;
+            text-align: right;
+            margin: 0;
+            padding: 0;
+            margin-bottom: 5px; 
+        }
+        .ai-message ul, .ai-message ol {
+            padding-right: 20px; 
+            list-style-position: inside;
+        }
+        .ai-message p:last-child {
+            margin-bottom: 0;
+        }
+        /* نهاية التنسيق الجديد */
+
+
+        .user-message {
+            background: rgba(255, 255, 255, 0.05);
+            text-align: right;
+            border-radius: 15px 15px 0 15px;
+            margin-right: 0;
+            margin-left: auto;
+        }
+
+        .ai-message {
+            background: rgba(255, 255, 255, 0.05);
+            text-align: right;
+            border-radius: 15px 15px 15px 0;
+            margin-left: 0;
+            margin-right: auto;
+        }
+
+        /* Loading Dots for Chat */
+        #loading-indicator .dot {
+            animation: bounce 1.4s infinite ease-in-out both;
+            display: inline-block;
+        }
+
+        #loading-indicator .dot:nth-child(1) { animation-delay: -0.32s; }
+        #loading-indicator .dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1.0); }
+        }
+
+        #user-input-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        #user-input {
+            flex-grow: 1;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: transparent;
+            color: inherit;
+        }
+
+        body.light #user-input {
+            border-color: #aaa;
+            background: #fff;
+            color: #000;
+        }
+        
+        /* Buttons Liquid Glass effect */
+        button, .send-btn, .load-more-btn, .show-more-btn, .request-btn, #togglePassword { /* إضافة #togglePassword هنا */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #000;
+            font-weight: bold;
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            
+            background: var(--accent-dark);
+            color: #000;
+        }
+
+        body.light button, body.light .send-btn, body.light .load-more-btn, body.light .show-more-btn, body.light .request-btn, body.light #togglePassword {
+             background: var(--accent-light);
+             color: #fff;
+        }
+        
+        button::before, .send-btn::before, .load-more-btn::before, .show-more-btn::before, .request-btn::before, #togglePassword::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.05) 40%, transparent 60%);
+            animation: liquidFlow 15s infinite linear;
+            z-index: -1;
+            opacity: 0.8;
+        }
+        
+        @keyframes liquidFlow {
+            0% {
+                transform: translate(0, 0);
+            }
+            100% {
+                transform: translate(50%, 50%);
+            }
+        }
+        
+        button:hover, .request-btn:hover, #togglePassword:hover {
+            opacity: 1;
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .send-btn svg {
+            width: 24px;
+            height: 24px;
+            stroke: #000;
+            stroke-width: 2.5;
+        }
+
+        body.light .send-btn svg {
+            stroke: #fff;
+        }
+        
+        /* --- Mtech Shop Styles --- */
+             .tabs {
+            display: flex;
+            background: var(--card-dark);
+            border-radius: 14px 14px 0 0;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        body.light .tabs {
+            background: var(--card-light);
+            border-color: #e6e6e6;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .tab-btn {
+            flex-grow: 1;
+            padding: 15px 20px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 700;
+            background: transparent;
+            color: var(--muted-dark);
+            border: none;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+        }
+
+        body.light .tab-btn {
+            color: var(--muted-light);
+        }
+
+        .tab-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        body.light .tab-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .tab-btn.active {
+            color: var(--accent-dark);
+            background: rgba(0, 188, 212, 0.1);
+            border-bottom: 3px solid var(--accent-dark);
+        }
+
+        body.light .tab-btn.active {
+            color: var(--accent-light);
+            background: rgba(0, 123, 255, 0.1);
+            border-bottom: 3px solid var(--accent-light);
+        }
+
+        .tab-content {
+            padding: 20px;
+            background: var(--card-dark);
+            border-radius: 0 0 14px 14px;
+            min-height: 500px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-top: none;
+            display: none;
+        }
+
+        body.light .tab-content {
+            background: var(--card-light);
+            border-color: #e6e6e6;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* --- Mtech Shop Styles (Inherited and Modified) --- */
+        .hero {
+            padding: 26px;
+            border-radius: 14px;
+            background: var(--card-dark);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            text-align: center;
+            transition: all var(--transition-speed);
+            margin-bottom: 20px;
+        }
+
+        body.light .hero {
+            background: var(--card-light);
+            border-color: #e6e6e6;
+        }
+
+        .hero h1 {
+            margin: 0;
+            font-size: 28px;
+            color: var(--accent-dark)
+        }
+
+        body.light .hero h1 {
+            color: var(--accent-light)
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 18px;
+            align-items: start
+        }
+
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 14px
+        }
+
+        .card {
+            background: var(--card-dark);
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+            box-shadow: 0 8px 26px rgba(0, 0, 0, 0.45);
+            transform: translateY(6px);
+            opacity: 0;
+            animation: cardIn .5s forwards;
+            transition: transform var(--transition), box-shadow var(--transition);
+        }
+
+        body.light .card {
+            background: var(--card-light);
+            color: var(--text-light);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+        }
+
+        .card:hover {
+            transform: translateY(0);
+            box-shadow: 0 14px 34px rgba(0, 0, 0, 0.45)
+        }
+
+        @keyframes cardIn {
+            from {
+                transform: translateY(18px);
+                opacity: 0
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1
+            }
+        }
+
+        .card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px
+        }
+
+        .card h3 {
+            margin: 8px 0 4px;
+            font-size: 18px;
+        }
+
+        .price {
+            color: #000;
+            background: var(--accent-dark);
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 10px;
+            font-weight: 700;
+            margin-top: 6px;
+            font-size: 15px;
+        }
+
+        body.light .price {
+            background: var(--accent-light);
+            color: #fff
+        }
+
+        .meta {
+            color: var(--muted-dark);
+            font-size: 14px;
+            margin-top: 6px
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 8px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            font-size: 13px;
+            margin-top: 8px;
+        }
+
+        body.light .badge {
+            background: #b8dfff;
+            color: var(--light-text)
+        }
+
+        .panel {
+            background: var(--card-dark);
+            padding: 14px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        body.light .panel {
+            background: var(--card-light);
+            border-color: #eee
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        input[type="text"], input[type="email"], input[type="password"], select, textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: transparent;
+            color: inherit;
+            margin-top: 6px;
+            outline: none;
+            transition: box-shadow var(--transition), border-color var(--transition);
+            font-size: 16px;
+        }
+
+        body.light input[type="text"], body.light input[type="email"], body.light input[type="password"], body.light select, body.light textarea {
+            background: #fff;
+            border: 1px solid #ddd;
+            color: var(--light-text)
+        }
+        
+        select {
+            appearance: none;
+            padding-right: 12px;
+            cursor: pointer;
+        }
+
+        .select-row {
+            display: flex;
+            gap: 8px;
+            align-items: center
+        }
+
+        /* تعديلات على الأوردر فورم */
+        .order-form {
+            display: grid;
+            gap: 12px;
+        }
+        
+        .order-form input, .order-form select, .order-form textarea {
+            width: 100%;
+            box-sizing: border-box;
+            min-width: 0;
+        }
+
+        .send {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 0;
+            background: var(--accent-dark);
+            color: #000;
+            font-weight: 800;
+            margin-top: 12px;
+            cursor: pointer;
+            transition: transform .14s;
+        }
+
+        body.light .send {
+            background: var(--accent-light);
+            color: #fff;
+        }
+
+        .send:active {
+            transform: translateY(1px)
+        }
+
+        .msg {
+            margin-top: 10px;
+            font-weight: 700;
+            color: var(--accent-dark);
+            text-align: center;
+        }
+
+        body.light .msg {
+            color: #007adb
+        }
+
+        .small {
+            font-size: 14px;
+            color: var(--muted-dark)
+        }
+
+        .highlight {
+            color: var(--accent-dark);
+            font-weight: 700;
+        }
+
+        body.light .highlight {
+            color: #007adb;
+        }
+
+        @media(max-width:600px) {
+            .app-card {
+                margin-top: 0;
+            }
+        }
+
+        .show-more-btn {
+            background: var(--card-dark);
+            color: var(--text-dark);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 12px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all var(--transition-speed);
+            width: 100%;
+            text-align: center;
+        }
+
+        body.light .show-more-btn {
+            background: var(--card-light);
+            color: var(--text-light);
+            border-color: #ddd;
+        }
+
+        .show-more-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .hidden-product {
+            display: none;
+        }
+        
+        .request-btn { /* Changed to Add to Cart */
+            display: block;
+            width: 100%;
+            margin-top: 10px;
+            font-size: 14px;
+            padding: 8px 15px;
+            background: var(--accent-dark);
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: background 0.2s;
+        }
+        
+        body.light .request-btn {
+            background: var(--accent-light);
+            color: #fff;
+        }
+
+        /* --- Cart specific styles --- */
+        .cart-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.light .cart-item {
+            background: #f0f8ff;
+            border-color: #cceeff;
+        }
+
+        .cart-info {
+            flex-grow: 1;
+            padding-left: 10px;
+        }
+        
+        .cart-info h4 {
+            margin: 0 0 4px 0;
+            font-size: 16px;
+        }
+        
+        .cart-info p {
+            margin: 0;
+            font-size: 14px;
+            color: var(--muted-dark);
+        }
+
+        body.light .cart-info p {
+            color: var(--muted-light);
+        }
+
+        .cart-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .quantity-input {
+            width: 50px;
+            text-align: center;
+            padding: 6px;
+            border-radius: 6px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: inherit;
+        }
+
+        body.light .quantity-input {
+            background: #fff;
+            border-color: #ddd;
+        }
+
+        .remove-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .cart-summary {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            background: rgba(0, 188, 212, 0.1);
+            border: 1px solid var(--accent-dark);
+            font-size: 18px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        body.light .cart-summary {
+            background: rgba(0, 123, 255, 0.1);
+            border-color: var(--accent-light);
+        }
+        
+        .cart-summary span {
+            color: var(--accent-dark);
+            font-size: 20px;
+        }
+
+        body.light .cart-summary span {
+            color: var(--accent-light);
+        }
+        
+        /* --- Orders History styles --- */
+        .orders-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .order-item {
+            padding: 15px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border-left: 5px solid var(--accent-dark);
+        }
+
+        body.light .order-item {
+            background: #f8f8f8;
+            border-left-color: var(--accent-light);
+        }
+
+        .order-item h4 {
+            margin: 0 0 8px 0;
+            font-size: 17px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+            padding-bottom: 5px;
+        }
+
+        body.light .order-item h4 {
+            border-bottom-color: #ddd;
+        }
+
+        .order-item ul {
+            list-style: none;
+            padding: 0;
+            margin: 8px 0 0 0;
+            font-size: 14px;
+        }
+
+        .order-item li {
+            margin-bottom: 3px;
+            padding-right: 15px;
+            position: relative;
+        }
+
+        .order-item li::before {
+            content: '•';
+            color: var(--accent-dark);
+            font-weight: 900;
+            position: absolute;
+            right: 0;
+        }
+
+        body.light .order-item li::before {
+            color: var(--accent-light);
+        }
+
+        .order-empty-message {
+            text-align: center;
+            padding: 50px 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            color: var(--muted-dark);
+        }
+
+        body.light .order-empty-message {
+            background: #f9f9f9;
+        }
+
+
+        /* --- Mtech Videos Styles --- */
+        .header-card {
+            background: var(--card-dark);
+            border-radius: 14px;
+            padding: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: center;
+            transition: all var(--transition-speed);
+            margin: 20px auto;
+            max-width: 500px;
+        }
+
+        body.light .header-card {
+            background: var(--card-light);
+            border-color: #ddd;
+        }
+
+        .header-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            margin: 0 auto 10px;
+            background: var(--accent-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: #000;
+            transition: all var(--transition-speed);
+            font-size: 2rem;
+        }
+
+        body.light .header-icon {
+            background: var(--accent-light);
+            color: #fff;
+        }
+
+        #videos-container {
+            display: grid;
+            gap: 25px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            margin-top: 40px;
+        }
+
+        .video-card {
+            background: var(--card-dark);
+            border-radius: 14px;
+            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all var(--transition-speed);
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+        }
+
+        body.light .video-card {
+            background: var(--card-light);
+            border-color: #ddd;
+        }
+
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .video-card img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            display: block;
+            border-radius: 8px;
+        }
+
+        .video-info {
+            padding-top: 10px;
+            text-align: right;
+        }
+
+        .video-info h3 {
+            font-size: 18px; /* Increased font size */
+            line-height: 1.4;
+            height: 50px; /* Adjusted height for 2 lines of text */
+            overflow: hidden;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        body.light .video-info h3 {
+            color: var(--text-light);
+        }
+
+        .video-info p {
+            font-size: 14px; /* Increased font size */
+            color: var(--muted-dark);
+            margin: 5px 0 0;
+        }
+
+        body.light .video-info p {
+            color: var(--muted-light);
+        }
+
+        .loading {
+            grid-column: 1 / -1;
+            text-align: center;
+            font-size: 1.5rem;
+            color: var(--muted-dark);
+            padding: 50px 0;
+        }
+
+        .load-more-btn {
+            background: var(--accent-dark);
+            color: #000;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all var(--transition-speed);
+            display: block;
+            margin: 40px auto;
+        }
+
+        body.light .load-more-btn {
+            background: var(--accent-light);
+            color: #fff;
+        }
+
+        .load-more-btn:hover {
+            opacity: 0.9;
+            transform: scale(1.05);
+        }
+
+        /* Modal Styles */
+        .video-player-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.9);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .video-player-modal-content {
+            position: relative;
+            width: 90%;
+            max-width: 900px;
+            padding-bottom: 56.25%;
+            height: 0;
+        }
+
+        .video-player-modal-content iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            color: #fff;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+            cursor: pointer;
+            z-index: 1001;
+        }
+/* Chat Specific Styles - Chat Modal */
+#chatModal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    right: 20px; 
+    bottom: 100px; /* فوق الزر العائم */
+    width: 90%;
+    max-width: 380px;
+    max-height: 80vh;
+    /* متغيرات الألوان هتكون في ملف الـCSS الأساسي */
+    background: var(--card-dark); 
+    border-radius: 14px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    flex-direction: column;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+body.light #chatModal {
+    background: var(--card-light);
+}
+#chatModal .modal-header {
+    padding: 10px 15px;
+    background: var(--accent-dark);
+    color: #000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    border-radius: 14px 14px 0 0;
+}
+body.light #chatModal .modal-header {
+    background: var(--accent-light);
+    color: #fff;
+}
+#chatModal .modal-header button {
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0;
+    box-shadow: none;
+    transition: transform 0.1s;
+}
+#chatModal .modal-header button:hover {
+    transform: scale(1.1);
+}
+
+#chat-history {
+    height: 400px; /* لضمان حجم رؤية ثابت داخل الـmodal */
+    overflow-y: auto;
+    padding: 10px;
+    background: transparent;
+    border-radius: 0;
+    margin-top: 0;
+    flex-grow: 1;
+    direction: rtl;
+    text-align: right;
+}
+
+.chat-message {
+    padding: 10px;
+    border-radius: 15px;
+    margin-bottom: 10px;
+    line-height: 1.5;
+    text-align: right;
+    max-width: 90%;
+}
+
+.user-message {
+    background: rgb(4, 114, 204);
+    border-radius: 15px 15px 0 15px;
+    margin-left: auto;
+}
+
+.ai-message {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px 15px 15px 0;
+    margin-right: auto;
+}
+
+#user-input-container {
+    padding: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--card-dark);
+    display: flex;
+    gap: 10px;
+}
+body.light #user-input-container {
+    background: var(--card-light);
+    border-top-color: #ddd;
+}
+#user-input {
+    flex-grow: 1;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: transparent;
+    color: inherit;
+    /* ... باقي التنسيقات من الكود الأساسي ... */
+}
+
+/* Floating Chat Button */
+#openChatBtn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    cursor: pointer;
+    z-index: 1001;
+    background: var(--accent-dark);
+    color: #000;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    transition: transform 0.3s, box-shadow 0.3s;
+    border: none;
+    font-weight: 800;
+}
+body.light #openChatBtn {
+    background: var(--accent-light);
+    color: #fff;
+}
+#openChatBtn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px var(--accent-dark); /* إضافة تأثير التوهج */
+}
+body.light #openChatBtn:hover {
+    box-shadow: 0 0 15px var(--accent-light);
+}
+
+/* Loading Dots for Chat */
+#loading-indicator .dot {
+    animation: bounce 1.4s infinite ease-in-out both;
+    display: inline-block;
+}
+
+#loading-indicator .dot:nth-child(1) { animation-delay: -0.32s; }
+#loading-indicator .dot:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes bounce {
+    0%, 80%, 100% { transform: scale(0); }
+    40% { transform: scale(1.0); }
+}
+        .close-btn:hover,
+        .close-btn:focus {
+            color: #bbb;
+            text-decoration: none;
+        }
+
+        /* تنسيق خاص لشريط القوة */
+        #strengthBarContainer {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            height: 10px; /* Fixed height for better look */
+        }
+        body.light #strengthBarContainer {
+            background: rgba(0, 0, 0, 0.1);
+        }
+        
+        #feedback {
+            padding: 10px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            text-align: right;
+            font-size: 15px; /* Increased font size */
+            line-height: 1.6;
+        }
+
+        body.light #feedback {
+            background: #e9f5ff;
+        }
+
+        .strength-ok {
+            color: #4caf50; /* Green */
+        }
+
+        .strength-fail {
+            color: #e53935; /* Red */
+        }
+        
+        /* Adjust for YouTube video styling */
+        .content-section iframe {
+            max-width: 100%;
+            height: 250px;
+            border-radius: 10px;
+        }
+        /* --- تعديل المشاكل النهائية (Category و Strength Text) --- */
+        
+        /* 1. وضوح الـCategory (الـMeta) في كارت المنتج */
+        .meta {
+            /* في الدارك مود: اللون الفاتح المكتوم */
+            color: var(--muted-dark) !important; 
+            font-size: 14px; 
+            margin-top: 6px;
+        }
+
+        body.light .meta {
+            /* في اللايت مود: اللون الغامق */
+            color: var(--text-light) !important; 
+        }
+        
+        /* 2. وضوح الـCategory (الـBadge) في تفاصيل الطلب */
+        body.light .selected-info .badge {
+            color: var(--text-light) !important; /* اللون الغامق في اللايت مود */
+            font-weight: 700;
+        }
+        
+        /* 3. وضوح رسالة "ابدأ الكتابة..." في مُحلل الباسورد (strengthText) */
+        #strengthText {
+            margin-top: 10px;
+            font-weight: 700;
+            /* في الدارك مود: اللون الفاتح المكتوم */
+            color: var(--muted-dark); 
+            text-align: center;
+        }
+
+        body.light #strengthText {
+            /* في اللايت مود: اللون الغامق المكتوم */
+            color: var(--muted-light) !important; 
+        }
+        /* تنسيق زر "تواصل معنا" الأخضر */
+    .contact-btn {
+    /* اللون الأخضر لخلفية الزر */
+    background-color: #4CAF50 !important; 
+    /* لون الخط أبيض */
+    color: white !important; 
+    /* حشو (Padding) عشان الزر يبقى شكله أحسن */
+    padding: 8px 15px !important;
+    /* حواف دائرية */
+    border-radius: 20px !important; 
+    /* عشان الزر ما يبقاش فيه خط تحت الكلام */
+    text-decoration: none !important;
+    /* تأثير انتقال ناعم عند مرور الماوس */
+    transition: background-color 0.3s ease; 
+}
+
+/* تأثير التفاعل (Hover) عند مرور الماوس */
+.contact-btn:hover {
+    /* لون أخضر أغمق قليلاً عند التفاعل */
+    background-color: #45a049 !important; 
+}
+/* Custom Color Picker Style */
+.color-picker-container {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 10px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: all var(--transition-speed);
+    color: var(--text-dark); /* عشان كلمة "لون الموقع" تبقى واضحة */
+}
+body.light .color-picker-container {
+    border-color: #aaa;
+    color: var(--text-light);
+}
+#colorPicker {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 30px;
+    height: 30px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+/* لتنسيق الألوان داخل مربع الاختيار */
+#colorPicker::-webkit-color-swatch {
+    border-radius: 5px;
+    border: 1px solid var(--text-dark);
+}
+#colorPicker::-moz-color-swatch {
+    border-radius: 5px;
+    border: 1px solid var(--text-dark);
+}
+body.light #colorPicker::-webkit-color-swatch,
+body.light #colorPicker::-moz-color-swatch {
+    border-color: var(--text-light);
+} 
+#قيمنا {
+    /* تنسيقات أساسية للمودال */
+    background-color: var(--bg-card); /* خلفية المودال بلون البطاقة */
+    color: var(--text-primary);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: var(--border-radius);
+    padding: 20px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+    max-width: fit-content; /* يجعل عرض المودال على قد المحتوى (الـiframe) */
+    width: auto;
+    
+    /* إلغاء التنسيق الافتراضي للمتصفح */
+    margin: auto;
+    transition: all var(--transition-speed); 
+}
+
+/* حالة المودال لما بيكون مفتوح */
+#قيمنا[open] {
+    /* يمكن إضافة تأثيرات هنا عند الفتح */
+    animation: fade-in 0.3s ease-out;
+}
+
+/* تنسيق الخلفية المعتمة (Backdrop) */
+#قيمنا::backdrop {
+    background: rgba(0, 0, 0, 0.85); /* خلفية داكنة جداً */
+    backdrop-filter: blur(5px);
+    transition: all var(--transition-speed); 
+}
+
+/* -------------------------------------------------------------------------- */
+/* 3. Iframe & Content Styling - تنسيق الـiframe والمحتوى */
+/* -------------------------------------------------------------------------- */
+
+/* تنسيق الـiframe اللي جواه الفورم */
+#قيمنا iframe {
+    /* استخدام القيم اللي أنت حددتها في الـHTML ولكن ممكن نعدلها هنا لو حبيت */
+    width: 800px; /* العرض اللي حددته في الـHTML */
+    height: 600px; /* الارتفاع اللي حددته في الـHTML */
+    display: block; /* مهم عشان يشتغل صح داخل الـdialog */
+    margin: 0;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* تنسيق حاوية الأزرار (لو حبيت تفصلها) */
+#قيمنا button {
+    /* تنسيق زر الإغلاق */
+    margin-top: 15px; /* مسافة بين الـiframe والزر */
+    padding: 10px 20px;
+    border-radius: var(--border-radius);
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    
+    /* استخدام اللون الأساسي اللي بيتغير */
+    background: var(--accent-color); 
+    color: var(--bg-primary); /* لون النص داخل الزرار */
+    transition: all 0.3s;
+}
+#قيمنا button:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+/* -------------------------------------------------------------------------- */
+/* 4. Responsive Design - للتجاوب مع الشاشات الصغيرة */
+/* -------------------------------------------------------------------------- */
+@media (max-width: 900px) {
+    #قيمنا {
+        max-width: 95%; /* في الشاشات الصغيرة المودال ياخد 95% من العرض */
+        padding: 10px;
+    }
+    
+    /* نصغر حجم الـiframe عشان يناسب الموبايل */
+    #قيمنا iframe {
+        width: 100%; /* الـiframe يملأ عرض المودال بالكامل */
+        height: 400px; /* ارتفاع مناسب للموبايل */
+    }
+}
+
+/* -------------------------------------------------------------------------- */
+/* 5. Light Mode Override - (لو كنت بتستخدم الوضع الفاتح) */
+/* -------------------------------------------------------------------------- */
+body.light #قيمنا {
+    background-color: var(--light-bg-card);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+/* ---------------------- Floating Liquid Glass Navigation Bar (Centered) ---------------------- */
+#bottom-nav {
+    /* **التعديلات الأساسية للموقع والتصميم:** */
+    position: fixed;
+    /* الطول: نجعله يتناسب مع المحتوى */
+    width: fit-content; 
+    min-width: 250px; 
+    max-width: 90%; 
+    
+    /* **الموقع الطافٍ (Floating Position):** */
+    bottom: 10px; /* مسافة من الأسفل لجعله طافيًا (غير ملتصق) */
+    
+    /* **التمركز الأفقي (Center Alignment):** */
+    left: 50%; /* تحريك النقطة المرجعية إلى المنتصف */
+    right: auto; /* إلغاء التثبيت من اليمين */
+    transform: translateX(-50%); /* إزاحة العنصر نفسه إلى اليسار بنسبة 50% من عرضه، لضمان التوسيط الدقيق */
+    
+    /* **شكل العنصر (Glass Effect Base):** */
+    border-radius: 25px; 
+    overflow: hidden; 
+    
+    /* **تأثير الزجاج (Liquid Glass Effect):** */
+    background: rgba(40, 40, 40, 0.6); /* خلفية شبه شفافة (غامقة) */
+    backdrop-filter: blur(10px) saturate(180%); /* التعتيم والتشبع - جوهر التأثير */
+    -webkit-backdrop-filter: blur(10px) saturate(180%); /* لدعم متصفحات الويب كيت */
+    
+    /* **الطبقات والظل:** */
+    z-index: 1000;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); 
+    border: 1px solid rgba(255, 255, 255, 0.18); 
+    
+    /* **تنسيق المحتوى الداخلي:** */
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px 15px; 
+}
+/* ---------------------- Light Mode Adjustments ---------------------- */
+body.light #bottom-nav {
+    background: rgba(255, 255, 255, 0.7); 
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+/* ---------------------- Navigation Links Styles ---------------------- */
+#bottom-nav a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: var(--muted-dark); 
+    font-size: 13px; 
+    font-weight: 500;
+    transition: color 0.3s, transform 0.2s, background-color 0.2s;
+    padding: 8px 12px;
+    border-radius: 15px; 
+}
+
+body.light #bottom-nav a { color: var(--muted-light); }
+
+/* **تأثيرات التفاعل (Hover/Active Effects):** */
+#bottom-nav a:hover {
+    color: var(--accent-dark);
+    background-color: rgba(255, 255, 255, 0.1); 
+    transform: translateY(-2px); 
+}
+body.light #bottom-nav a:hover { 
+    color: var(--accent-light); 
+    background-color: rgba(0, 0, 0, 0.05); 
+}
+
+/* ---------------------- Icons Styles ---------------------- */
+#bottom-nav i {
+    font-size: 1.6rem; 
+    margin-bottom: 3px;
+}
+
+/* ---------------------- Body Padding ---------------------- */
+/* لإضافة مسافة أسفل الصفحة لعدم إخفاء المحتوى وراء الشريط الثابت */
+body {
+    padding-bottom: 100px; 
+}
+.whatsapp-button {
+    /* أساسيات الزر */
+    display: inline-flex; /* بيخلي الأيقونة والنص جنب بعض */
+    align-items: center;
+    padding: 10px 20px;
+    border-radius: 50px; /* شكل بيضاوي أو دائري لإحساس عصري */
+    text-decoration: none; /* إزالة الخط تحت الرابط */
+    font-weight: bold;
+    font-family: 'Arial', sans-serif; /* خط حديث وواضح */
+    transition: background-color 0.3s, transform 0.3s; /* حركات بسيطة للتفاعل */
+
+    /* ألوان واتساب (ممكن تغيرها لتناسب تصميمك) */
+    background-color: #25D366; /* الأخضر المميز لواتساب */
+    color: white; /* لون النص والأيقونة */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* ظل بسيط لإضافة عمق */
+}
+
+.whatsapp-button:hover {
+    background-color: #128C7E; /* لون أغمق عند المرور بالماوس */
+    transform: translateY(-2px); /* حركة بسيطة للأعلى عند التفاعل */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.whatsapp-button .fab {
+    /* تنسيق أيقونة واتساب */
+    font-size: 20px;
+    margin-left: 8px; /* مسافة بين الأيقونة والنص */
+}
+
+.whatsapp-button span {
+    /* تنسيق النص */
+    font-size: 16px;
+}
+.ad-carousel-container {
+            width: var(--carousel-size);  /* 400px */
+            height: var(--carousel-size); /* 400px */
+            margin: 40px auto; 
+            position: relative;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            overflow: hidden; /* مهم لـ Swiper */
+            background-color: #fff;
+        }
+
+        /* 3. تصميم الشرائح (محتوى الشريحة) */
+        .swiper-slide {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            direction: ltr; /* للحفاظ على الصور والروابط لـ LTR */
+        }
+        
+        .swiper-slide a {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .swiper-slide img {
+            width: 100%;
+            height: 100%; 
+            object-fit: cover; 
+            display: block;
+            border-radius: 15px;
+        }
+
+        /* 4. تصميم أزرار التنقل (Swiper Navigation) */
+        .swiper-button-prev,
+        .swiper-button-next {
+            color: var(--primary-color);
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+            transition: background 0.3s;
+            margin: 0 10px; /* لتبعد قليلا عن الحواف */
+        }
+        
+        /* تلوين السهم الداخلي */
+        .swiper-button-prev::after,
+        .swiper-button-next::after {
+            font-size: 20px !important;
+            font-weight: bold;
+        }
+        
+        .swiper-button-prev:hover,
+        .swiper-button-next:hover {
+            background: #fff;
+        }
+
+        /* 5. تصميم نقاط الترقيم (Pagination) */
+        .swiper-pagination-bullet {
+            background: rgba(0, 0, 0, 0.3);
+            opacity: 1;
+        }
+        .swiper-pagination-bullet-active {
+            background: var(--primary-color);
+        }
+        /* إخفاء شريط جوجل المزعج اللي بيظهر فوق */
+.goog-te-banner-frame {
+    display: none !important;
+}
+body {
+    top: 0px !important;
+}
+
+/* تنسيق زرار اللغة */
+#lang-toggle {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-right: 5px;
+    font-weight: bold;
+}
+
+/* --- تعديلات الوضع الإنجليزي (LTR) --- */
+/* الكلاس ده بنضيفه بالجافاسكريبت لما اللغة تكون إنجليزي */
+body.ltr-mode {
+    direction: ltr !important;
+    text-align: left !important;
+}
+
+/* عكس اتجاهات العناصر في وضع الإنجليزي */
+body.ltr-mode header,
+body.ltr-mode .nav-container, 
+body.ltr-mode .app-card,
+body.ltr-mode .content-section,
+body.ltr-mode .features-grid,
+body.ltr-mode #chat-history, 
+body.ltr-mode .chat-message,
+body.ltr-mode .panel,
+body.ltr-mode .links-list {
+    text-align: left !important;
+    direction: ltr !important;
+}
+
+/* تعديل مكان زرار الشات في الإنجليزي */
+body.ltr-mode #openChatBtn {
+    right: auto;
+    left: 20px;
+}
+body.ltr-mode #chatModal {
+    right: auto;
+    left: 20px;
+}
+
+/* تعديل القوائم والنقاط */
+body.ltr-mode .ai-message ul, 
+body.ltr-mode .ai-message ol {
+    padding-right: 0;
+    padding-left: 20px;
+}
+
+/* تعديل أيقونات السهم والرجوع */
+body.ltr-mode .back-arrow-button {
+    transform: scaleX(-1); /* عكس اتجاه السهم */
+}
+/* إخفاء الخلفية القديمة */
+.goog-te-banner-frame.skiptranslate {
+  box-shadow: none !important;
+  border: none !important;
+}
+
+#toggle-login-btn {
+            position: relative; 
+            padding: 8px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 1.4em; /* حجم أيقونة مناسب */
+            color: #007bff;
+            vertical-align: middle;
+        }
+
+#greeting-popup {
+    visibility: hidden; 
+    opacity: 0; 
+    transition: opacity 0.3s, visibility 0.3s; 
+
+    position: absolute;
+    top: 100%; /* 🔑 ده بيخليها تحت الأيقونة بالظبط */
+    left: 0%;  /* 🔑 ده بيخليها تبدأ من أقصى اليسار (الشرق) */
+    
+    /* إلغاء أي تمركز أو إزاحة ترفعها لأعلى */
+    transform: none; 
+    
+    margin-top: 8px; /* ⬅️ زودنا المسافة عشان تنزل أكتر تحت الزرار */
+    
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 0.8em; 
+    width: max-content; 
+    white-space: nowrap; 
+    z-index: 1010;
+}
+
+/* تعديل السهم: خليه يشاور لأعلى من الركن الشمالي الشرقي للـ Popup */
+#greeting-popup::after {
+    content: "";
+    position: absolute;
+    top: -5px; /* يظهر فوق الـ popup */
+    left: 5px; /* يبدأ من ناحية اليسار (قرب الأيقونة) */
+    margin-left: 0;
+    border-width: 5px;
+    border-style: solid;
+    /* يخلي السهم يشاور لأعلى */
+    border-color: transparent transparent #333 transparent; 
+}
+
+/* حالة الظهور (عشان الحركة تكون سلسة) */
+#toggle-login-btn.active #greeting-popup {
+    visibility: visible;
+    opacity: 1;
+    /* نلغي الـ transform هنا كمان لضمان عدم التعارض */
+    transform: none; 
+}
+        /* تنسيقات الـ Card (للتوافق مع الموبايل والتمركز) */
+        #user-profile-card {
+            display: none; 
+            position: fixed; 
+            top: 150%; 
+            left: 50%; 
+            transform: translate(-50%, -50%); 
+            
+            /* التوافق مع الموبايل */
+            max-width: 350px; 
+            width: 90%; 
+            
+            padding: 15px; 
+            background-color: #06254B;
+            border: 1px solid #06254B;
+            border-radius: 8px; 
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15); 
+            z-index: 1000; 
+            text-align: right;
+        }
+        
+        /* تنسيق الفورم والـ Input */
+        #user-profile-card h2 {
+            font-size: 1.2em;
+            margin: 0 0 10px;
+            text-align: center;
+        }
+        #login-form label {
+            font-size: 0.9em; 
+            display: block; /* عشان الليبل ياخد سطر لوحده */
+            margin-top: 5px;
+        }
+        #login-form input[type="text"] {
+            width: 100%;
+            padding: 8px; 
+            margin: 5px 0 10px 0;
+            font-size: 1em; 
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-align: right;
+        }
+        #login-form button#login-btn {
+            width: 100%;
+            padding: 8px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.95em; 
+        }
+        #user-info-display {
+            text-align: center;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="site">
+        <header>
+            <div class="brand">
+                <div class="logo">MT</div>
+                <div>
+                    <h1>Magic Technology</h1>
+                    <div class="tagline">حلول تقنية مبتكرة</div>
+                </div>
+            </div>
+            <div class="nav-container">
+                <input type="text" id="searchBox" placeholder="ابحث هنا..." oninput="filterContent(this.value)">
+                                <button id="toggle-login-btn">
+                        <i class="fas fa-user-circle"></i> 
+                        <div id="greeting-popup">
+                            مرحباً بك! اضغط لتسجيل الدخول.
+                        </div>
+                    </button>
+<div class="app-card content-section scroll-animation" id="user-profile-card">
+    <section class="panel">
+        <h2 id="welcome-title">تسجيل الدخول</h2>
+
+        <form id="login-form" class="order-form" style="max-width: 300px; margin: 0 auto; display: block;">
+            <label for="usernameInput">اسم المستخدم</label>
+            <input type="text" id="usernameInput" required placeholder="اكتب اسمك هنا">
+            <button type="submit" class="send" id="login-btn">تسجيل الدخول</button>
+        </form>
+
+        <div id="user-info-display" style="display: none; padding: 10px;">
+            <h3 id="welcome-message" style="margin-bottom: 10px;">مرحباً بك</h3>
+            <p style="font-size: 0.9em; color: #b6b6b6;">لقد سجلت دخولك بنجاح. نتمنى لك يوما سعيدا ☀️</p>
+        </div>
+    </section>
+</div>
+                <div id="google_translate_element" style="display:none;"></div>
+
+                <button id="lang-toggle" class="mode-btn" onclick="toggleLanguage()" aria-label="تغيير اللغة">
+                    <i class="fas fa-globe"></i> <span></span>
+                </button>
+                <div class="color-picker-container">
+                <label for="colorPicker" style="font-size: 14px; margin-left: 5px;">لون الموقع:</label>
+                <input type="color" id="colorPicker" value="#020f20">
+                 </div>
+
+         
+            </div>
+        </header>
+  
+<div class="ad-carousel-container swiper">
+        <div class="swiper-wrapper" id="adCarousel">
+            
+            <div class="swiper-slide" data-original-index="0">
+                <a href="ads/ad2.jpg">
+                    <img src="ads/ad2.jpg" alt="العب واكسب خصم 10%">
+                </a>
+            </div>
+            
+            <div class="swiper-slide" data-original-index="1">
+                <a href="ads/ad1.jpg">
+                    <img src="ads/ad1.jpg" alt="A whole new universe - استكشاف">
+                </a>
+            </div>
+            
+            <div class="swiper-slide" data-original-index="2">
+                <a href="ads/ad3.jpg">
+                    <img src="ads/ad3.jpg" alt="MavixOS تحديث عصري">
+                </a>
+            </div>
+            
+            <div class="swiper-slide" data-original-index="3">
+                <a href="ads/ad5.jpg">
+                    <img src="ads/ad5.jpg" alt="Mtech AI بقى في حتة تانية">
+                </a>
+            </div>
+            
+            <div class="swiper-slide" data-original-index="4">
+                <a href="ads/ad4.jpg">
+                    <img src="ads/ad4.jpg" alt="العب واكسب - رابط مباشر">
+                </a>
+            </div>
+
+        </div>
+        
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+
+        <div class="swiper-pagination"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+        <div class="app-card scroll-animation">
+            <div class="app-icon">🤖</div>
+            <h2>Mtech EraX</h2>
+            <p class="muted">New Era | Magic Technology</p>
+        </div>
+        <div class="app-card content-section scroll-animation" id="about">
+            <section class="panel">
+                <h2>عنّا</h2>
+                <p>نقدم حلول برمجية مبتكرة — تطبيقات، أنظمة، وخدمات تقنية مميزة.</p>
+                <h2>نظام MavixOS</h2>
+                <p>شركة Magic Technology بتعلن رسميًا عن إطلاق نظام MavixOS.
+                    النظام اتطوّر من فتره مش طويلة، ورغم الفترة القصيرة دي، قدر يحقق فرق واضح في الأداء.
+                    مع MavixOS مواقعنا وبرامجنا بقت أسرع 3 مرات مقارنة بالنسخ السابقة، وده بيدّي تجربة استخدام محسّنة، سرعة أعلى، وكفاءة أكبر.
+                    إحنا في Magic Technology ملتزمين دايمًا بتقديم تكنولوجيا حديثة تواكب التطور وتفتح آفاق جديدة قدام المستخدم.
+                </p>
+
+                <h3>مميزات النظام:</h3>
+                <div class="features-grid">
+                    <div class="feature-item scroll-animation">
+                        <i class="fas fa-rocket"></i>
+                        <p>أداء فائق</p>
+                    </div>
+                    <div class="feature-item scroll-animation">
+                        <i class="fas fa-shield-alt"></i>
+                        <p>أمان متقدم</p>
+                    </div>
+                    <div class="feature-item scroll-animation">
+                        <i class="fas fa-cogs"></i>
+                        <p>مرونة عالية</p>
+                    
+                    </div>
+                </div>
+            </section>
+        </div>
+
+
+        <div class="app-card content-section scroll-animation" id="install">
+            <section class="panel">
+                <h2>كيفية تثبيت برنامجنا</h2>
+                <p class="muted">الخطوات سهلة جداً... اتبع الآتي:</p>
+                <div class="features-grid" style="grid-template-columns: 1fr;">
+                    <div class="feature-item scroll-animation">
+                        <h3>خطوة 1: الدخول للموقع</h3>
+                        <p>افتح متصفح كروم أو سفاري وادخل على موقعنا الرسمي <span class="highlight">https://mtech-site.netlify.app/</span>.</p>
+                    </div>
+                    <div class="feature-item scroll-animation">
+                        <h3>خطوة 2: الدخول على خيارات المتصفح</h3>
+                        <p>اضغط على الثلاث نقاط (<span class="highlight">•••</span>) الموجودة في أعلى أو أسفل الشاشة.</p>
+                    </div>
+                    <div class="feature-item scroll-animation">
+                        <h3>خطوة 3: الإضافة للشاشة الرئيسية</h3>
+                        <p>اختر "<span class="highlight">Add to Home Screen</span>" أو "<span class="highlight">الإضافة للشاشة الرئيسية</span>" ووافق على الإضافة.</p>
+                    </div>
+                </div>
+                <p style="text-align: center; margin-top: 20px; font-weight: 600;">
+                    وبكده تقدر توصل للبرنامج على طول من الشاشة الرئيسية!
+                </p>
+            </section>
+        </div>
+        <nav id="bottom-nav">
+
+        </a>
+        <a href="shop.html" aria-label="متجر">
+            <i class="fas fa-store"></i>
+            <span>متجر</span>
+        </a>
+        <a href="#videos" aria-label="فيديوهات">
+            <i class="fas fa-video"></i>
+            <span>فيديوهات</span>
+            
+        <a href="#install" aria-label="برنامج">
+            <i class="fas fa-mobile-alt"></i>
+            <span>برنامج</span>
+        </a>
+        <a href="tools.html" aria-label="tools">
+            <i class="fas fa-star"></i>
+            <span>Tools</span>
+        </a>
+
+
+    </nav>
+        <div class="app-card content-section scroll-animation" id="security">
+            <h2>اهتمامنا بالأمن</h2>
+            <p>في Magic Technology، الأمان مش مجرد إضافة جانبية… ده جزء أساسي من شغلنا.
+                علشان كده خصصنا مجهود كبير لتأمين البنية التحتية عندنا، خصوصًا في نقطة حساسة زي API Keys.
+                إحنا مطبقين أنظمة حماية متقدمة بتضمن إن مفاتيح الربط والخدمات بتاعتنا مش بس محفوظة بشكل مشفّر، لكن كمان متقسّمة بصلاحيات دقيقة علشان تمنع أي استخدام غير مُصرّح بيه.
+                الاهتمام بالأمان عندنا معناه إن المستخدم يثق إن بياناته وخدماته دايمًا في أيدين آمنة، وده التزام ثابت مش هنفرّط فيه
+            </p>
+            <h2>سياسة الأمن والاستخدام</h2>
+            <ul class="links-list">
+                <li>
+                    <a href="Security and Usage Policy.html">
+                        <i class=""></i> سياسة الأمن والاستخدام – منصة Mtech EraX
+                    </a>
+                </li>
+            </ul>
+
+        </div>
+        <div class="app-card content-section scroll-animation" id="reviews">
+            <section class="panel reviews">
+                <h2>آراء المستخدمين</h2>
+                <div class="features-grid">
+                    <div class="feature-item review-card scroll-animation" style="text-align: right;">
+                        <i class="fas fa-star" style="color: gold; font-size: 1.2em;"></i>
+                        <i class="fas fa-star" style="color: gold; font-size: 1.2em;"></i>
+                        <i class="fas fa-star" style="color: gold; font-size: 1.2em;"></i>
+                        <i class="fas fa-star" style="color: gold; font-size: 1.2em;"></i>
+                        <i class="fas fa-star" style="color: gold; font-size: 1.2em;"></i>
+                        <p style="font-size: 15px;">"الموقع رائع وسهل الاستخدام!" - محمد*</p>
+                    </div>
+                    <div class="feature-item review-card scroll-animation" style="text-align: right;">
+                        <i class="fas fa-star" style="color: gold; font-size: 1.2em;"></i>
+                        <i class="fas fa-star" style="color: gold; font-size: 1.2em;"></i>
+                        <i class="fas fa-star" style="color: gold; font-size: 1.2em;"></i>
+                        <i class="fas fa-star" style="color: gold; font-size: 1.2em;"></i>
+                        <p style="font-size: 15px;">"حبيت المميزات الجديدة." - داليا*</p>
+                    </div>
+                    <div class="feature-item review-card scroll-animation" style="text-align: right;">
+                        <i class="fas fa-star" style="color: gold; font-size: 1.2em;"></i>
+                        <i class="fas fa-star" style="color: gold; font-size: 1.2em;"></i>
+                        <i class="fas fa-star" style="color: gold; font-size: 1.2em;"></i>
+                        <i class="fas fa-star" style="color: gold; font-size: 1.2em;"></i>
+                        <i class="fas fa-star-half-alt" style="color: gold; font-size: 1.2em;"></i>
+                        <p style="font-size: 15px;">"الموقع تحفههههه." - سمير صالح*</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+    <button id="openChatBtn" aria-label="Open Mtech AI Chat">
+        <i class="fas fa-comment-dots"></i>
+    </button>
+    
+    <div id="chatModal">
+        <div class="modal-header">
+            <a href="https://wa.me/+201012436211" aria-label="تواصل عبر واتساب" class="whatsapp-button">
+                <i class="fab fa-whatsapp"></i> 
+                <span>تواصل عبر واتساب</span>
+            </a>
+            <span class="close-btn" id="closeChatBtn">&times;</span>
+            <span>Mtech AI Chat</span>
+
+        </div>
+        <div id="chat-history">
+            <div class="ai-message chat-message">
+                <p>أهلاً بك! أنا Mtech AI، الذكاء الاصطناعي الخاص بـMagic Technology. أقدر أساعدك إزاي؟</p>
+            </div>
+        </div>
+<div id="attachment-status" style="display: none; padding: 8px 10px; margin: 0 10px; border-radius: 8px; background: rgba(255, 255, 255, 0.1); align-items: center; justify-content: space-between; font-size: 14px; direction: rtl; color: var(--text-dark); /* تم تعديل هذا الستايل ليظهر بشكل صحيح داخل الـmodal */">
+        <span id="attachment-name">صورة مرفقة:</span>
+        <button type="button" onclick="clearAttachment()" style="background: var(--accent-dark); color: #000; padding: 5px 10px; border-radius: 8px; cursor: pointer; border: none; font-weight: 600; min-width: 50px;">إزالة</button>
+    </div>
+
+    <div id="user-input-container" style="display: flex; gap: 10px; padding: 10px; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+        
+        <input type="file" id="image-input" accept="image/jpeg, image/png, image/webp" style="display: none;" onchange="updateAttachmentStatus()">
+        
+        <button type="button" id="attach-image-btn" onclick="document.getElementById('image-input').click()" style="width: 45px; padding: 0; background: none; box-shadow: none; border: none; flex-shrink: 0; color: var(--text-dark); font-size: 1.2rem; cursor: pointer;">
+            <i class="fas fa-image"></i>
+        </button>
+
+        <input type="text" id="user-input" placeholder="اكتب رسالتك أو اسأل عن الصورة..." onkeypress="if(event.key === 'Enter') sendMessage()">
+        
+<button id="send-button" class="send-btn" style="width: 45px; padding: 0; flex-shrink: 0;">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M5 12L19 12M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+</button>
+
+    </div>
+    </div>
+        <div class="app-card content-section scroll-animation" id="utility">
+            <section class="panel">
+                <div class="header-icon" style="width:60px; height:60px; margin-bottom: 20px;">🛡️</div>
+                <h2>مُحلل قوة كلمة المرور</h2>
+                <p class="muted" style="text-align: center;">اكتب كلمة المرور هنا لتعرف مدى قوتها وأمانها.</p>
+                
+                <label for="passwordInput" style="margin-top: 15px; font-weight: 600;">كلمة المرور:</label>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <input type="password" id="passwordInput" placeholder="اكتب هنا كلمة المرور التي تريد فحصها" style="flex-grow: 1; margin-top: 6px;">
+                    <button id="togglePassword" class="mode-btn" style="padding: 10px 12px; font-size: 1rem; margin-top: 6px; box-shadow: none;">
+                        <i class="fas fa-eye" id="toggleIcon"></i>
+                    </button>
+                </div>
+                <div id="strengthBarContainer" style="margin-top: 15px;">
+                    <div id="strengthBar" style="height: 10px; border-radius: 5px; width: 0%; transition: width 0.3s ease-in-out;"></div>
+                </div>
+                
+                <div id="strengthText" style="margin-top: 10px; font-weight: 700; color: var(--muted-dark); text-align: center;">ابدأ الكتابة...</div>
+
+                <div id="feedback" style="margin-top: 15px; text-align: right; font-size: 14px; line-height: 1.6; padding: 10px; border-radius: 8px; background: rgba(255, 255, 255, 0.03);">
+                    <p style="margin: 0;">ابدأ بكتابة كلمة المرور لفحصها.</p>
+                </div>
+            </section>
+        </div>
+
+ 
+        </div>
+        <div class="app-card content-section scroll-animation" id="videos">
+            <div class="header-card" style="max-width: unset;">
+                <div class="header-icon">📺</div>
+                <h3>Mtech Videos</h3>
+                <p class="muted">أحدث الفيديوهات من قناتنا على يوتيوب</p>
+            </div>
+            <div id="videos-container">
+                <div class="loading">جارٍ تحميل الفيديوهات...</div>
+            </div>
+            <button id="load-more-btn" class="load-more-btn" style="display: none;">عرض المزيد</button>
+        </div>
+        <div id="videoModal" class="video-player-modal">
+            <span class="close-btn" onclick="closeModal()">×</span>
+            <div class="video-player-modal-content">
+               <iframe id="videoIframe" width="100%" height="100%" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+        </div>
+        
+        <div class="app-card content-section scroll-animation" id="links">
+            <h2>روابطنا</h2>
+            <ul class="links-list">
+                <li><a href="https://www.facebook.com/profile.php?id=61561551517347" target="_blank"><i class="fab fa-facebook-f"></i> Our Facebook</a></li>
+                <li><a href="https://chat.whatsapp.com/JAttL8KU0bOJgx9RnL7KDm" target="_blank"><i class="fab fa-whatsapp"></i> Our Whatsapp Group</a></li>
+                <li><a href="https://whatsapp.com/channel/0029Vb5edVQCXC3OCqel8s3A" target="_blank"><i class="fab fa-whatsapp"></i> Our Whatsapp Channel</a></li>
+                <li><a href="https://www.facebook.com/groups/1179241387335710/?ref=share&mibextid=NSMWBT" target="_blank"><i class="fab fa-facebook-f"></i> Our Facebook Group</a></li>
+                <li><a href="https://www.instagram.com/magic_technology1" target="_blank"><i class="fab fa-instagram"></i> Instagram Page</a></li>
+                <li><a href="https://www.youtube.com/channel/UCDFuAU8EIOx1b-YK4XdloBw" target="_blank"><i class="fab fa-youtube"></i> Youtube Channel</a></li>
+            </ul>
+        </div>
+        <footer>© Powered By MavixOS 26.1 ELITE</footer>
+    </div>
+    <script>
+        // Intersection Observer for scroll animation
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.scroll-animation').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Navigation
+        function toggleNav() {
+            const nav = document.getElementById("navLinks");
+            nav.classList.toggle("show");
+        }
+
+        // Mode
+        function toggleMode() {
+    const body = document.body;
+    body.classList.toggle('light');
+
+    // حفظ الوضع المختار في الذاكرة
+    if (body.classList.contains('light')) {
+        localStorage.setItem('mode', 'light');
+    } else {
+        localStorage.setItem('mode', 'dark');
+    }
+    
+    // **السطر ده هو اللي بيضمن إن الثيم المخصص يشتغل صح بعد تغيير المود**
+    applyCustomTheme(); 
+}
+        
+        // Apply saved mode on load
+        document.addEventListener('DOMContentLoaded', () => {
+             if (localStorage.getItem('mode') === 'light') {
+                document.body.classList.add('light');
+             }
+        });
+
+        // Search/Filter Functionality
+        function filterContent(value) {
+            const query = value.toLowerCase().trim();
+            const allContent = document.querySelectorAll('.app-card, .links-list li, #productsContainer .card, .video-card'); // Added video-card
+
+            allContent.forEach(el => {
+                const text = el.textContent.toLowerCase();
+                let isMatch = false;
+
+                // Check for match in all content
+                if (query === '' || text.includes(query)) {
+                    isMatch = true;
+                }
+
+                // Handling for cards (products and videos)
+                if (el.classList.contains('card') || el.classList.contains('video-card')) {
+                    const isContentMatch = text.includes(query);
+                    const isInitialHidden = el.dataset.initialHidden === 'true';
+
+                    if (query === '') {
+                        // Only show initially visible products/videos when search is empty
+                        if (el.classList.contains('card')) {
+                            el.style.display = isInitialHidden ? 'none' : 'block';
+                        }
+                        // Keep videos displayed when search is empty
+                        el.style.opacity = '1';
+                        el.style.animation = `cardIn 0.5s forwards`; 
+                    } else {
+                        // Show/hide based on search query
+                        el.style.display = isContentMatch ? 'block' : 'none';
+                        el.style.opacity = isContentMatch ? '1' : '0.2';
+                        el.style.animation = 'none'; 
+                    }
+                } else {
+                    // Handle other sections (app-card, links)
+                    el.style.opacity = isMatch ? '1' : '0.2';
+                }
+            });
+
+            // Update Show More Button visibility based on search result
+            const showMoreBtn = document.getElementById('showMoreBtn');
+            const hiddenProducts = document.querySelectorAll('#productsContainer .card[data-initial-hidden="true"]');
+            
+            if (query === '' && hiddenProducts.length > 0) {
+                 showMoreBtn.style.display = 'block';
+            } else {
+                 showMoreBtn.style.display = 'none';
+            }
+        }
+        
+         // --- AI Chat Logic ---
+        
+      // ====================================================================
+// ****** إعدادات الـGemini والمكونات الأساسية ******
+// ====================================================================
+// ====================================================================
+// ****** إعدادات الـGemini والمكونات الأساسية ******
+// ====================================================================
+const geminiApiKey = "AIzaSyDx0E9Y8_12E4nyxs3Ahv4c1ZmdTHBiE0k"; 
+const CHAT_MODEL = "gemini-2.5-flash"; 
+const geminiApiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${CHAT_MODEL}:generateContent?key=${geminiApiKey}`;
+
+// سجل المحادثة الداخلي للاحتفاظ بالسياق (History)
+let conversationData = []; 
+
+// إنشاء محول Markdown (يتطلب مكتبة Showdown)
+const converter = new showdown.Converter({
+    tables: true,
+    simplifiedAutoLink: true
+});
+
+// الرسالة التوجيهية للنظام (System Instruction)
+const systemInstruction = {
+    parts: [{
+        text: 'أنت مساعد ذكاء اصطناعي من شركة Magic Technology. أجيب على أسئلة المستخدمين بدقة ووضوح. اللغة الأساسية هي اللهجة المصرية (Masry) مع إجابات متوسطة الحجم، مركزة، وقوية. لو حد سألني بلغة تانية أرد عليه بنفس اللغة بدقة وفصاحة.'
+    }]
+};
+
+
+// ====================================================================
+// ****** وظائف الـUI المساعدة ******
+// ====================================================================
+
+// دالة إضافة رسالة جديدة لسجل الدردشة 
+function addMessage(sender, content) {
+    const chatHistory = document.getElementById('chat-history');
+    if (!chatHistory) return;
+    
+    const messageDiv = document.createElement('div');
+    messageDiv.classList.add('chat-message');
+    
+    if (sender === 'user') {
+        messageDiv.classList.add('user-message');
+        messageDiv.innerHTML = content;
+    } else {
+        messageDiv.classList.add('ai-message');
+        const htmlContent = converter.makeHtml(content);
+        messageDiv.innerHTML = htmlContent;
+    }
+    
+    chatHistory.appendChild(messageDiv);
+    chatHistory.scrollTop = chatHistory.scrollHeight; 
+}
+
+// دالة إضافة مؤشر التحميل (...)
+function addLoadingIndicator() {
+    const chatHistory = document.getElementById('chat-history');
+    if (!chatHistory) return;
+    
+    const loadingDiv = document.createElement('div');
+    loadingDiv.id = 'loading-indicator';
+    loadingDiv.classList.add('ai-message', 'chat-message');
+    loadingDiv.innerHTML = `<p style="margin:0;">جاري الرد <span class="dot">.</span><span class="dot">.</span><span class="dot">.</span></p>`;
+    chatHistory.appendChild(loadingDiv);
+    chatHistory.scrollTop = chatHistory.scrollHeight;
+    return loadingDiv;
+}
+
+// دالة إزالة مؤشر التحميل
+function removeLoadingIndicator(indicator) {
+    indicator?.remove();
+}
+
+
+// ====================================================================
+// ****** الدوال الخاصة برفع الصور (Multimodal) ******
+// ====================================================================
+
+/**
+ * تحويل ملف الصورة إلى جزء مولّد (GenerativePart)
+ */
+function fileToGenerativePart(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const base64Data = e.target.result.split(',')[1]; 
+            resolve({
+                inlineData: {
+                    data: base64Data,
+                    mimeType: file.type,
+                },
+            });
+        };
+        reader.onerror = (error) => reject(error);
+        reader.readAsDataURL(file);
+    });
+}
+
+/**
+ * تحديث حالة الملف المرفق في واجهة المستخدم.
+ */
+function updateAttachmentStatus() {
+    const fileInput = document.getElementById('image-input');
+    const statusDiv = document.getElementById('attachment-status');
+    const nameSpan = document.getElementById('attachment-name');
+    
+    if (fileInput && statusDiv && nameSpan && fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        nameSpan.textContent = `صورة مرفقة: ${file.name}`;
+        statusDiv.style.display = 'flex';
+    } else if (statusDiv) {
+        statusDiv.style.display = 'none';
+        nameSpan.textContent = '';
+    }
+}
+window.updateAttachmentStatus = updateAttachmentStatus;
+
+/**
+ * إزالة الملف المرفق من حقل الإدخال.
+ */
+function clearAttachment() {
+    const fileInput = document.getElementById('image-input');
+    if (fileInput) {
+        fileInput.value = ''; 
+        updateAttachmentStatus();
+    }
+}
+window.clearAttachment = clearAttachment;
+
+
+// ====================================================================
+// ****** دالة الإرسال الرئيسية (HandleSend) ******
+// ====================================================================
+
+async function handleSend() {
+    // جلب العناصر داخل الدالة لضمان الوصول إليها
+    const userInput = document.getElementById('user-input');
+    const imageInput = document.getElementById('image-input');
+
+    if (!userInput || !imageInput) {
+         console.error("خطأ: أحد عناصر الإدخال (user-input أو image-input) غير موجود.");
+         addMessage('ai', "معلش، فيه مشكلة في تهيئة زرار رفع الصور. تأكد إنك ضفت كود الـHTML الجديد لمنطقة الإدخال.");
+         return;
+    }
+
+    const message = userInput.value.trim();
+    const imageFile = imageInput.files.length > 0 ? imageInput.files[0] : null; 
+
+    if (!message && !imageFile) {
+        addMessage('ai', "من فضلك اكتب رسالة أو أرفق صورة.");
+        return; 
+    }
+    
+    // 1. بناء رسالة المستخدم وعرضها
+    let userContentToDisplay = '';
+    const userMessageParts = [];
+    
+    if (imageFile) {
+        try {
+            const imagePart = await fileToGenerativePart(imageFile);
+            userMessageParts.push(imagePart);
+        } catch (error) {
+            console.error("Error converting file to part:", error);
+            addMessage('ai', "معلش، حصلت مشكلة في تحويل الصورة للإرسال.");
+            return;
+        }
+
+        const imgUrl = URL.createObjectURL(imageFile);
+        userContentToDisplay = `
+            ${message ? `<p>${message.replace(/\n/g, '<br>')}</p>` : ''}
+            <img src="${imgUrl}" style="max-width: 100%; height: auto; border-radius: 8px; margin-top: 5px;" alt="صورة مرفقة"/>
+        `;
+        
+        clearAttachment();
+    } else if (message) {
+        userContentToDisplay = `<p>${message.replace(/\n/g, '<br>')}</p>`;
+    }
+    
+    if (message) {
+        userMessageParts.push({ text: message });
+    }
+
+    addMessage('user', userContentToDisplay);
+    userInput.value = ''; 
+
+    // 2. تحديث سجل المحادثة
+    conversationData.push({
+        role: "user",
+        parts: userMessageParts
+    });
+
+    // 3. إرسال المحادثة بالكامل إلى الـAPI
+    const loadingIndicator = addLoadingIndicator();
+    try {
+        const response = await fetch(geminiApiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                contents: conversationData, 
+                systemInstruction: systemInstruction 
+            })
+        });
+
+        if (!response.ok) {
+            const errorBody = await response.json();
+            console.error("API Response Error Details:", errorBody); 
+            throw new Error(`HTTP error! status: ${response.status}. Message: ${errorBody?.error?.message || 'Unknown API Error'}`);
+        }
+        
+        const result = await response.json();
+        
+        const aiResponseText = result?.candidates?.[0]?.content?.parts?.[0]?.text || "معلش، فيه مشكلة حصلت وأنا برد عليك. (لم يتم العثور على رد).";
+        
+        removeLoadingIndicator(loadingIndicator);
+        addMessage('ai', aiResponseText);
+        
+        // 4. تحديث سجل المحادثة برد الـAI
+        conversationData.push({
+            role: "model",
+            parts: [{ text: aiResponseText }]
+        });
+        
+    } catch (error) {
+        console.error("Error calling Gemini API:", error);
+        removeLoadingIndicator(loadingIndicator);
+        addMessage('ai', `معلش، حصلت مشكلة في الاتصال بالذكاء الاصطناعي. السبب: ${error.message}. ممكن تحاول تاني؟`);
+    }
+}
+window.handleSend = handleSend; // جعل الدالة متاحة لـ onclick في الـHTML
+
+
+// ====================================================================
+// ****** ربط الأحداث (الموثوق) ******
+// ====================================================================
+
+document.addEventListener('DOMContentLoaded', function() {
+    const sendButton = document.getElementById('send-button');
+    const userInput = document.getElementById('user-input');
+    
+    // ربط الزر والإدخال في حالة وجودهما بعد تحميل الصفحة بالكامل
+    if (sendButton) {
+        sendButton.addEventListener('click', handleSend);
+    } else {
+        console.error("خطأ: زر الإرسال (#send-button) غير موجود في DOM.");
+    }
+
+    if (userInput) {
+        userInput.addEventListener('keydown', (event) => {
+            // التأكد من عدم الإرسال عند الضغط على Shift + Enter
+            if (event.key === 'Enter' && !event.shiftKey) { 
+                event.preventDefault();
+                handleSend();
+            }
+        });
+    }
+});
+
+// وظائف الفتح والإغلاق (يفترض أن هذه الدوال موجودة في كودك)
+document.addEventListener('DOMContentLoaded', function() {
+    const chatModal = document.getElementById('chatModal');
+    
+    document.getElementById('openChatBtn')?.addEventListener('click', () => {
+        if(chatModal) chatModal.style.display = 'flex';
+        document.getElementById('openChatBtn').style.display = 'none';
+    });
+});
+
+
+        // كود تحليل قوة كلمة المرور
+        const passwordInput = document.getElementById('passwordInput');
+        const togglePassword = document.getElementById('togglePassword');
+        const toggleIcon = document.getElementById('toggleIcon');
+        const strengthText = document.getElementById('strengthText');
+        const strengthBar = document.getElementById('strengthBar');
+        const feedbackDiv = document.getElementById('feedback');
+
+        passwordInput.addEventListener('input', checkPasswordStrength);
+
+        // وظيفة إظهار/إخفاء كلمة المرور
+        togglePassword.addEventListener('click', () => {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            // تغيير أيقونة العين
+            toggleIcon.classList.toggle('fa-eye');
+            toggleIcon.classList.toggle('fa-eye-slash');
+        });
+
+        function checkPasswordStrength() {
+            const password = passwordInput.value;
+            let score = 0;
+            let feedbackHTML = '';
+
+            // تحديد المعايير المطلوبة
+            const minLength = password.length >= 12; // Increased length for better security
+            const hasUpperCase = /[A-Z]/.test(password);
+            const hasLowerCase = /[a-z]/.test(password);
+            const hasNumbers = /[0-9]/.test(password);
+            const hasSymbols = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(password);
+
+            // حساب النتيجة (Adjusted scoring)
+            if (password.length >= 12) score += 35;
+            else if (password.length >= 8) score += 15;
+
+            if (hasUpperCase) score += 20; 
+            if (hasNumbers) score += 20; 
+            if (hasSymbols) score += 25;
+            
+            // إذا كان فيه حروف كابيتال وسمول مع بعض بتزود النتيجة
+            if (hasUpperCase && hasLowerCase && hasNumbers && hasSymbols) {
+                score = Math.min(score + 10, 100); // مكافأة لـ Complexity
+            }
+
+            // Penalty for very short passwords
+            if (password.length > 0 && password.length < 8) score = Math.min(score, 30);
+            
+            // تحديث شريط القوة والنص
+            let color = '';
+            let text = '';
+            
+            if (score < 40) {
+                text = 'ضعيفة جداً 🔴';
+                color = '#e53935'; 
+            } else if (score < 70) {
+                text = 'متوسطة 🟠';
+                color = '#ff9800'; 
+            } else if (score < 95) {
+                text = 'قوية 🟢';
+                color = '#4caf50'; 
+            } else {
+                text = 'ممتازة ومؤمنة ⭐';
+                color = '#00bcd4'; 
+                score = 100;
+            }
+
+            strengthBar.style.width = score + '%';
+            strengthBar.style.backgroundColor = color;
+            strengthText.textContent = text;
+            strengthText.style.color = color;
+            
+            // عرض النصائح (Feedback)
+            feedbackHTML += `<p style="margin: 5px 0 0;" class="${minLength ? 'strength-ok' : 'strength-fail'}">${minLength ? '✅' : '❌'} يجب أن تحتوي على 12 أحرف على الأقل.</p>`;
+            feedbackHTML += `<p style="margin: 5px 0 0;" class="${hasUpperCase ? 'strength-ok' : 'strength-fail'}">${hasUpperCase ? '✅' : '❌'} تحتوي على حروف كبيرة (A-Z).</p>`;
+            feedbackHTML += `<p style="margin: 5px 0 0;" class="${hasNumbers ? 'strength-ok' : 'strength-fail'}">${hasNumbers ? '✅' : '❌'} تحتوي على أرقام (0-9).</p>`;
+            feedbackHTML += `<p style="margin: 5px 0 0;" class="${hasSymbols ? 'strength-ok' : 'strength-fail'}">${hasSymbols ? '✅' : '❌'} تحتوي على رموز (@!$%).</p>`;
+            
+            feedbackDiv.innerHTML = feedbackHTML;
+
+            // إخفاء الـ Feedback لما تكون كلمة المرور فاضية
+            if (password === '') {
+                strengthText.textContent = 'ابدأ الكتابة...';
+                strengthText.style.color = 'var(--muted-dark)';
+                strengthBar.style.width = '0%';
+                feedbackDiv.innerHTML = '<p style="margin: 0;">ابدأ بكتابة كلمة المرور لفحصها.</p>';
+            }
+        }
+
+        // --- Mtech Videos Script ---
+        const API_KEY = "AIzaSyB2Zibr3wy6vQnQt5VT02YNWMz1wNH9Inc"; // USER REQUESTED TO KEEP THIS KEY
+        const CHANNEL_ID = "UCDFuAU8EIOx1b-YK4XdloBw";
+        let nextPageToken = '';
+        const videosContainer = document.getElementById('videos-container');
+        const loadMoreBtn = document.getElementById('load-more-btn');
+        const videoModal = document.getElementById('videoModal');
+        const videoIframe = document.getElementById('videoIframe');
+
+        const fetchVideos = async (pageToken = '') => {
+            const URL = `https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${CHANNEL_ID}&part=snippet,id&order=date&maxResults=4&pageToken=${pageToken}&type=video`;
+            
+            // Show loading if first load
+            if (pageToken === '') {
+                 videosContainer.innerHTML = '<div class="loading">جارٍ تحميل الفيديوهات...</div>';
+                 loadMoreBtn.style.display = 'none';
+            } else {
+                // Disable load more button while loading
+                loadMoreBtn.disabled = true;
+                loadMoreBtn.textContent = 'جارٍ التحميل...';
+            }
+            
+            try {
+                const response = await fetch(URL);
+                const data = await response.json();
+                
+                // Clear loading indicator only after data is received
+                if (pageToken === '') {
+                    videosContainer.innerHTML = ''; 
+                } else {
+                    loadMoreBtn.disabled = false;
+                    loadMoreBtn.textContent = 'عرض المزيد';
+                }
+
+
+                if (data.error) {
+                    videosContainer.innerHTML = `<p style="text-align: center; color: red;">حدث خطأ: ${data.error.message}. تأكد من صحة مفتاح الـ API.</p>`;
+                    loadMoreBtn.style.display = 'none';
+                    return;
+                }
+
+                if (data.items.length === 0 && pageToken === '') {
+                    videosContainer.innerHTML = '<p style="text-align: center;">لا توجد فيديوهات للعرض حالياً.</p>';
+                    loadMoreBtn.style.display = 'none';
+                    return;
+                }
+
+                data.items.forEach(item => {
+                    if (item.id.videoId) {
+                        const videoId = item.id.videoId;
+                        const title = item.snippet.title;
+                        const publishDate = new Date(item.snippet.publishedAt).toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
+                        const thumbnail = item.snippet.thumbnails?.high?.url || 'placeholder.jpg';
+                        
+                        const videoCard = document.createElement('div');
+                        videoCard.classList.add('video-card');
+                        videoCard.innerHTML = `
+                            <img src="${thumbnail}" alt="${title}" loading="lazy">
+                            <div class="video-info">
+                                <h3>${title}</h3>
+                                <p>نشر في: ${publishDate}</p>
+                            </div>
+                        `;
+                        videoCard.addEventListener('click', () => {
+                            openModal(videoId);
+                        });
+                        videosContainer.appendChild(videoCard);
+                    }
+                });
+
+                nextPageToken = data.nextPageToken || '';
+                if (nextPageToken) {
+                    loadMoreBtn.style.display = 'block';
+                } else {
+                    loadMoreBtn.style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Error fetching data from YouTube API:', error);
+                if (pageToken === '') {
+                     videosContainer.innerHTML = '<p style="text-align: center; color: red;">حدث خطأ في الاتصال بالشبكة أو في مفتاح الـAPI.</p>';
+                } else {
+                    loadMoreBtn.textContent = 'فشل التحميل. حاول مرة أخرى.';
+                }
+                loadMoreBtn.style.display = 'none';
+            }
+        };
+
+        const openModal = (videoId) => {
+            const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+            videoIframe.setAttribute('src', embedUrl);
+            videoModal.style.display = 'flex';
+        };
+
+        const closeModal = () => {
+            videoIframe.src = ''; // Stop video playback
+            videoModal.style.display = 'none';
+        };
+
+        window.onclick = function(event) {
+            if (event.target == videoModal) {
+                closeModal();
+            }
+        }
+
+        // Event listener for the "Load More" button
+        loadMoreBtn.addEventListener('click', () => {
+            fetchVideos(nextPageToken);
+        });
+
+        // Initial call to fetch videos when the page loads
+        fetchVideos();
+
+    // --- كود تغيير الثيم الشامل V3 ---
+
+
+    
+    // تعريف الألوان الأساسية اللي الموقع معتمد عليها (هتتغير بناءً على اللون المخصص)
+    const CSS_VARIABLES = {
+        // اللون الأساسي للخلفية الداكنة (Default: #020f20)
+        '--bg-dark': '#020f20', 
+        // لون Card الخلفي (Default: rgba(255, 255, 255, 0.05))
+        '--bg-card': 'rgba(255, 255, 255, 0.05)', 
+        // لون الـHover للخلفية الداكنة (Default: rgba(255, 255, 255, 0.1))
+        '--bg-dark-hover': 'rgba(255, 255, 255, 0.1)' 
+        // لاحظ إن --text-dark مش هيتغير عشان النص يبقى مقروء دايماً
+    };
+   const colorPicker = document.getElementById('colorPicker');
+    const root = document.documentElement;
+
+    // اللون الافتراضي (لأنه تم تثبيته في الـCSS)
+    const DEFAULT_ACCENT_COLOR = '#007ce9';
+    const DEFAULT_LIGHT_ACCENT = '#095faa';
+
+    // ---------------------- دالة تطبيق الثيم الرئيسية ----------------------
+    
+    function applyCustomTheme(color) {
+        // نستخدم اللون المختار أو نرجع للون الافتراضي
+        const baseColor = color || localStorage.getItem('customAccentColor') || DEFAULT_ACCENT_COLOR;
+        
+        // 1. تطبيق اللون المخصص على الـAccent في الوضع الداكن
+        root.style.setProperty('--accent-dark', baseColor);
+        
+        // 2. تطبيق لون متناسق مع اللون المختار في الوضع الفاتح
+        // نستخدم اللون المختار مع تعديل بسيط (مثل التعتيم أو تغيير بسيط)
+        // في هذا التصحيح، سأفترض أن --accent-light هو نفس اللون المختار لتجربة بسيطة،
+        // أو يمكنك وضع أي لون فاتح تريده هنا. سأختار لون مختلف لتبدو التغييرات واضحة.
+        const lightModeColor = baseColor; // يمكنك تغييرها يدوياً إذا أردت لون مختلف لللايت مود
+        root.style.setProperty('--accent-light', lightModeColor);
+
+        // 3. تحديث مربع اختيار اللون ليعرض اللون الحالي
+        if (colorPicker) {
+            colorPicker.value = baseColor;
+        }
+    }
+
+    // ---------------------- دالة تغيير الوضع ----------------------
+
+    function toggleMode() {
+        const body = document.body;
+        const isLightMode = body.classList.toggle('light');
+
+        // حفظ الوضع المختار
+        localStorage.setItem('mode', isLightMode ? 'light' : 'dark');
+        
+        // لا نحتاج لإعادة تطبيق الثيم بالكامل هنا، التغييرات الأهم تتم في applyCustomTheme
+        // والـCSS يتولى باقي الألوان (bg, card)
+    }
+    window.toggleMode = toggleMode; // جعل الدالة متاحة للـ onclick
+
+    // ---------------------- التنفيذ الأولي ----------------------
+    
+    // 1. مستمع حدث لتغيير اللون وحفظه
+    if (colorPicker) {
+        // إعداد اللون الافتراضي عند أول زيارة
+        if (!localStorage.getItem('customAccentColor')) {
+            localStorage.setItem('customAccentColor', DEFAULT_ACCENT_COLOR);
+        }
+        
+        colorPicker.addEventListener('input', (event) => {
+            const newColor = event.target.value;
+            localStorage.setItem('customAccentColor', newColor);
+            applyCustomTheme(newColor); // تطبيق اللون الجديد فوراً
+        });
+    }
+
+    // 2. استرجاع الوضع المحفوظ (Dark/Light) عند تحميل الصفحة
+    const savedMode = localStorage.getItem('mode');
+    if (savedMode === 'light') { 
+        document.body.classList.add('light'); 
+    }
+
+    // 3. تطبيق الثيم عند تحميل الصفحة لأول مرة (لتحميل اللون المخصص)
+    applyCustomTheme(); 
+    // ====================================================================
+// ****** وظائف فتح وإغلاق المودال الخاصة بالدردشة ******
+// ====================================================================
+
+function openChatModal() {
+    const chatModal = document.getElementById('chatModal');
+    const openChatBtn = document.getElementById('openChatBtn');
+    if (chatModal) chatModal.style.display = 'flex'; // فتح المودال
+    if (openChatBtn) openChatBtn.style.display = 'none'; // إخفاء الزر العائم
+}
+
+function closeChatModal() {
+    const chatModal = document.getElementById('chatModal');
+    const openChatBtn = document.getElementById('openChatBtn');
+    if (chatModal) chatModal.style.display = 'none'; // إغلاق المودال
+    if (openChatBtn) openChatBtn.style.display = 'flex'; // إظهار الزر العائم
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const chatModal = document.getElementById('chatModal');
+    const openChatBtn = document.getElementById('openChatBtn');
+    const closeChatBtn = document.getElementById('closeChatBtn');
+
+    // 1. مستمع لزر "فتح المحادثة" العائم
+    openChatBtn?.addEventListener('click', openChatModal);
+
+    // 2. مستمع لزر الإغلاق (X) داخل النافذة
+    closeChatBtn?.addEventListener('click', closeChatModal);
+
+    // 3. مستمع للإغلاق عند النقر خارج الـ Modal (على الخلفية المعتمة)
+    window.addEventListener('click', (event) => {
+        if (event.target === chatModal) {
+            closeChatModal();
+        }
+    });
+
+    // *تأكد أن هذا الكود يضاف فقط مرة واحدة في الدالة الكبيرة:*
+    // document.getElementById('openChatBtn')?.addEventListener('click', () => {
+    //     if(chatModal) chatModal.style.display = 'flex';
+    //     document.getElementById('openChatBtn').style.display = 'none';
+    // });
+    // **إذا كان هذا الجزء موجوداً، قم بإزالته وابقِ على الكود الجديد فقط.**
+});
+
+// ====================================================================
+// ****** نهاية وظائف فتح وإغلاق المودال ******
+// ====================================================================
+// تهيئة الكاروسيل باستخدام Swiper.js
+function checkLanguage() {
+            return document.cookie.indexOf('/en') > -1;
+        }
+
+        var isEnglish = checkLanguage();
+        
+        // 2. (خطوة مهمة جداً) بنجبر حاوية السلايدر تاخد الاتجاه الصح في الـ HTML
+        var container = document.querySelector('.ad-carousel-container');
+        if (container) {
+            // لو إنجليزي خلي الاتجاه ltr، لو عربي خليه rtl
+            container.setAttribute('dir', isEnglish ? 'ltr' : 'rtl');
+        }
+
+        // 3. تشغيل Swiper بإعدادات المراقبة (Observer)
+        const swiper = new Swiper('.ad-carousel-container', {
+            // الإعدادات الأساسية
+            direction: 'horizontal',
+            loop: true,
+            
+            // *** الإضافات الجديدة لحل مشكلة التعليق ***
+            observer: true,       // بيخلي السلايدر يراقب أي تغيير في الصفحة ويحدث نفسه
+            observeParents: true, // بيراقب العناصر الأب عشان لو الموقع اتحرك
+            
+            autoplay: {
+                delay: 4000,
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            
+            // تفعيل الـ RTL لو اللغة مش إنجليزي
+            rtl: !isEnglish
+        });
+    // 1. دالة تعريف جوجل
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({
+            pageLanguage: 'ar', 
+            includedLanguages: 'ar,en', 
+            autoDisplay: false
+        }, 'google_translate_element');
+    }
+
+    // 2. دالة التعامل مع الكوكيز (عشان يحفظ اللغة)
+    function setCookie(key, value, expiry) {
+        var expires = new Date();
+        expires.setTime(expires.getTime() + (expiry * 24 * 60 * 60 * 1000));
+        document.cookie = key + '=' + value + ';expires=' + expires.toUTCString() + ';path=/';
+    }
+
+    function getCookie(key) {
+        var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
+        return keyValue ? keyValue[2] : null;
+    }
+
+    // 3. دالة التبديل عند الضغط على الزر
+    function toggleLanguage() {
+        var currentLang = getCookie('googtrans');
+        
+        if (currentLang && currentLang.indexOf('/en') > -1) {
+            // لو هو إنجليزي -> رجعه عربي
+            setCookie('googtrans', '/ar/ar', 1);
+            window.location.reload();
+        } else {
+            // لو هو عربي -> خليه إنجليزي
+            setCookie('googtrans', '/ar/en', 1);
+            window.location.reload();
+        }
+    }
+
+    // 4. الكود اللي بيشتغل أول ما الصفحة تحمل
+    document.addEventListener('DOMContentLoaded', function() {
+        var currentLang = getCookie('googtrans');
+        var langText = document.getElementById('lang-text');
+        
+        // لو الكوكيز بتقول إننا إنجليزي
+        if (currentLang && currentLang.indexOf('/en') > -1) {
+            document.body.classList.add('ltr-mode'); // فعل كلاس الإنجليزي
+            if(langText) langText.innerText = "Ar";   // غير الكلمة لـ Ar
+        } else {
+            // لو عربي
+            document.body.classList.remove('ltr-mode');
+            if(langText) langText.innerText = "En";
+        }
+    });
+document.addEventListener('DOMContentLoaded', () => {
+    // ##########################################
+    // 1. تعريف العناصر (Elements)
+    // ##########################################
+    const userProfileCard = document.getElementById('user-profile-card');
+    const toggleLoginBtn = document.getElementById('toggle-login-btn');
+    const loginForm = document.getElementById('login-form');
+    const usernameInput = document.getElementById('usernameInput');
+    const welcomeTitle = document.getElementById('welcome-title');
+    const userInfoDisplay = document.getElementById('user-info-display');
+    
+    // عناصر الـ Popup والشات
+    const greetingPopup = document.getElementById('greeting-popup'); 
+    const chatHistoryElement = document.getElementById('chat-history');
+    // عنصر sysInstructionDisplay هنجيبه داخل دالة updateChatGreeting عشان نضمن انه مش هيعمل crash لو مش موجود.
+    
+    // متغير لتخزين الاسم (بيجيبه من الـ Local Storage لو موجود)
+    let currentUserName = localStorage.getItem('loggedInUser') || '';
+
+
+    // ##########################################
+    // 2. الدوال الرئيسية (Functions)
+    // ##########################################
+
+    // 💡 الدالة الأولى: لتحديث ترحيب الشات بوت وإرشادات النظام
+    function updateChatGreeting(username) {
+        const defaultGreeting = "أهلاً بك! أنا Mtech AI، الذكاء الاصطناعي الخاص بـMagic Technology. أقدر أساعدك إزاي؟";
+        const personalizedGreeting = `أهلاً بك يا ${username}! أنا Mtech AI، الذكاء الاصطناعي الخاص بـMagic Technology. أقدر أساعدك إزاي؟`;
+
+        const initialGreetingElement = chatHistoryElement ? chatHistoryElement.querySelector('.ai-message p') : null;
+        
+        // تحديث رسالة الشات الافتتاحية
+        if (initialGreetingElement && chatHistoryElement.children.length === 1) { 
+            initialGreetingElement.innerHTML = username ? personalizedGreeting : defaultGreeting;
+        }
+        
+        // تجهيز إرشادات النظام (System Instruction)
+        window.systemInstruction = username 
+            ? `أنت Mtech AI، الشات بوت الخاص بـMagic Technology. أنت تتحدث باللهجة المصرية/العربية الودودة. اسم المستخدم الذي تتحدث معه هو: ${username}. يجب عليك تضمين اسمه (يا ${username}) في رد الترحيب الأول وفي أي رد آخر إذا كان مناسباً ليكون الحوار أكثر شخصية.` 
+            : `أنت Mtech AI، الشات بوت الخاص بـMagic Technology. أنت تتحدث باللهجة المصرية/العربية الودودة. ردودك يجب أن تكون بأسلوب ودود ومفيد.`;
+
+        // 🚨 تصحيح المشكلة: نتحقق من وجود العنصر قبل محاولة تغيير محتواه
+        const sysInstructionDisplay = document.getElementById('sys-instruction-display');
+        if (sysInstructionDisplay) { 
+            sysInstructionDisplay.textContent = window.systemInstruction;
+        }
+    }
+
+    // 💡 الدالة الثانية: لتحديث رسالة الـ Popup وتعديل عنوان الكارد الداخلي
+    function updateGreetingDisplay() {
+        if (currentUserName) {
+            // تحديث رسالة الـ Popup
+            if (greetingPopup) {
+                greetingPopup.textContent = `أهلاً بك يا ${currentUserName}! اضغط لتغيير المستخدم.`;
+            }
+            // تحديث العنوان الداخلي
+            if (welcomeTitle) {
+                welcomeTitle.textContent = `مرحباً بك يا ${currentUserName}`; 
+            }
+        } else {
+            // رسائل افتراضية
+            if (greetingPopup) {
+                greetingPopup.textContent = 'مرحباً بك! اضغط لتسجيل الدخول.';
+            }
+            if (welcomeTitle) {
+                welcomeTitle.textContent = 'تسجيل الدخول'; 
+            }
+        }
+    }
+
+
+    // ##########################################
+    // 3. التهيئة والـ Event Listeners (التشغيل)
+    // ##########################################
+
+    // 1. التهيئة الأولية عند تحميل الصفحة
+    updateGreetingDisplay();
+    updateChatGreeting(currentUserName); 
+
+    // 🚀 2. التحكم في فتح وقفل كارد تسجيل الدخول والـ Popup
+    if (toggleLoginBtn && userProfileCard) {
+        toggleLoginBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); 
+            
+            const isHidden = userProfileCard.style.display === 'none' || userProfileCard.style.display === '';
+            
+            // تبديل حالة الظهور
+            userProfileCard.style.display = isHidden ? 'block' : 'none';
+
+            // إظهار وإخفاء الـ Popup
+            if (userProfileCard.style.display === 'block') {
+                toggleLoginBtn.classList.add('active'); 
+            } else {
+                toggleLoginBtn.classList.remove('active'); 
+            }
+
+            // تحديد ما يظهر داخل الكارد
+            if (currentUserName) {
+                 if (loginForm) loginForm.style.display = 'none'; 
+                 if (userInfoDisplay) userInfoDisplay.style.display = 'block';
+            } else {
+                if (loginForm) loginForm.style.display = 'block';
+                if (userInfoDisplay) userInfoDisplay.style.display = 'none';
+            }
+        });
+    }
+
+    // 💡 3. إخفاء الكارد والـ Popup لو ضغط في أي مكان تاني في الصفحة
+    document.addEventListener('click', (e) => {
+        // نتحقق من وجود العناصر قبل استخدامها
+        if (userProfileCard && toggleLoginBtn) {
+            // لو الضغط ماكنش على الأيقونة ولا داخل الكارد
+            if (!userProfileCard.contains(e.target) && e.target !== toggleLoginBtn && !toggleLoginBtn.contains(e.target)) {
+                userProfileCard.style.display = 'none';
+                toggleLoginBtn.classList.remove('active'); 
+            }
+        }
+    });
+
+    // 🔑 4. معالجة حدث تسجيل الدخول (Submit)
+    if (loginForm) {
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault(); 
+
+            const username = usernameInput.value.trim();
+
+            if (username) {
+                currentUserName = username;
+                localStorage.setItem('loggedInUser', username);
+
+                // تحديث كل الرسائل
+                updateGreetingDisplay(); 
+                updateChatGreeting(currentUserName); 
+
+                // تحديث الـ UI
+                if (loginForm) loginForm.style.display = 'none';
+                if (userInfoDisplay) userInfoDisplay.style.display = 'block';
+                
+                alert(`أهلاً يا ${username}، تم تسجيل الدخول بنجاح!`);
+            }
+        });
+    }
+});
+</script>
+
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+</body>
+</html>

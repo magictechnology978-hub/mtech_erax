@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>أداة تغيير حجم الصور</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="shortcut icon" href="logo-192x192.png" type="image/x-icon">
+    
+    <style>
+        /* الألوان والمتغيرات الأساسية (للتوافق مع موقعك) */
+          :root {
+            --bg-dark: #0f2541;
+            --bg-light: #d8eaff;
+            --card-dark: rgb(7, 36, 75);
+            --card-light: rgba(255, 255, 255, 0.9);
+            --text-dark: #ffffff;
+            --text-light: #020f20;
+            --accent-dark: #007ce9;
+            --accent-light: #095faa;
+            --muted-dark: rgba(255, 255, 255, 0.85);
+            --muted-light: #555;
+            --transition-speed: .4s;
+            --primary-btn: var(--accent-dark);
+            --success-btn: #28a745;
+        }
+
+        /* Base Styles */
+        body {
+            font-family: 'Cairo', sans-serif;
+            margin: 0;
+            padding: 18px;
+            background: var(--bg-dark);
+            color: var(--text-dark);
+            transition: all var(--transition-speed) ease;
+            direction: rtl;
+            font-size: 16px;
+        }
+
+        body.light {
+            background: var(--bg-light);
+            color: var(--text-light);
+        }
+
+        .site {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header (تم نسخه من tools.html) */
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px;
+            border-radius: 14px;
+            background: rgba(2, 37, 90, 0);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all var(--transition-speed);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            margin-bottom: 20px;
+        }
+
+        body.light header {
+            background: rgba(255, 255, 255, 0.4);
+            border-color: #ddd;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: var(--accent-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            color: #000;
+        }
+
+        body.light .logo {
+            background: var(--accent-light);
+            color: #fff;
+        }
+
+        .brand h1 {
+            font-size: 18px;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .app-card {
+            background: var(--card-dark);
+            border-radius: 14px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin: 20px auto;
+            text-align: center;
+        }
+
+        h2 {
+            color: var(--accent-dark);
+            margin-bottom: 25px;
+            font-size: 28px;
+        }
+        
+        /* ------------------------------------------------ */
+        /* تنسيقات الأداة */
+        /* ------------------------------------------------ */
+
+        .input-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .input-group label {
+            color: var(--muted-dark);
+            font-weight: 600;
+        }
+
+        .input-group input[type="number"], .input-group input[type="file"] {
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: var(--card-dark);
+            color: var(--text-dark);
+            width: 120px;
+            text-align: center;
+        }
+
+        .primary-button, .download-button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            background: var(--accent-dark);
+            color: var(--text-dark);
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        
+        .primary-button:hover, .download-button:hover {
+            background: #00a0ff;
+        }
+
+        /* منطقة المعاينة (Canvas) */
+        #previewArea {
+            margin-top: 20px;
+            min-height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        #previewArea img {
+            max-width: 100%;
+            height: auto;
+            display: none; /* يتم إخفاء الصورة الأصلية والاعتماد على الـ Canvas */
+        }
+        
+        #imageCanvas {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            /* للتأكد من أنها لا تظهر قبل تحميل الصورة */
+            display: none; 
+        }
+
+        .info-bar {
+            margin-top: 15px;
+            color: var(--muted-dark);
+            font-size: 0.9em;
+        }
+        
+        .info-bar span {
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+              .back-arrow-button {
+    /* جعل الزر مربعًا متساوي الأبعاد */
+    width: 50px;
+    height: 50px;
+    
+    /* توسيط محتوى السهم */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* خصائص النص (للسهم) */
+    font-size: 1.5rem; /* حجم السهم */
+    line-height: 1; /* للتأكد من توسيط الرمز */
+    
+    /* جعله دائريًا */
+    border-radius: 50%;
+    
+    /* تحديد موقع الزر (ثابت في الزاوية العلوية اليمنى) */
+.back-arrow-button {
+    position: fixed;
+    top: 20px;
+    left: 20px; /* <--- قم بتغييرها إلى LEFT */
+    /* قم بإزالة أو التعليق على خاصية right: 20px; */
+    z-index: 1000;
+}
+}
+
+/* ---------------------------------------------------- */
+/* تأثير Liquid Glass (تم تطبيقه على .liquid-glass) */
+/* ---------------------------------------------------- */
+.liquid-glass {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    
+    /* تأثير الزجاج: خلفية شبه شفافة مع تغبيش */
+    background: rgba(255, 255, 255, 0.15); /* أبيض شبه شفاف */
+    backdrop-filter: blur(10px) saturate(180%);
+    -webkit-backdrop-filter: blur(10px) saturate(180%);
+
+    /* الحدود والتظليل */
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2), 
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+
+    /* خصائص النص (السهم) */
+    color: white;
+    font-weight: bold;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+/* تأثير التفاعل (Hover) */
+.liquid-glass:hover {
+    backdrop-filter: blur(15px) saturate(200%);
+    -webkit-backdrop-filter: blur(15px) saturate(200%);
+    box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.3), 
+                0 0 0 1px rgba(255, 255, 255, 0.5);
+    transform: scale(1.05); /* تكبير بسيط عند المرور يعطي تأثير الحركة */
+}
+
+    </style>
+</head>
+<body>
+        <div class="site">
+        <header>
+            <div class="brand">
+                <div class="logo">imr</div>
+                <h1>أداة تغيير حجم الصور</h1>
+            </div>
+     <div class="background-container">
+        <button class="back-arrow-button liquid-glass" onclick="history.back()">
+            &#10094; 
+        </button>
+    </div>
+        </header>
+
+    <div class="container">
+        <div class="app-card">
+            
+            <h2>🖼️ أداة تغيير حجم الصور</h2>
+            <p class="muted">قم بتحميل الصورة، أدخل الأبعاد المطلوبة (بالبكسل)، ثم قم بالتحميل.</p>
+
+            <div class="input-group">
+                <input type="file" id="fileInput" accept="image/*">
+            </div>
+            
+            <div class="info-bar" id="originalInfo">
+                الحجم الأصلي: <span id="originalWidth">...</span>x<span id="originalHeight">...</span>
+            </div>
+
+            <div class="input-group">
+                <label for="widthInput">العرض الجديد:</label>
+                <input type="number" id="widthInput" value="512" min="1" disabled>
+                
+                <i class="fas fa-times" style="color: var(--muted-dark);"></i>
+                
+                <label for="heightInput">الارتفاع الجديد:</label>
+                <input type="number" id="heightInput" value="512" min="1" disabled>
+                
+                <button id="resizeBtn" class="primary-button" disabled>تغيير الحجم</button>
+            </div>
+
+            <div id="previewArea">
+                <canvas id="imageCanvas"></canvas>
+            </div>
+            
+            <button id="downloadBtn" class="download-button" style="display:none; margin-top: 25px;">
+                <i class="fas fa-download"></i> تحميل الصورة المُعدَّلة
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        
+        // **************************************************
+        // المتغيرات
+        // **************************************************
+        const fileInput = document.getElementById('fileInput');
+        const canvas = document.getElementById('imageCanvas');
+        const ctx = canvas.getContext('2d');
+        const widthInput = document.getElementById('widthInput');
+        const heightInput = document.getElementById('heightInput');
+        const resizeBtn = document.getElementById('resizeBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const originalWidthSpan = document.getElementById('originalWidth');
+        const originalHeightSpan = document.getElementById('originalHeight');
+        
+        let originalImage = null;
+        let aspectRatio = 1;
+
+        // **************************************************
+        // الدوال الأساسية
+        // **************************************************
+
+        // 1. الدالة المسؤولة عن تحميل الصورة
+        function handleFileSelect(e) {
+            const file = e.target.files[0];
+            if (!file || !file.type.startsWith('image/')) {
+                alert("الرجاء اختيار ملف صورة صحيح.");
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const img = new Image();
+                img.onload = () => {
+                    originalImage = img;
+                    
+                    // عرض الأبعاد الأصلية
+                    originalWidthSpan.textContent = img.width;
+                    originalHeightSpan.textContent = img.height;
+                    
+                    // حساب نسبة الأبعاد (Aspect Ratio)
+                    aspectRatio = img.width / img.height;
+                    
+                    // تفعيل المدخلات والأزرار
+                    widthInput.disabled = false;
+                    heightInput.disabled = false;
+                    resizeBtn.disabled = false;
+                    
+                    // إعادة ضبط الأبعاد الافتراضية
+                    widthInput.value = img.width;
+                    heightInput.value = img.height;
+                    
+                    // رسم الصورة الأصلية في Canvas للمعاينة
+                    drawPreview(img.width, img.height);
+                    
+                    // إخفاء زر التحميل مؤقتاً
+                    downloadBtn.style.display = 'none';
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        // 2. دالة رسم الصورة على Canvas (للمعاينة)
+        function drawPreview(width, height) {
+            // نستخدم أبعاد صغيرة للمعاينة لضمان السرعة والعرض المناسب في شاشة المتصفح
+            const maxWidth = 500;
+            const maxHeight = 400;
+            
+            let previewWidth = width;
+            let previewHeight = height;
+            
+            if (width > maxWidth) {
+                previewWidth = maxWidth;
+                previewHeight = maxWidth / aspectRatio;
+            }
+            if (previewHeight > maxHeight) {
+                previewHeight = maxHeight;
+                previewWidth = maxHeight * aspectRatio;
+            }
+
+            canvas.width = previewWidth;
+            canvas.height = previewHeight;
+            canvas.style.display = 'block';
+            
+            // مسح الـ Canvas قبل الرسم
+            ctx.clearRect(0, 0, previewWidth, previewHeight); 
+            ctx.drawImage(originalImage, 0, 0, previewWidth, previewHeight);
+        }
+
+        // 3. دالة تعديل الأبعاد للحفاظ على نسبة العرض (عند تعديل العرض)
+        function handleWidthChange() {
+            const newWidth = parseInt(widthInput.value);
+            if (newWidth > 0 && originalImage) {
+                heightInput.value = Math.round(newWidth / aspectRatio);
+                drawPreview(newWidth, Math.round(newWidth / aspectRatio));
+            }
+        }
+
+        // 4. دالة تعديل الأبعاد للحفاظ على نسبة العرض (عند تعديل الارتفاع)
+        function handleHeightChange() {
+            const newHeight = parseInt(heightInput.value);
+            if (newHeight > 0 && originalImage) {
+                widthInput.value = Math.round(newHeight * aspectRatio);
+                drawPreview(Math.round(newHeight * aspectRatio), newHeight);
+            }
+        }
+        
+        // 5. دالة تنفيذ تغيير الحجم والتحميل
+        function resizeAndDownload() {
+            if (!originalImage) return;
+
+            const finalWidth = parseInt(widthInput.value);
+            const finalHeight = parseInt(heightInput.value);
+
+            if (finalWidth <= 0 || finalHeight <= 0) {
+                alert("الأبعاد يجب أن تكون أكبر من صفر.");
+                return;
+            }
+
+            // إنشاء Canvas جديد للمعالجة النهائية (لضمان الدقة العالية)
+            const finalCanvas = document.createElement('canvas');
+            finalCanvas.width = finalWidth;
+            finalCanvas.height = finalHeight;
+            const finalCtx = finalCanvas.getContext('2d');
+            
+            // رسم الصورة بالحجم الجديد
+            finalCtx.drawImage(originalImage, 0, 0, finalWidth, finalHeight);
+
+            // التحويل إلى ملف وإطلاق التحميل
+            finalCanvas.toBlob((blob) => {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                // اسم الملف
+                a.download = `resized-${finalWidth}x${finalHeight}.png`; 
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                // إظهار زر التحميل مرة أخرى للإشارة للنجاح
+                downloadBtn.style.display = 'block';
+            }, 'image/png'); // يمكن تغييرها إلى 'image/jpeg' إذا أردت
+        }
+
+
+        // **************************************************
+        // ربط الأحداث (Event Listeners)
+        // **************************************************
+        document.addEventListener('DOMContentLoaded', () => {
+            fileInput.addEventListener('change', handleFileSelect);
+            widthInput.addEventListener('input', handleWidthChange);
+            heightInput.addEventListener('input', handleHeightChange);
+            resizeBtn.addEventListener('click', resizeAndDownload);
+            downloadBtn.addEventListener('click', resizeAndDownload); // يمكن ربط التحميل بنفس الدالة
+        });
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({
+            pageLanguage: 'ar', 
+            includedLanguages: 'ar,en', 
+            autoDisplay: false
+        }, 'google_translate_element');
+    }
+
+    // 2. دالة التعامل مع الكوكيز (عشان يحفظ اللغة)
+    function setCookie(key, value, expiry) {
+        var expires = new Date();
+        expires.setTime(expires.getTime() + (expiry * 24 * 60 * 60 * 1000));
+        document.cookie = key + '=' + value + ';expires=' + expires.toUTCString() + ';path=/';
+    }
+
+    function getCookie(key) {
+        var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
+        return keyValue ? keyValue[2] : null;
+    }
+
+    // 3. دالة التبديل عند الضغط على الزر
+    function toggleLanguage() {
+        var currentLang = getCookie('googtrans');
+        
+        if (currentLang && currentLang.indexOf('/en') > -1) {
+            // لو هو إنجليزي -> رجعه عربي
+            setCookie('googtrans', '/ar/ar', 1);
+            window.location.reload();
+        } else {
+            // لو هو عربي -> خليه إنجليزي
+            setCookie('googtrans', '/ar/en', 1);
+            window.location.reload();
+        }
+    }
+
+    // 4. الكود اللي بيشتغل أول ما الصفحة تحمل
+    document.addEventListener('DOMContentLoaded', function() {
+        var currentLang = getCookie('googtrans');
+        var langText = document.getElementById('lang-text');
+        
+        // لو الكوكيز بتقول إننا إنجليزي
+        if (currentLang && currentLang.indexOf('/en') > -1) {
+            document.body.classList.add('ltr-mode'); // فعل كلاس الإنجليزي
+            if(langText) langText.innerText = "Ar";   // غير الكلمة لـ Ar
+        } else {
+            // لو عربي
+            document.body.classList.remove('ltr-mode');
+            if(langText) langText.innerText = "En";
+        }
+    });
+</script>
+
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    </script>
+</body>
+</html>

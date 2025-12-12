@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File compressor</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="shortcut icon" href="logo-192x192.png" type="image/x-icon">
+    <style>
+        /* -------------------------------------------------------------------------- */
+        /* 1. متغيرات الألوان والتصميم (Mtech Vision) */
+        /* -------------------------------------------------------------------------- */
+        :root {
+            --bg-dark: #0f2541;
+            --bg-light: #d8eaff;
+            --card-dark: rgb(7, 36, 75);
+            --card-light: rgba(255, 255, 255, 0.9);
+            --text-dark: #ffffff;
+            --text-light: #020f20;
+            --accent-dark: #007ce9; 
+            --accent-light: #095faa;
+            --muted-dark: rgba(255, 255, 255, 0.7);
+            --transition-speed: .4s;
+            --primary-btn: var(--accent-dark);
+        }
+
+        /* -------------------------------------------------------------------------- */
+        /* 2. Base Styles and Layout */
+        /* -------------------------------------------------------------------------- */
+          body {
+            font-family: 'Cairo', sans-serif;
+            margin: 0;
+            padding: 18px;
+            background: var(--bg-dark);
+            color: var(--text-dark);
+            transition: all var(--transition-speed) ease;
+            direction: rtl;
+            font-size: 16px;
+        }
+
+        body.light {
+            background: var(--bg-light);
+            color: var(--text-light);
+        }
+
+        .site {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px;
+            border-radius: 14px;
+            background: rgba(2, 37, 90, 0);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all var(--transition-speed);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            margin-bottom: 20px;
+        }
+
+        body.light header {
+            background: rgba(255, 255, 255, 0.4);
+            border-color: #ddd;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: var(--accent-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            color: #000;
+        }
+
+        body.light .logo {
+            background: var(--accent-light);
+            color: #fff;
+        }
+
+        .brand h1 {
+            font-size: 18px;
+            margin: 0;
+        }
+        
+
+        /* -------------------------------------------------------------------------- */
+        /* 3. Controls and Input Styling */
+        /* -------------------------------------------------------------------------- */
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        /* تصميم زر الرفع (إخفاء الـ input واستبداله بزر مخصص) */
+        .file-upload-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .file-upload-wrapper input[type=file] {
+            font-size: 100px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .custom-file-upload {
+            border: 2px dashed var(--muted-dark);
+            color: var(--muted-dark);
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            text-align: center;
+            font-size: 1.1em;
+        }
+
+        .file-upload-wrapper:hover .custom-file-upload {
+            border-color: var(--accent-dark);
+            color: var(--accent-dark);
+        }
+
+        /* معلومات الملف (قبل وبعد) */
+        .file-info {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            color: var(--muted-dark);
+        }
+        
+        body.light .file-info {
+            background: #f0f0f0;
+            color: var(--text-light);
+        }
+        
+        .file-info p {
+            margin: 5px 0;
+            font-weight: 500;
+        }
+        
+        .success-text {
+            color: #28a745; 
+            font-weight: 700;
+        }
+        
+        /* زر التحويل */
+        .btn-primary {
+            background: var(--primary-btn);
+            color: var(--text-light); 
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 10px rgba(0, 124, 233, 0.3);
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        .btn-primary:hover {
+            background: #0093ff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 124, 233, 0.4);
+        }
+
+        /* -------------------------------------------------------------------------- */
+        /* 4. زر تبديل الثيم */
+        /* -------------------------------------------------------------------------- */
+        .mode-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 6px 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            color: inherit;
+            transition: all var(--transition-speed);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            font-size: 1.2rem;
+        }
+
+        body.light .mode-btn {
+            border-color: #aaa;
+            color: var(--text-light);
+        }
+                .back-arrow-button {
+    /* جعل الزر مربعًا متساوي الأبعاد */
+    width: 50px;
+    height: 50px;
+    
+    /* توسيط محتوى السهم */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* خصائص النص (للسهم) */
+    font-size: 1.5rem; /* حجم السهم */
+    line-height: 1; /* للتأكد من توسيط الرمز */
+    
+    /* جعله دائريًا */
+    border-radius: 50%;
+    
+    /* تحديد موقع الزر (ثابت في الزاوية العلوية اليمنى) */
+.back-arrow-button {
+    position: fixed;
+    top: 20px;
+    left: 20px; /* <--- قم بتغييرها إلى LEFT */
+    /* قم بإزالة أو التعليق على خاصية right: 20px; */
+    z-index: 1000;
+}
+}
+
+/* ---------------------------------------------------- */
+/* تأثير Liquid Glass (تم تطبيقه على .liquid-glass) */
+/* ---------------------------------------------------- */
+.liquid-glass {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    
+    /* تأثير الزجاج: خلفية شبه شفافة مع تغبيش */
+    background: rgba(255, 255, 255, 0.15); /* أبيض شبه شفاف */
+    backdrop-filter: blur(10px) saturate(180%);
+    -webkit-backdrop-filter: blur(10px) saturate(180%);
+
+    /* الحدود والتظليل */
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2), 
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+
+    /* خصائص النص (السهم) */
+    color: white;
+    font-weight: bold;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+/* تأثير التفاعل (Hover) */
+.liquid-glass:hover {
+    backdrop-filter: blur(15px) saturate(200%);
+    -webkit-backdrop-filter: blur(15px) saturate(200%);
+    box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.3), 
+                0 0 0 1px rgba(255, 255, 255, 0.5);
+    transform: scale(1.05); /* تكبير بسيط عند المرور يعطي تأثير الحركة */
+}
+
+    </style>
+</head>
+<body class="dark">
+
+
+    <div class="site">
+        <header>
+            <div class="brand">
+                <div class="logo">ZIP</div>
+                <h1>ضاغط الملفات</h1>
+            </div>
+                    <div class="background-container">
+        <button class="back-arrow-button liquid-glass" onclick="history.back()">
+            &#10094; 
+        </button>
+    </div>
+        </header>
+        <div class="app-card">
+            
+            <div class="header">
+                <h2>🗜️ ضاغط الملفات العام (.ZIP)</h2>
+                <p style="color: var(--muted-dark);">اضغط أي ملف (PDF, DOCX, TXT) إلى صيغة ZIP لتقليل حجمه.</p>
+            </div>
+
+            <div class="form-group">
+                <label for="file-upload">اختر ملف (أي صيغة):</label>
+                <div class="file-upload-wrapper">
+                    <input type="file" id="file-upload" onchange="handleFileSelect(this.files)">
+                    <div id="file-name-display" class="custom-file-upload">
+                         <i class="fas fa-file-upload"></i> اضغط لرفع ملف
+                    </div>
+                </div>
+            </div>
+
+            <div id="original-info" class="file-info" style="display: none;">
+                <p>الاسم الأصلي: <span id="original-name"></span></p>
+                <p>الحجم الأصلي: <span id="original-size"></span></p>
+            </div>
+            
+            <button class="btn-primary" onclick="compressFile()" id="compress-btn" disabled>
+                <i class="fas fa-compress-alt"></i> ابدأ الضغط بأقصى كفاءة
+            </button>
+            
+            <div id="compressed-info" class="file-info" style="display: none;">
+                <p class="success-text"><i class="fas fa-check-circle"></i> تم الضغط بنجاح!</p>
+                <p>الحجم بعد الضغط: <span id="compressed-size"></span></p>
+                <p>توفير في الحجم: <span id="saving-percent"></span></p>
+            </div>
+            
+        </div>
+    </div>
+
+    <script>
+        // *************** إعدادات عامة ***************
+        let originalFile = null;
+        
+        const fileInput = document.getElementById('file-upload');
+        const fileNameDisplay = document.getElementById('file-name-display');
+        const compressBtn = document.getElementById('compress-btn');
+
+        // عناصر عرض المعلومات
+        const originalInfoDiv = document.getElementById('original-info');
+        const compressedInfoDiv = document.getElementById('compressed-info');
+
+        // *************** وظائف مساعدة ***************
+
+        function formatBytes(bytes, decimals = 2) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const dm = decimals < 0 ? 0 : decimals;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+        }
+
+        // *************** معالجة اختيار الملف ***************
+        function handleFileSelect(files) {
+            if (files.length === 0) return;
+            
+            const file = files[0];
+            originalFile = file;
+            
+            fileNameDisplay.innerHTML = `<i class="fas fa-file-alt"></i> تم اختيار: ${file.name}`;
+            
+            document.getElementById('original-name').innerText = file.name;
+            document.getElementById('original-size').innerText = formatBytes(file.size);
+            originalInfoDiv.style.display = 'block';
+            compressedInfoDiv.style.display = 'none';
+            compressBtn.disabled = false;
+        }
+
+        // *************** وظيفة الضغط الأساسية (باستخدام JSZip) ***************
+        async function compressFile() {
+            if (!originalFile) {
+                alertUser('من فضلك اختر ملف للضغط أولاً.', 'warning');
+                return;
+            }
+            
+            alertUser('جاري ضغط الملف... الرجاء الانتظار.', 'processing');
+            compressBtn.disabled = true;
+
+            const zip = new JSZip();
+            
+            // إضافة الملف إلى كائن ZIP وتحديد أعلى مستوى ضغط (DEFLATE - level 9)
+            zip.file(originalFile.name, originalFile, { 
+                compression: "DEFLATE",
+                compressionOptions: { level: 9 } 
+            });
+
+            try {
+                // توليد ملف ZIP النهائي كـ Blob
+                const compressedBlob = await zip.generateAsync({
+                    type: "blob",
+                    mimeType: "application/zip"
+                });
+
+                const compressedSize = compressedBlob.size;
+                const originalSize = originalFile.size;
+                const saving = 100 - (compressedSize / originalSize) * 100;
+                
+                // عرض النتيجة
+                document.getElementById('compressed-size').innerText = formatBytes(compressedSize);
+                document.getElementById('saving-percent').innerText = `${saving.toFixed(1)}%`;
+                compressedInfoDiv.style.display = 'block';
+                
+                // بدء التنزيل
+                const fileName = originalFile.name.split('.')[0] + '_compressed.zip';
+                const url = URL.createObjectURL(compressedBlob);
+                downloadFile(url, fileName);
+                
+                alertUser('تم الضغط بنجاح! جاري تنزيل ملف ZIP.', 'success');
+
+            } catch (error) {
+                console.error("Compression Error:", error);
+                alertUser('حدث خطأ أثناء عملية الضغط.', 'error');
+            } finally {
+                compressBtn.disabled = false;
+            }
+        }
+
+        // *************** وظيفة بدء تنزيل الملف ***************
+        function downloadFile(url, fileName) {
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url); 
+        }
+        
+        // *************** وظيفة إشعار المستخدم (نفس التصميم) ***************
+        function alertUser(message, type) {
+            const existingAlert = document.getElementById('custom-alert');
+            if (existingAlert) existingAlert.remove();
+            
+            const alertDiv = document.createElement('div');
+            alertDiv.id = 'custom-alert';
+            alertDiv.innerHTML = message;
+            
+            let bgColor = '#28a745'; 
+            let textColor = 'white';
+            if (type === 'error' || type === 'warning') bgColor = '#e91e63';
+            if (type === 'processing') {
+                bgColor = '#ffc107'; 
+                textColor = 'black';
+            }
+            
+            alertDiv.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background-color: ${bgColor};
+                color: ${textColor};
+                padding: 10px 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+                z-index: 1000;
+                font-family: 'Cairo', sans-serif;
+                opacity: 0;
+                transition: opacity 0.5s;
+                direction: rtl;
+            `;
+            
+            document.body.appendChild(alertDiv);
+            
+            setTimeout(() => { alertDiv.style.opacity = 1; }, 50);
+            
+            if (type !== 'processing') {
+                setTimeout(() => {
+                    alertDiv.style.opacity = 0;
+                    setTimeout(() => alertDiv.remove(), 500);
+                }, 3000);
+            }
+        }
+
+
+        // *************** منطق تبديل الثيم ***************
+        function toggleTheme() {
+            const body = document.body;
+            const icon = document.getElementById('theme-icon');
+            body.classList.toggle('light');
+
+            if (body.classList.contains('light')) {
+                icon.className = 'fas fa-moon'; 
+                localStorage.setItem('theme', 'light');
+            } else {
+                icon.className = 'fas fa-sun'; 
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // تطبيق الثيم المحفوظ عند التحميل
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            if (savedTheme === 'light') {
+                document.body.classList.add('light');
+                document.getElementById('theme-icon').className = 'fas fa-moon';
+            } else {
+                 document.getElementById('theme-icon').className = 'fas fa-sun';
+            }
+        });
+            function googleTranslateElementInit() {
+        new google.translate.TranslateElement({
+            pageLanguage: 'ar', 
+            includedLanguages: 'ar,en', 
+            autoDisplay: false
+        }, 'google_translate_element');
+    }
+
+    // 2. دالة التعامل مع الكوكيز (عشان يحفظ اللغة)
+    function setCookie(key, value, expiry) {
+        var expires = new Date();
+        expires.setTime(expires.getTime() + (expiry * 24 * 60 * 60 * 1000));
+        document.cookie = key + '=' + value + ';expires=' + expires.toUTCString() + ';path=/';
+    }
+
+    function getCookie(key) {
+        var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
+        return keyValue ? keyValue[2] : null;
+    }
+
+    // 3. دالة التبديل عند الضغط على الزر
+    function toggleLanguage() {
+        var currentLang = getCookie('googtrans');
+        
+        if (currentLang && currentLang.indexOf('/en') > -1) {
+            // لو هو إنجليزي -> رجعه عربي
+            setCookie('googtrans', '/ar/ar', 1);
+            window.location.reload();
+        } else {
+            // لو هو عربي -> خليه إنجليزي
+            setCookie('googtrans', '/ar/en', 1);
+            window.location.reload();
+        }
+    }
+
+    // 4. الكود اللي بيشتغل أول ما الصفحة تحمل
+    document.addEventListener('DOMContentLoaded', function() {
+        var currentLang = getCookie('googtrans');
+        var langText = document.getElementById('lang-text');
+        
+        // لو الكوكيز بتقول إننا إنجليزي
+        if (currentLang && currentLang.indexOf('/en') > -1) {
+            document.body.classList.add('ltr-mode'); // فعل كلاس الإنجليزي
+            if(langText) langText.innerText = "Ar";   // غير الكلمة لـ Ar
+        } else {
+            // لو عربي
+            document.body.classList.remove('ltr-mode');
+            if(langText) langText.innerText = "En";
+        }
+    });
+</script>
+
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+    </script>
+</body>
+</html>

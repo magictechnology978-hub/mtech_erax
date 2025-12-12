@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Generator</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.0.4/jsQR.min.js"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="shortcut icon" href="logo-192x192.png" type="image/x-icon">
+    <style>
+        /* -------------------------------------------------------------------------- */
+        /* 1. متغيرات الألوان والتصميم (Mtech Vision) */
+        /* -------------------------------------------------------------------------- */
+        :root {
+            --bg-dark: #0f2541;
+            --bg-light: #d8eaff;
+            --card-dark: rgb(7, 36, 75);
+            --card-light: rgba(255, 255, 255, 0.9);
+            --text-dark: #ffffff;
+            --text-light: #020f20;
+            --accent-dark: #007ce9; 
+            --accent-light: #095faa;
+            --muted-dark: rgba(255, 255, 255, 0.7);
+            --transition-speed: .4s;
+            --primary-btn: var(--accent-dark);
+            --secondary-btn: #3e4c6c; 
+            --clear-color-base: #e91e63;
+        }
+
+        /* -------------------------------------------------------------------------- */
+        /* 2. Base Styles and Layout */
+        /* -------------------------------------------------------------------------- */
+              body {
+            font-family: 'Cairo', sans-serif;
+            margin: 0;
+            padding: 18px;
+            background: var(--bg-dark);
+            color: var(--text-dark);
+            transition: all var(--transition-speed) ease;
+            direction: rtl;
+            font-size: 16px;
+        }
+
+        body.light {
+            background: var(--bg-light);
+            color: var(--text-light);
+        }
+
+        .site {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px;
+            border-radius: 14px;
+            background: rgba(2, 37, 90, 0);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all var(--transition-speed);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            margin-bottom: 20px;
+        }
+
+        body.light header {
+            background: rgba(255, 255, 255, 0.4);
+            border-color: #ddd;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: var(--accent-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            color: #000;
+        }
+
+        body.light .logo {
+            background: var(--accent-light);
+            color: #fff;
+        }
+
+        .brand h1 {
+            font-size: 18px;
+            margin: 0;
+        }
+        
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .tab-btn {
+            background: transparent;
+            color: var(--muted-dark);
+            border: none;
+            padding: 10px 20px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: color 0.3s, border-bottom 0.3s;
+            border-bottom: 2px solid transparent;
+            font-weight: 600;
+        }
+
+        .tab-btn.active {
+            color: var(--accent-dark);
+            border-bottom: 2px solid var(--accent-dark);
+        }
+        
+        body.light .tab-btn.active {
+            color: var(--accent-light);
+            border-bottom: 2px solid var(--accent-light);
+        }
+
+        .tab-content {
+            display: none;
+            padding-top: 20px;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* -------------------------------------------------------------------------- */
+        /* 3. Input and Button Styles */
+        /* -------------------------------------------------------------------------- */
+        textarea { /* المولد */
+            width: 90%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: #1a202c;
+            color: var(--text-dark);
+            font-size: 16px;
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        body.light textarea {
+            background: #f0f0f0;
+            color: var(--text-light);
+            border-color: #ccc;
+        }
+        
+        .btn-primary { /* توليد وتحميل */
+            background: var(--primary-btn);
+            color: var(--text-light); 
+            padding: 12px 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 124, 233, 0.3);
+        }
+        
+        .btn-primary:hover {
+            background: #0093ff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 124, 233, 0.4);
+        }
+        
+        .btn-secondary { /* قارئ (اختر صورة) */
+            background: var(--secondary-btn);
+            color: var(--text-dark); 
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s;
+        }
+        
+        body.light .btn-secondary {
+            background: #ccc;
+            color: var(--text-light);
+        }
+        
+        .btn-secondary:hover {
+            background: #4e5d80;
+        }
+
+        /* -------------------------------------------------------------------------- */
+        /* 4. Output Sections */
+        /* -------------------------------------------------------------------------- */
+        .qr-output {
+             margin-top: 30px;
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        body.light .qr-output {
+            background: #f8f8f8;
+            border-color: #ddd;
+        }
+        
+        #qrcode-container {
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 8px;
+            display: inline-block;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+        }
+        
+        #qrcode-container img, #qrcode-container canvas {
+             width: 250px !important;
+             height: 250px !important;
+        }
+
+        .scan-output {
+            padding: 20px;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.2);
+            margin-top: 20px;
+            border: 1px solid var(--accent-dark);
+            word-break: break-all;
+            min-height: 80px;
+            text-align: right;
+        }
+
+        body.light .scan-output {
+             background: #fff;
+             color: var(--text-light);
+        }
+
+        .scan-output p {
+            font-weight: 700;
+            margin-top: 0;
+            color: var(--accent-dark);
+        }
+        
+        .scan-output span {
+            color: var(--text-dark);
+            display: block;
+            margin-top: 10px;
+            font-size: 1.1em;
+        }
+        
+        body.light .scan-output span {
+            color: var(--text-light);
+        }
+        
+        .hidden { display: none !important; }
+        
+        /* -------------------------------------------------------------------------- */
+        /* 5. زر تبديل الثيم */
+        /* -------------------------------------------------------------------------- */
+        .mode-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 6px 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            color: inherit;
+            transition: all var(--transition-speed);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            font-size: 1.2rem;
+        }
+        
+        body.light .mode-btn {
+            border-color: #aaa;
+            color: var(--text-light);
+        }
+        
+        .btn-base {
+            border: none;
+            font-size: 1.1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
+        }
+                .back-arrow-button {
+    /* جعل الزر مربعًا متساوي الأبعاد */
+    width: 50px;
+    height: 50px;
+    
+    /* توسيط محتوى السهم */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* خصائص النص (للسهم) */
+    font-size: 1.5rem; /* حجم السهم */
+    line-height: 1; /* للتأكد من توسيط الرمز */
+    
+    /* جعله دائريًا */
+    border-radius: 50%;
+    
+    /* تحديد موقع الزر (ثابت في الزاوية العلوية اليمنى) */
+.back-arrow-button {
+    position: fixed;
+    top: 20px;
+    left: 20px; /* <--- قم بتغييرها إلى LEFT */
+    /* قم بإزالة أو التعليق على خاصية right: 20px; */
+    z-index: 1000;
+}
+}
+
+/* ---------------------------------------------------- */
+/* تأثير Liquid Glass (تم تطبيقه على .liquid-glass) */
+/* ---------------------------------------------------- */
+.liquid-glass {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    
+    /* تأثير الزجاج: خلفية شبه شفافة مع تغبيش */
+    background: rgba(255, 255, 255, 0.15); /* أبيض شبه شفاف */
+    backdrop-filter: blur(10px) saturate(180%);
+    -webkit-backdrop-filter: blur(10px) saturate(180%);
+
+    /* الحدود والتظليل */
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2), 
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+
+    /* خصائص النص (السهم) */
+    color: white;
+    font-weight: bold;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+/* تأثير التفاعل (Hover) */
+.liquid-glass:hover {
+    backdrop-filter: blur(15px) saturate(200%);
+    -webkit-backdrop-filter: blur(15px) saturate(200%);
+    box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.3), 
+                0 0 0 1px rgba(255, 255, 255, 0.5);
+    transform: scale(1.05); /* تكبير بسيط عند المرور يعطي تأثير الحركة */
+}
+/* التأثير الأساسي للجسم (Body) */
+    </style>
+</head>
+<body class="dark">
+
+    <div class="site">
+        <header>
+            <div class="brand">
+                <div class="logo">QR</div>
+                <h1>QR Code</h1>
+            </div> 
+            <div class="background-container">
+            <button class="back-arrow-button liquid-glass" onclick="history.back()">
+            &#10094; 
+            </button>
+    </div>
+        </header>
+
+        <div class="app-card">
+            
+            <div class="header">
+                <h2>⚡ مولد وقارئ أكواد QR</h2>
+                <p style="color: var(--muted-dark);">حوّل النص إلى كود أو اقرأ كود من صورة.</p>
+            </div>
+
+            <div class="tabs">
+                <button class="tab-btn active" onclick="openTab('generator')"><i class="fas fa-magic"></i> توليد الكود</button>
+                <button class="tab-btn" onclick="openTab('scanner')"><i class="fas fa-camera"></i> قراءة الكود</button>
+            </div>
+            
+            <div id="generator" class="tab-content active">
+                <div class="form-group">
+                    <label for="qr-data">أدخل النص أو الرابط:</label>
+                    <textarea id="qr-data" placeholder="اكتب النص، الرابط، أو أي معلومة تريد تحويلها..."></textarea>
+                </div>
+                
+                <button class="btn-primary btn-base" style="width: 100%;" onclick="generateQrCode()">
+                    <i class="fas fa-qrcode"></i> توليد كود QR
+                </button>
+                
+                <div id="qr-output" class="qr-output hidden">
+                    <div id="qrcode-container">
+                        </div>
+                    <button id="download-btn" class="btn-primary btn-base" onclick="downloadQrCode()" style="margin-top: 15px; max-width: 250px;">
+                        <i class="fas fa-download"></i> تحميل الصورة
+                    </button>
+                </div>
+            </div>
+            
+            <div id="scanner" class="tab-content">
+                <div class="form-group" style="text-align: center;">
+                    <label for="qr-image" style="color: var(--muted-dark);">اختر صورة كود QR من جهازك:</label>
+                    <input type="file" id="qr-image" accept="image/*" style="display: none;" onchange="readQrCode(event)">
+                    <button class="btn-secondary btn-base" onclick="document.getElementById('qr-image').click()">
+                        <i class="fas fa-image"></i> اختيار صورة
+                    </button>
+                </div>
+                
+                <div style="text-align: center; margin-top: 15px;">
+                    <img id="scanned-image-preview" class="hidden" style="max-width: 100%; height: auto; border-radius: 8px; border: 1px solid #ccc;">
+                </div>
+
+                <div id="scan-result" class="scan-output hidden">
+                    <p>النتيجة:</p>
+                    <span id="scan-data">لم يتم قراءة أي كود بعد.</span>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <script>
+        // *************** إعدادات عامة ***************
+        let qrcode;
+        const qrDataInput = document.getElementById('qr-data');
+        const qrOutput = document.getElementById('qr-output');
+        const qrcodeContainer = document.getElementById('qrcode-container');
+        const scanResultDiv = document.getElementById('scan-result');
+        const scanDataSpan = document.getElementById('scan-data');
+        const imagePreview = document.getElementById('scanned-image-preview');
+
+        // *************** منطق التبويبات (Tabs) ***************
+        function openTab(tabName) {
+            const contents = document.querySelectorAll('.tab-content');
+            const buttons = document.querySelectorAll('.tab-btn');
+
+            contents.forEach(content => content.classList.remove('active'));
+            buttons.forEach(button => button.classList.remove('active'));
+
+            document.getElementById(tabName).classList.add('active');
+            document.querySelector(`.tab-btn[onclick*="${tabName}"]`).classList.add('active');
+            
+            if (tabName === 'scanner') {
+                scanResultDiv.classList.add('hidden');
+                imagePreview.classList.add('hidden');
+                scanDataSpan.innerText = 'لم يتم قراءة أي كود بعد.';
+            }
+        }
+
+        // *************** 1. وظائف توليد الكود (Generator Functions) ***************
+        function generateQrCode() {
+            const data = qrDataInput.value.trim();
+            if (!data) {
+                alertUser('من فضلك أدخل نص أو رابط أولاً.', 'warning');
+                return;
+            }
+
+            qrcodeContainer.innerHTML = '';
+            qrOutput.classList.remove('hidden');
+
+            qrcode = new QRCode(qrcodeContainer, {
+                text: data,
+                width: 250,
+                height: 250,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+            
+            alertUser('تم توليد كود QR بنجاح!', 'success');
+        }
+
+        function downloadQrCode() {
+            if (!qrcode) return;
+            const canvas = qrcodeContainer.querySelector('canvas');
+            
+            if (canvas) {
+                const imageUrl = canvas.toDataURL("image/png");
+                const link = document.createElement('a');
+                link.href = imageUrl;
+                link.download = 'qrcode_mtech_vision.png';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } else {
+                 alertUser('عفواً، لا يمكن تحميل الكود. حاول استخدام متصفح آخر.', 'error');
+            }
+        }
+        
+        // *************** 2. وظيفة قراءة الكود (Scanner Function) - تم تحديثها ***************
+        function readQrCode(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            scanResultDiv.classList.remove('hidden');
+            scanDataSpan.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحليل...';
+            imagePreview.classList.add('hidden'); // إخفاء البريفيو حتى يتم تحميل الصورة الجديدة
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    // عرض الصورة المختارة
+                    imagePreview.src = img.src;
+                    imagePreview.classList.remove('hidden');
+
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    
+                    // تحديد حجم الكانفاس ليكون كبيراً (لتحسين دقة القراءة)
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    
+                    // رسم الصورة على الكانفاس
+                    ctx.drawImage(img, 0, 0, img.width, img.height);
+                    
+                    // الحصول على بيانات البكسل
+                    const imageData = ctx.getImageData(0, 0, img.width, img.height);
+                    
+                    // استخدام مكتبة jsQR
+                    const code = jsQR(imageData.data, imageData.width, imageData.height, {
+                        // محاولة عكس الألوان لتحسين القراءة في بعض الحالات
+                        inversionAttempts: "attemptBoth", 
+                    });
+
+                    scanResultDiv.classList.remove('hidden');
+                    
+                    if (code) {
+                        scanDataSpan.innerText = code.data;
+                        alertUser('تم قراءة الكود بنجاح!', 'success');
+                        
+                        // محاولة فتح الرابط إذا كان URL
+                        if (code.data.startsWith('http')) {
+                            scanDataSpan.innerHTML += `<br><a href="${code.data}" target="_blank" style="color: var(--accent-dark); font-weight: 600;">فتح الرابط</a>`;
+                        }
+                    } else {
+                        scanDataSpan.innerText = 'لم يتم العثور على كود QR في الصورة. تأكد أن الكود واضح وغير مشوش.';
+                        alertUser('فشل القراءة.', 'error');
+                    }
+                };
+                img.onerror = function() {
+                    scanDataSpan.innerText = 'حدث خطأ في تحميل الصورة.';
+                    alertUser('خطأ في تحميل الصورة.', 'error');
+                }
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // *************** وظيفة إشعار المستخدم ***************
+        function alertUser(message, type) {
+            const existingAlert = document.getElementById('custom-alert');
+            if (existingAlert) existingAlert.remove();
+            
+            const alertDiv = document.createElement('div');
+            alertDiv.id = 'custom-alert';
+            alertDiv.innerText = message;
+            
+            const bgColor = type === 'success' ? '#28a745' : '#e91e63';
+            
+            alertDiv.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background-color: ${bgColor};
+                color: white;
+                padding: 10px 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+                z-index: 1000;
+                font-family: 'Cairo', sans-serif;
+                opacity: 0;
+                transition: opacity 0.5s;
+                direction: rtl;
+            `;
+            
+            document.body.appendChild(alertDiv);
+            
+            setTimeout(() => {
+                alertDiv.style.opacity = 1;
+            }, 50);
+            
+            setTimeout(() => {
+                alertDiv.style.opacity = 0;
+                setTimeout(() => alertDiv.remove(), 500);
+            }, 3000);
+        }
+
+        // *************** منطق تبديل الثيم ***************
+        function toggleTheme() {
+            const body = document.body;
+            const icon = document.getElementById('theme-icon');
+            body.classList.toggle('light');
+
+            if (body.classList.contains('light')) {
+                icon.className = 'fas fa-moon'; 
+                localStorage.setItem('theme', 'light');
+            } else {
+                icon.className = 'fas fa-sun'; 
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // تطبيق الثيم المحفوظ عند التحميل
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            if (savedTheme === 'light') {
+                document.body.classList.add('light');
+                document.getElementById('theme-icon').className = 'fas fa-moon';
+            } else {
+                 document.getElementById('theme-icon').className = 'fas fa-sun';
+            }
+            openTab('generator');
+        });
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({
+            pageLanguage: 'ar', 
+            includedLanguages: 'ar,en', 
+            autoDisplay: false
+        }, 'google_translate_element');
+    }
+
+    // 2. دالة التعامل مع الكوكيز (عشان يحفظ اللغة)
+    function setCookie(key, value, expiry) {
+        var expires = new Date();
+        expires.setTime(expires.getTime() + (expiry * 24 * 60 * 60 * 1000));
+        document.cookie = key + '=' + value + ';expires=' + expires.toUTCString() + ';path=/';
+    }
+
+    function getCookie(key) {
+        var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
+        return keyValue ? keyValue[2] : null;
+    }
+
+    // 3. دالة التبديل عند الضغط على الزر
+    function toggleLanguage() {
+        var currentLang = getCookie('googtrans');
+        
+        if (currentLang && currentLang.indexOf('/en') > -1) {
+            // لو هو إنجليزي -> رجعه عربي
+            setCookie('googtrans', '/ar/ar', 1);
+            window.location.reload();
+        } else {
+            // لو هو عربي -> خليه إنجليزي
+            setCookie('googtrans', '/ar/en', 1);
+            window.location.reload();
+        }
+    }
+
+    // 4. الكود اللي بيشتغل أول ما الصفحة تحمل
+    document.addEventListener('DOMContentLoaded', function() {
+        var currentLang = getCookie('googtrans');
+        var langText = document.getElementById('lang-text');
+        
+        // لو الكوكيز بتقول إننا إنجليزي
+        if (currentLang && currentLang.indexOf('/en') > -1) {
+            document.body.classList.add('ltr-mode'); // فعل كلاس الإنجليزي
+            if(langText) langText.innerText = "Ar";   // غير الكلمة لـ Ar
+        } else {
+            // لو عربي
+            document.body.classList.remove('ltr-mode');
+            if(langText) langText.innerText = "En";
+        }
+    });
+</script>
+
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    </script>
+</body>
+</html>

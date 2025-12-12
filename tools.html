@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tools</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="shortcut icon" href="logo-192x192.png" type="image/x-icon">
+    
+    <style>
+        /* الألوان والمتغيرات الأساسية من الموقع المرفوع */
+        :root {
+            --bg-dark: #0f2541;
+            --bg-light: #d8eaff;
+            --card-dark: rgb(7, 36, 75);
+            --card-light: rgba(255, 255, 255, 0.9);
+            --text-dark: #ffffff;
+            --text-light: #020f20;
+            --accent-dark: #007ce9;
+            --accent-light: #095faa;
+            --muted-dark: rgba(255, 255, 255, 0.85);
+            --muted-light: #555;
+            --transition-speed: .4s;
+            --transition: .32s;
+        }
+
+        /* Reset & Body */
+        body {
+            font-family: 'Cairo', sans-serif;
+            margin: 0;
+            padding: 18px;
+            background: var(--bg-dark);
+            color: var(--text-dark);
+            transition: all var(--transition-speed) ease;
+            scroll-behavior: smooth;
+            direction: rtl;
+            font-size: 16px;
+        }
+
+        body.light {
+            background: var(--bg-light);
+            color: var(--text-light);
+        }
+
+        /* Container */
+        .site {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Header (مبسط) */
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px;
+            border-radius: 14px;
+            background: rgba(2, 37, 90, 0);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all var(--transition-speed);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            margin-bottom: 20px;
+        }
+
+        body.light header {
+            background: rgba(255, 255, 255, 0.4);
+            border-color: #ddd;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: var(--accent-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            color: #000;
+            transition: all var(--transition-speed);
+        }
+
+        body.light .logo {
+            background: var(--accent-light);
+            color: #fff;
+        }
+
+        .brand h1 {
+            font-size: 18px;
+            margin: 0;
+        }
+
+        .mode-btn {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 6px 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            color: inherit;
+            transition: all var(--transition-speed);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            font-size: 1.2rem;
+        }
+
+        body.light .mode-btn {
+            border-color: #aaa;
+        }
+
+        /* Card Style */
+        .app-card {
+            background: var(--card-dark);
+            border-radius: 14px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: center;
+            transition: all var(--transition-speed);
+            margin: 20px auto;
+        }
+
+        body.light .app-card {
+            background: var(--card-light);
+            border-color: #ddd;
+        }
+
+        .content-section {
+            padding: 15px;
+            text-align: right;
+        }
+
+        h2 {
+            font-size: 30px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--accent-dark);
+            text-align: center;
+        }
+
+        body.light h2 {
+            color: var(--accent-light);
+        }
+
+        .muted {
+            font-size: 15px;
+            color: var(--muted-dark);
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        body.light .muted {
+            color: var(--muted-light);
+        }
+        
+        /* Links Grid Style (الأداة اللي بتعرض الأدوات) */
+        .links-list {
+            list-style: none;
+            padding: 0;
+            text-align: center;
+            display: grid;
+            /* عرض 200 بكسل على الأقل لكل عمود وتتوزع تلقائياً */
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+            gap: 15px;
+        }
+
+        .links-list li {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* ظل بسيط */
+            border-radius: 10px;
+        }
+
+        .links-list a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            /* نفس خلفية البطاقة */
+            background: var(--card-dark); 
+            padding: 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            color: var(--text-dark);
+            transition: all var(--transition-speed);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        body.light .links-list a {
+            background: var(--card-light);
+            color: var(--text-light);
+            border-color: #eee;
+        }
+
+        .links-list a:hover {
+            /* تأثير الـ Liquid Glass على الـ Hover */
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            background: var(--accent-dark);
+            color: #000;
+        }
+        
+        body.light .links-list a:hover {
+            background: var(--accent-light);
+            color: #fff;
+        }
+        
+        .links-list a i {
+            font-size: 1.5em;
+        }
+                .back-arrow-button {
+    /* جعل الزر مربعًا متساوي الأبعاد */
+    width: 50px;
+    height: 50px;
+    
+    /* توسيط محتوى السهم */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* خصائص النص (للسهم) */
+    font-size: 1.5rem; /* حجم السهم */
+    line-height: 1; /* للتأكد من توسيط الرمز */
+    
+    /* جعله دائريًا */
+    border-radius: 50%;
+    
+    /* تحديد موقع الزر (ثابت في الزاوية العلوية اليمنى) */
+.back-arrow-button {
+    position: fixed;
+    top: 20px;
+    left: 20px; /* <--- قم بتغييرها إلى LEFT */
+    /* قم بإزالة أو التعليق على خاصية right: 20px; */
+    z-index: 1000;
+}
+}
+
+/* ---------------------------------------------------- */
+/* تأثير Liquid Glass (تم تطبيقه على .liquid-glass) */
+/* ---------------------------------------------------- */
+.liquid-glass {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    
+    /* تأثير الزجاج: خلفية شبه شفافة مع تغبيش */
+    background: rgba(255, 255, 255, 0.15); /* أبيض شبه شفاف */
+    backdrop-filter: blur(10px) saturate(180%);
+    -webkit-backdrop-filter: blur(10px) saturate(180%);
+
+    /* الحدود والتظليل */
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2), 
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+
+    /* خصائص النص (السهم) */
+    color: white;
+    font-weight: bold;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+/* تأثير التفاعل (Hover) */
+.liquid-glass:hover {
+    backdrop-filter: blur(15px) saturate(200%);
+    -webkit-backdrop-filter: blur(15px) saturate(200%);
+    box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.3), 
+                0 0 0 1px rgba(255, 255, 255, 0.5);
+    transform: scale(1.05); /* تكبير بسيط عند المرور يعطي تأثير الحركة */
+}
+/* التأثير الأساسي للجسم (Body) */
+/* New Styles for Search Box and Controls Group */
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #searchBox {
+            /* تصميم Liquid Glass لصندوق البحث */
+            padding: 8px 16px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-dark);
+            outline: none;
+            font-size: 15px;
+            width: 150px; /* عرض قياسي */
+            transition: all var(--transition-speed);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            text-align: right; /* محاذاة النص لليمين */
+        }
+
+        #searchBox::placeholder {
+            color: var(--muted-dark);
+        }
+
+        body.light #searchBox {
+            border-color: #aaa;
+            background: rgba(255, 255, 255, 0.8);
+            color: #000;
+        }
+        
+        /* تعديل خاص لزر تبديل الوضع mode-btn ليتناسق مع Liquid Glass */
+        .mode-btn {
+            background: rgba(255, 255, 255, 0.15); /* لون الخلفية من Liquid Glass */
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            color: inherit;
+            transition: all var(--transition-speed);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            font-size: 1.2rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* إضافة ظل بسيط */
+        }
+        /* لا تنسى أن زر mode-btn هو الآن معه أيضاً كلاس liquid-glass */
+        /* إخفاء شريط جوجل المزعج اللي بيظهر فوق */
+.goog-te-banner-frame {
+    display: none !important;
+}
+body {
+    top: 0px !important;
+}
+
+/* تنسيق زرار اللغة */
+#lang-toggle {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-right: 5px;
+    font-weight: bold;
+}
+
+/* --- تعديلات الوضع الإنجليزي (LTR) --- */
+/* الكلاس ده بنضيفه بالجافاسكريبت لما اللغة تكون إنجليزي */
+body.ltr-mode {
+    direction: ltr !important;
+    text-align: left !important;
+}
+
+/* عكس اتجاهات العناصر في وضع الإنجليزي */
+body.ltr-mode header,
+body.ltr-mode .nav-container, 
+body.ltr-mode .app-card,
+body.ltr-mode .content-section,
+body.ltr-mode .features-grid,
+body.ltr-mode #chat-history, 
+body.ltr-mode .chat-message,
+body.ltr-mode .panel,
+body.ltr-mode .links-list {
+    text-align: left !important;
+    direction: ltr !important;
+}
+
+/* تعديل مكان زرار الشات في الإنجليزي */
+body.ltr-mode #openChatBtn {
+    right: auto;
+    left: 20px;
+}
+body.ltr-mode #chatModal {
+    right: auto;
+    left: 20px;
+}
+
+/* تعديل القوائم والنقاط */
+body.ltr-mode .ai-message ul, 
+body.ltr-mode .ai-message ol {
+    padding-right: 0;
+    padding-left: 20px;
+}
+
+/* تعديل أيقونات السهم والرجوع */
+body.ltr-mode .back-arrow-button {
+    transform: scaleX(-1); /* عكس اتجاه السهم */
+}
+    </style>
+</head>
+<body class="dark">
+
+    <div class="site">
+        <header>
+            <div class="brand">
+                <div class="logo">T</div>
+                <h1>Tools</h1>
+            </div>
+            <div class="header-controls">
+                <input type="search" id="searchBox" placeholder="ابحث في الأدوات..." />
+            <div class="background-container">
+        <button class="back-arrow-button liquid-glass" onclick="history.back()">
+            &#10094; 
+        </button>
+    </div>
+        </header>
+
+        <div class="app-card content-section">
+            
+            <h2>🛠️ الأدوات المتاحة</h2>
+            <p class="muted">اختر الأداة التي تريد استخدامها من القائمة.</p>
+
+            <ul class="links-list">
+                
+                <li>
+                    <a href="background_remover.html">
+                        <i class="fas fa-image"></i>AI Background Remover
+                    </a>
+                </li>
+                
+                <li>
+                    <a href="game.html">
+                        <i class="fas fa-gamepad"></i> Magic Tech Catcher
+                    </a>
+                </li>
+                
+                <li>
+                    <a href="image_editor.html">
+                        <i class="fas features-grid"></i> Image Editor
+                    </a>
+                </li>                
+                <li>
+                    <a href="QR_Generator.html">
+                        <i class="fas fa-qrcode"></i> QR Generator
+                    </a>
+                </li>    
+                <li>
+                    <a href="Image_Converter.html">
+                        <i class="fas fa-upload"></i> Image Converter
+                    </a>
+                </li>   
+                <li>
+                    <a href="File_compressor.html">
+                        <i class="fas fa-compress-alt"></i> File Compressor
+                    </a>
+                </li>
+                <li>
+                    <a href="color_picker.html">
+                        <i class="fas fa-plus-circle"></i> Color Picker
+                    </a>
+                </li>   
+                <li>
+                    <a href="image_resizer.html">
+                        <i class="fas fa-compress-alt"></i> Image Resizer
+                    </a>
+                </li>
+                <li>
+                    <a href="sound_creator.html">
+                        <i class="fas fa-magic"></i> From Text To Sound
+                    </a>
+                </li>        
+                <li>
+                    <a href="MavixOS Nexus.html">
+                        <i class="fas font-awesome"></i> MavixOS Nexus
+                    </a>
+                </li>
+                <li>
+                    <a href="islam.html">
+                        <i class="fas font-awesome"></i> MavixOS Islam
+                    </a>
+                </li>
+                <li>
+                    <a href="https://my-blog-ten-vert.vercel.app">
+                        <i class="fas font-awesome"></i> Fady Blog | Made By Fady
+                    </a>
+                </li>
+                </ul>
+        </div>
+        
+    </div>
+        <footer><center>© Powered By MavixOS 26.1 ELITE</center></footer>
+
+  <script>
+        // **************************************************
+        // كود تشغيل وضع الليل/النهار (Dark/Light Mode) المحدث
+        // **************************************************
+        function toggleMode() {
+            const body = document.body;
+            // تأكد من استخدام الـ ID الجديد لزر التبديل
+            const icon = document.getElementById('mode-toggle').querySelector('i');
+            
+            if (body.classList.contains('light')) {
+                body.classList.remove('light');
+                localStorage.setItem('theme', 'dark');
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            } else {
+                body.classList.add('light');
+                localStorage.setItem('theme', 'light');
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            }
+        }
+
+        // **************************************************
+        // تطبيق الثيم المحفوظ عند تحميل الصفحة
+        // **************************************************
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            const body = document.body;
+            // تأكد من وجود العنصر قبل محاولة الوصول إليه
+            const modeToggleElement = document.getElementById('mode-toggle'); 
+            
+            if (modeToggleElement) {
+                const icon = modeToggleElement.querySelector('i');
+
+                if (savedTheme === 'light') {
+                    body.classList.add('light');
+                    icon.classList.remove('fa-sun');
+                    icon.classList.add('fa-moon');
+                } else {
+                    body.classList.remove('light');
+                    icon.classList.remove('fa-moon');
+                    icon.classList.add('fa-sun');
+                }
+            }
+        });
+        
+        // **************************************************
+        // كود البحث (للمحاكاة فقط - يحتاج لمنطق تصفية حقيقي)
+        // **************************************************
+        document.getElementById('searchBox')?.addEventListener('input', function() {
+            const filter = this.value.toLowerCase();
+            const listItems = document.querySelectorAll('.links-list li');
+            
+            listItems.forEach(item => {
+                const text = item.querySelector('a').textContent.toLowerCase();
+                if (text.includes(filter)) {
+                    item.style.display = ''; // إظهار العنصر
+                } else {
+                    item.style.display = 'none'; // إخفاء العنصر
+                }
+            });
+        });
+    // 1. دالة تعريف جوجل
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({
+            pageLanguage: 'ar', 
+            includedLanguages: 'ar,en', 
+            autoDisplay: false
+        }, 'google_translate_element');
+    }
+
+    // 2. دالة التعامل مع الكوكيز (عشان يحفظ اللغة)
+    function setCookie(key, value, expiry) {
+        var expires = new Date();
+        expires.setTime(expires.getTime() + (expiry * 24 * 60 * 60 * 1000));
+        document.cookie = key + '=' + value + ';expires=' + expires.toUTCString() + ';path=/';
+    }
+
+    function getCookie(key) {
+        var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
+        return keyValue ? keyValue[2] : null;
+    }
+
+    // 3. دالة التبديل عند الضغط على الزر
+    function toggleLanguage() {
+        var currentLang = getCookie('googtrans');
+        
+        if (currentLang && currentLang.indexOf('/en') > -1) {
+            // لو هو إنجليزي -> رجعه عربي
+            setCookie('googtrans', '/ar/ar', 1);
+            window.location.reload();
+        } else {
+            // لو هو عربي -> خليه إنجليزي
+            setCookie('googtrans', '/ar/en', 1);
+            window.location.reload();
+        }
+    }
+
+    // 4. الكود اللي بيشتغل أول ما الصفحة تحمل
+    document.addEventListener('DOMContentLoaded', function() {
+        var currentLang = getCookie('googtrans');
+        var langText = document.getElementById('lang-text');
+        
+        // لو الكوكيز بتقول إننا إنجليزي
+        if (currentLang && currentLang.indexOf('/en') > -1) {
+            document.body.classList.add('ltr-mode'); // فعل كلاس الإنجليزي
+            if(langText) langText.innerText = "Ar";   // غير الكلمة لـ Ar
+        } else {
+            // لو عربي
+            document.body.classList.remove('ltr-mode');
+            if(langText) langText.innerText = "En";
+        }
+    });
+</script>
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    </script>
+</body>
+</html>

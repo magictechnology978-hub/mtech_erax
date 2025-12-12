@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Image Color Picker</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        /* الألوان والمتغيرات الأساسية (من tools.html) */
+       :root {
+            --bg-dark: #0f2541;
+            --bg-light: #d8eaff;
+            --card-dark: rgb(7, 36, 75);
+            --card-light: rgba(255, 255, 255, 0.9);
+            --text-dark: #ffffff;
+            --text-light: #020f20;
+            --accent-dark: #007ce9;
+            --accent-light: #095faa;
+            --muted-dark: rgba(255, 255, 255, 0.85); /* Increased contrast */
+            --muted-light: #555;
+            --transition-speed: .4s;
+            --transition: .32s;
+        }
+
+        /* Reset & Body */
+        body {
+            font-family: 'Cairo', sans-serif;
+            margin: 0;
+            padding: 18px;
+            background: var(--bg-dark);
+            color: var(--text-dark);
+            transition: all var(--transition-speed) ease;
+            scroll-behavior: smooth;
+            direction: rtl;
+            font-size: 16px; /* Increased base font size */
+        }
+
+        body.light {
+            background: var(--bg-light);
+            color: var(--text-light);
+        }
+
+        /* Container */
+        .site {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px;
+            border-radius: 14px;
+            background: rgba(2, 37, 90, 0);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all var(--transition-speed);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            margin-bottom: 20px;
+        }
+
+        body.light header {
+            background: rgba(255, 255, 255, 0.4);
+            border-color: #ddd;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: var(--accent-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            color: #000;
+            transition: all var(--transition-speed);
+        }
+
+        body.light .logo {
+            background: var(--accent-light);
+            color: #fff;
+        }
+
+        .brand h1 {
+            font-size: 18px;
+        }
+
+        .brand .tagline {
+            font-size: 14px; /* Increased font size */
+            color: var(--accent-dark);
+            transition: all var(--transition-speed);
+        }
+
+        body.light .brand .tagline {
+            color: var(--accent-light);
+        }
+
+        .nav-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* تنسيقات البطاقة (من tools.html) */
+        .app-card {
+            background: var(--card-dark);
+            border-radius: 14px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all var(--transition-speed);
+            margin: 20px auto;
+        }
+
+        body.light .app-card {
+            background: var(--card-light);
+            border-color: #ddd;
+        }
+
+        .content-section {
+            padding: 15px;
+            text-align: right;
+        }
+
+        h2 {
+            font-size: 30px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--accent-dark);
+            text-align: center;
+        }
+
+        body.light h2 {
+            color: var(--accent-light);
+        }
+
+        .muted {
+            font-size: 15px;
+            color: var(--muted-dark);
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        body.light .muted {
+            color: var(--muted-light);
+        }
+        
+        /* تنسيقات مُنتقي الألوان والتحكمات */
+        .color-control-group {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap; 
+        }
+        
+        #colorDisplay {
+            width: 80px;
+            height: 80px;
+            border-radius: 12px;
+            border: 3px solid var(--accent-dark);
+            transition: background-color 0.3s, border-color var(--transition-speed);
+        }
+
+        body.light #colorDisplay {
+             border-color: var(--accent-light);
+        }
+        
+        #colorCode {
+            padding: 10px 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-dark);
+            font-size: 1.1em;
+            text-align: center;
+            min-width: 120px;
+            transition: all var(--transition-speed);
+        }
+
+        body.light #colorCode {
+            border-color: #aaa;
+            background: rgba(255, 255, 255, 0.8);
+            color: #000;
+        }
+
+        /* ------------------------------------------------ */
+        /* التنسيقات الجديدة لرفع الصورة والـ Canvas */
+        /* ------------------------------------------------ */
+        .image-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        #imageCanvas {
+            /* ده الـ Canvas اللي بيظهر عليه الصورة */
+            max-width: 100%;
+            height: auto;
+            border: 5px solid var(--accent-dark);
+            border-radius: 10px;
+            cursor: crosshair; /* عشان يبين إنه ممكن تختار منه */
+            margin-top: 15px;
+            transition: border-color var(--transition-speed);
+        }
+        
+        body.light #imageCanvas {
+            border-color: var(--accent-light);
+        }
+
+        #fileInput {
+            /* إخفاء زرار رفع الملف الأصلي وتنسيق الزر المخصص */
+            display: none;
+        }
+
+        .custom-file-upload {
+            background: var(--accent-dark);
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .custom-file-upload:hover {
+            background: #00a0ff;
+        }
+
+        body.light .custom-file-upload {
+            background: var(--accent-light);
+            color: #fff;
+        }
+                      .back-arrow-button {
+    /* جعل الزر مربعًا متساوي الأبعاد */
+    width: 50px;
+    height: 50px;
+    
+    /* توسيط محتوى السهم */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* خصائص النص (للسهم) */
+    font-size: 1.5rem; /* حجم السهم */
+    line-height: 1; /* للتأكد من توسيط الرمز */
+    
+    /* جعله دائريًا */
+    border-radius: 50%;
+    
+    /* تحديد موقع الزر (ثابت في الزاوية العلوية اليمنى) */
+.back-arrow-button {
+    position: fixed;
+    top: 20px;
+    left: 20px; /* <--- قم بتغييرها إلى LEFT */
+    /* قم بإزالة أو التعليق على خاصية right: 20px; */
+    z-index: 1000;
+}
+}
+
+/* ---------------------------------------------------- */
+/* تأثير Liquid Glass (تم تطبيقه على .liquid-glass) */
+/* ---------------------------------------------------- */
+.liquid-glass {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    
+    /* تأثير الزجاج: خلفية شبه شفافة مع تغبيش */
+    background: rgba(255, 255, 255, 0.15); /* أبيض شبه شفاف */
+    backdrop-filter: blur(10px) saturate(180%);
+    -webkit-backdrop-filter: blur(10px) saturate(180%);
+
+    /* الحدود والتظليل */
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2), 
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+
+    /* خصائص النص (السهم) */
+    color: white;
+    font-weight: bold;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+/* تأثير التفاعل (Hover) */
+.liquid-glass:hover {
+    backdrop-filter: blur(15px) saturate(200%);
+    -webkit-backdrop-filter: blur(15px) saturate(200%);
+    box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.3), 
+                0 0 0 1px rgba(255, 255, 255, 0.5);
+    transform: scale(1.05); /* تكبير بسيط عند المرور يعطي تأثير الحركة */
+}
+/* تنسيق مربع التحذير الذي يغطي الشاشة */
+#screenSizeWarning {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9); /* خلفية معتمة */
+    display: flex; /* لكي يكون المحتوى في المنتصف */
+    justify-content: center;
+    align-items: center;
+    z-index: 99999; /* لضمان ظهوره فوق كل شيء */
+    color: white;
+    font-family: 'Cairo', sans-serif;
+    text-align: center;
+}
+
+.warning-content {
+    background-color: #f44336; /* لون أحمر للتنبيه */
+    color: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    max-width: 85%;
+    transform: scale(1);
+    transition: transform 0.3s;
+}
+
+.warning-content h3 {
+    margin-top: 0;
+    font-size: 24px;
+}
+
+.warning-content button {
+    background-color: #fff;
+    color: #f44336;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+    </style>
+</head>
+<body class="dark">
+
+    <div class="site">
+        <header>
+            <div class="brand">
+                <div class="logo">P</div>
+                <h1>Image Color Picker</h1>
+            </div>
+            <div class="header-controls">
+                </div>
+                                    <div class="background-container">
+        <button class="back-arrow-button liquid-glass" onclick="history.back()">
+            &#10094; 
+        </button>
+    </div>
+        </header>
+
+        <div class="app-card content-section">
+            
+            <h2>🖍️ اختر لون من كود أو صورة</h2>
+            <p class="muted">يمكنك اختيار لون من خلال الأداة الدائرية أو رفع صورة واختيار لون من أي مكان فيها.</p>
+            
+            <div class="color-control-group">
+                <input type="color" id="colorPicker" value="#007ce9">
+                <div id="colorDisplay" style="background-color: #007ce9;"></div>
+                <input type="text" id="colorCode" value="#007CE9" readonly>
+            </div>
+            
+            <hr style="border: 1px solid rgba(255, 255, 255, 0.1); margin: 30px 0;">
+            
+            <div class="image-container">
+                <label for="fileInput" class="custom-file-upload">
+                    <i class="fas fa-upload"></i>ارفع الصورة لأختيار اللون منها
+                </label>
+                <input type="file" id="fileInput" accept="image/*">
+                
+                <canvas id="imageCanvas"></canvas>
+            </div>
+            
+        </div>
+        
+    </div>
+    <div id="screenSizeWarning" style="display: none;">
+    <div class="warning-content">
+        <h3>🚨تحذير</h3>
+        <p>برجاء استخدام هذه الأداة علي اللابتوب أو الكمبيوتر لدقة افضل ولأستخراج الوان أدق</p>
+        <p>Please use this tool on your laptop or computer for better accuracy and more precise color reproduction.</p>
+        <button onclick="document.getElementById('screenSizeWarning').style.display='none'">الأستخدام علي أي حال</button>
+    </div>
+</div>
+
+  <script>
+        // **************************************************
+        // الكود المعقد (JavaScript) - أنا بكتبه ببطء شديد
+        // **************************************************
+        
+        const colorPicker = document.getElementById('colorPicker');
+        const colorDisplay = document.getElementById('colorDisplay');
+        const colorCode = document.getElementById('colorCode');
+        const fileInput = document.getElementById('fileInput');
+        const canvas = document.getElementById('imageCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // **************************************************
+        // الدالة اللي بتحدث اللون (عشان متكررش الكود)
+        function updateColor(hexColor) {
+            colorDisplay.style.backgroundColor = hexColor;
+            colorCode.value = hexColor.toUpperCase();
+            colorPicker.value = hexColor; 
+        }
+
+        // **************************************************
+        // 1. تشغيل مُنتقي الألوان العادي
+        colorPicker?.addEventListener('input', (e) => {
+            updateColor(e.target.value);
+        });
+
+        // **************************************************
+        // 2. كود رفع وعرض الصورة على Canvas
+        fileInput?.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const img = new Image();
+                img.onload = () => {
+                    // عشان الصورة ما تبقاش كبيرة قوي، نحدد أقصى عرض
+                    const MAX_WIDTH = 600;
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > MAX_WIDTH) {
+                        height = height * (MAX_WIDTH / width);
+                        width = MAX_WIDTH;
+                    }
+                    
+                    // نحدد أبعاد الـ Canvas
+                    canvas.width = width;
+                    canvas.height = height;
+                    
+                    // نرسم الصورة على الـ Canvas
+                    ctx.drawImage(img, 0, 0, width, height);
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // **************************************************
+        // 3. كود اختيار اللون من الصورة لما تضغط بالماوس
+        canvas?.addEventListener('click', (e) => {
+            
+            // دي عشان نجيب إحداثيات الضغطة بالنسبة للـ Canvas
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            // دي بقى الحركة السحرية: نقرا البيانات من الـ Canvas
+            const imageData = ctx.getImageData(x, y, 1, 1).data; 
+            
+            const red = imageData[0];
+            const green = imageData[1];
+            const blue = imageData[2];
+            
+            // تحويل الـ RGB للـ HEX (لازم أعملها بنفسي عشان أكون غبي)
+            const rgbToHex = (r, g, b) => '#' + [r, g, b]
+                .map(x => x.toString(16).padStart(2, '0'))
+                .join('');
+
+            const hexColor = rgbToHex(red, green, blue);
+            
+            // نحدث الألوان بناءً على اللون اللي طلع من الصورة
+            updateColor(hexColor);
+            
+            // عشان نوري المستخدم بيكسل اللون اللي اختاره
+            console.log(`Color at (${x}, ${y}): ${hexColor}`);
+        });
+
+        // أنا مش هحط كود وضع الليل/النهار دلوقتي عشان ما أفصلش!
+
+        // عشان أول ما الصفحة تفتح، اللون يكون مظبوط
+        document.addEventListener('DOMContentLoaded', () => {
+             updateColor(colorPicker.value); 
+        });
+        const MIN_WIDTH = 970; // الحد الأدنى لعرض الشاشة (بالبكسل)
+    const warningElement = document.getElementById('screenSizeWarning');
+
+    function checkScreenSize() {
+        // التحقق من أن عنصر التحذير موجود في الصفحة
+        if (!warningElement) {
+            return;
+        }
+
+        // إذا كان عرض النافذة أقل من 768 بكسل
+        if (window.innerWidth < MIN_WIDTH) {
+            warningElement.style.display = 'flex'; // إظهار الرسالة
+        } else {
+            warningElement.style.display = 'none'; // إخفاء الرسالة
+        }
+    }
+
+    // 1. تشغيل الدالة عند تحميل الصفحة لأول مرة
+    document.addEventListener('DOMContentLoaded', checkScreenSize);
+
+    // 2. تشغيل الدالة كلما قام المستخدم بتغيير حجم النافذة (أو تدوير الهاتف)
+    window.addEventListener('resize', checkScreenSize);
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({
+            pageLanguage: 'ar', 
+            includedLanguages: 'ar,en', 
+            autoDisplay: false
+        }, 'google_translate_element');
+    }
+
+    // 2. دالة التعامل مع الكوكيز (عشان يحفظ اللغة)
+    function setCookie(key, value, expiry) {
+        var expires = new Date();
+        expires.setTime(expires.getTime() + (expiry * 24 * 60 * 60 * 1000));
+        document.cookie = key + '=' + value + ';expires=' + expires.toUTCString() + ';path=/';
+    }
+
+    function getCookie(key) {
+        var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
+        return keyValue ? keyValue[2] : null;
+    }
+
+    // 3. دالة التبديل عند الضغط على الزر
+    function toggleLanguage() {
+        var currentLang = getCookie('googtrans');
+        
+        if (currentLang && currentLang.indexOf('/en') > -1) {
+            // لو هو إنجليزي -> رجعه عربي
+            setCookie('googtrans', '/ar/ar', 1);
+            window.location.reload();
+        } else {
+            // لو هو عربي -> خليه إنجليزي
+            setCookie('googtrans', '/ar/en', 1);
+            window.location.reload();
+        }
+    }
+
+    // 4. الكود اللي بيشتغل أول ما الصفحة تحمل
+    document.addEventListener('DOMContentLoaded', function() {
+        var currentLang = getCookie('googtrans');
+        var langText = document.getElementById('lang-text');
+        
+        // لو الكوكيز بتقول إننا إنجليزي
+        if (currentLang && currentLang.indexOf('/en') > -1) {
+            document.body.classList.add('ltr-mode'); // فعل كلاس الإنجليزي
+            if(langText) langText.innerText = "Ar";   // غير الكلمة لـ Ar
+        } else {
+            // لو عربي
+            document.body.classList.remove('ltr-mode');
+            if(langText) langText.innerText = "En";
+        }
+    });
+</script>
+
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    </script>
+</body>
+</html>

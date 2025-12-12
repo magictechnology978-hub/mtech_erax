@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Converter</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="shortcut icon" href="logo-192x192.png" type="image/x-icon">
+    <style>
+        /* -------------------------------------------------------------------------- */
+        /* 1. متغيرات الألوان والتصميم (Mtech Vision) */
+        /* -------------------------------------------------------------------------- */
+        :root {
+            --bg-dark: #0f2541;
+            --bg-light: #d8eaff;
+            --card-dark: rgb(7, 36, 75);
+            --card-light: rgba(255, 255, 255, 0.9);
+            --text-dark: #ffffff;
+            --text-light: #020f20;
+            --accent-dark: #007ce9; 
+            --accent-light: #095faa;
+            --muted-dark: rgba(255, 255, 255, 0.7);
+            --transition-speed: .4s;
+            --primary-btn: var(--accent-dark);
+            --clear-color-base: #e91e63;
+        }
+
+        /* -------------------------------------------------------------------------- */
+        /* 2. Base Styles and Layout */
+        /* -------------------------------------------------------------------------- */
+        body {
+            font-family: 'Cairo', sans-serif;
+            margin: 0;
+            padding: 18px;
+            background: var(--bg-dark);
+            color: var(--text-dark);
+            transition: all var(--transition-speed) ease;
+            direction: rtl;
+            font-size: 16px;
+        }
+
+        body.light {
+            background: var(--bg-light);
+            color: var(--text-light);
+        }
+
+        .site {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px;
+            border-radius: 14px;
+            background: rgba(2, 37, 90, 0);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all var(--transition-speed);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            margin-bottom: 20px;
+        }
+
+        body.light header {
+            background: rgba(255, 255, 255, 0.4);
+            border-color: #ddd;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: var(--accent-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            color: #000;
+        }
+
+        body.light .logo {
+            background: var(--accent-light);
+            color: #fff;
+        }
+
+        .brand h1 {
+            font-size: 18px;
+            margin: 0;
+        }
+        
+
+        .app-card {
+            background: var(--card-dark);
+            border-radius: 14px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            transition: all var(--transition-speed);
+        }
+
+        body.light .app-card {
+            background: var(--card-light);
+            border-color: #ddd;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .header h2 {
+            color: var(--accent-dark);
+            font-weight: 800;
+        }
+
+        body.light .header h2 {
+            color: var(--accent-light);
+        }
+
+        /* -------------------------------------------------------------------------- */
+        /* 3. Controls and Input Styling */
+        /* -------------------------------------------------------------------------- */
+        .controls-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            align-items: flex-end;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 0; 
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: #1a202c;
+            color: var(--text-dark);
+            font-size: 16px;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: left 10px center;
+            padding-left: 35px; /* مسافة للآيقونة */
+        }
+
+        body.light select {
+            background: #f0f0f0;
+            color: var(--text-light);
+            border-color: #ccc;
+            /* تحديث لون آيقونة السهم في الوضع الفاتح */
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        }
+        
+        /* تصميم زر الرفع (إخفاء الـ input واستبداله بزر مخصص) */
+        .file-upload-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .file-upload-wrapper input[type=file] {
+            font-size: 100px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .custom-file-upload {
+            border: 2px dashed var(--muted-dark);
+            color: var(--muted-dark);
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            text-align: center;
+        }
+
+        .file-upload-wrapper:hover .custom-file-upload {
+            border-color: var(--accent-dark);
+            color: var(--accent-dark);
+        }
+
+        /* زر التحويل */
+        .btn-primary {
+            background: var(--primary-btn);
+            color: var(--text-light); 
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 10px rgba(0, 124, 233, 0.3);
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        .btn-primary:hover {
+            background: #0093ff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 124, 233, 0.4);
+        }
+
+        /* -------------------------------------------------------------------------- */
+        /* 4. زر تبديل الثيم */
+        /* -------------------------------------------------------------------------- */
+        .mode-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 6px 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            color: inherit;
+            transition: all var(--transition-speed);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            font-size: 1.2rem;
+        }
+
+        body.light .mode-btn {
+            border-color: #aaa;
+            color: var(--text-light);
+        }
+        .back-arrow-button {
+    /* جعل الزر مربعًا متساوي الأبعاد */
+    width: 50px;
+    height: 50px;
+    
+    /* توسيط محتوى السهم */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* خصائص النص (للسهم) */
+    font-size: 1.5rem; /* حجم السهم */
+    line-height: 1; /* للتأكد من توسيط الرمز */
+    
+    /* جعله دائريًا */
+    border-radius: 50%;
+    
+    /* تحديد موقع الزر (ثابت في الزاوية العلوية اليمنى) */
+.back-arrow-button {
+    position: fixed;
+    top: 20px;
+    left: 20px; /* <--- قم بتغييرها إلى LEFT */
+    /* قم بإزالة أو التعليق على خاصية right: 20px; */
+    z-index: 1000;
+}
+}
+
+/* ---------------------------------------------------- */
+/* تأثير Liquid Glass (تم تطبيقه على .liquid-glass) */
+/* ---------------------------------------------------- */
+.liquid-glass {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    
+    /* تأثير الزجاج: خلفية شبه شفافة مع تغبيش */
+    background: rgba(255, 255, 255, 0.15); /* أبيض شبه شفاف */
+    backdrop-filter: blur(10px) saturate(180%);
+    -webkit-backdrop-filter: blur(10px) saturate(180%);
+
+    /* الحدود والتظليل */
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2), 
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+
+    /* خصائص النص (السهم) */
+    color: white;
+    font-weight: bold;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+/* تأثير التفاعل (Hover) */
+.liquid-glass:hover {
+    backdrop-filter: blur(15px) saturate(200%);
+    -webkit-backdrop-filter: blur(15px) saturate(200%);
+    box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.3), 
+                0 0 0 1px rgba(255, 255, 255, 0.5);
+    transform: scale(1.05); /* تكبير بسيط عند المرور يعطي تأثير الحركة */
+}
+/* التأثير الأساسي للجسم (Body) */
+    </style>
+</head>
+<body class="dark">
+
+
+    <div class="site">
+        <header>
+            <div class="brand">
+                <div class="logo">MT</div>
+                <h1>محول صيغ الصور 🔄</h1>
+            </div>
+            <div class="background-container">
+        <button class="back-arrow-button liquid-glass" onclick="history.back()">
+            &#10094; 
+        </button>
+    </div>
+            
+        </header>
+        <div class="app-card">
+            
+            <div class="header">
+                <h2>🔄 محول صيغ الصور</h2>
+                <p style="color: var(--muted-dark);">تحويل سريع للصور (PNG, JPG, WEBP) مباشرةً في متصفحك.</p>
+            </div>
+
+            <div class="controls-grid">
+                
+                <div class="form-group">
+                    <label for="file-upload">اختر صورة:</label>
+                    <div class="file-upload-wrapper">
+                        <input type="file" id="file-upload" accept="image/png, image/jpeg, image/webp" onchange="updateFileName()">
+                        <div id="file-name-display" class="custom-file-upload">
+                             <i class="fas fa-upload"></i> اضغط للرفع
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="target-format">اختر صيغة التحويل:</label>
+                    <select id="target-format">
+                        <option value="jpeg">JPEG</option>
+                        <option value="png">PNG</option>
+                        <option value="webp">WEBP</option>
+                    </select>
+                </div>
+                
+            </div>
+            
+            <button class="btn-primary" onclick="convertFile()">
+                <i class="fas fa-exchange-alt"></i> ابدأ التحويل والتنزيل
+            </button>
+            
+        </div>
+    </div>
+
+    <script>
+        // *************** إعدادات عامة ***************
+        const fileInput = document.getElementById('file-upload');
+        const targetFormatSelect = document.getElementById('target-format');
+        const fileNameDisplay = document.getElementById('file-name-display');
+
+        // *************** تحديث اسم الملف المختار ***************
+        function updateFileName() {
+            if (fileInput.files.length > 0) {
+                fileNameDisplay.innerHTML = `<i class="fas fa-check"></i> تم اختيار: ${fileInput.files[0].name}`;
+            } else {
+                fileNameDisplay.innerHTML = `<i class="fas fa-upload"></i> اضغط للرفع`;
+            }
+        }
+
+
+        // *************** وظيفة التحويل الأساسية (تعتمد على Canvas) ***************
+        function convertFile() {
+            const file = fileInput.files[0];
+            const targetFormat = targetFormatSelect.value;
+
+            if (!file) {
+                alertUser('من فضلك اختر ملف صورة أولاً.', 'warning');
+                return;
+            }
+
+            // التأكد من أن الملف صورة
+            if (!file.type.startsWith('image/')) {
+                 alertUser('الرجاء اختيار ملف صورة صالح (JPG, PNG, WEBP).', 'error');
+                 return;
+            }
+
+            alertUser('جاري التحويل... الرجاء الانتظار.', 'processing');
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+
+                    let mimeType;
+                    // تحديد الـ MIME Type بناءً على الصيغة المختارة
+                    if (targetFormat === 'png') mimeType = 'image/png';
+                    else if (targetFormat === 'webp') mimeType = 'image/webp';
+                    else mimeType = 'image/jpeg'; 
+
+                    // التحويل الفعلي باستخدام canvas.toBlob
+                    canvas.toBlob(function(blob) {
+                        if (!blob) {
+                            alertUser('فشل التحويل إلى الصيغة المطلوبة.', 'error');
+                            return;
+                        }
+                        const url = URL.createObjectURL(blob);
+                        
+                        const originalFileName = file.name.split('.')[0];
+                        const newFileName = originalFileName + '.' + targetFormat;
+                        
+                        downloadFile(url, newFileName);
+                        alertUser('تم التحويل بنجاح! جاري التنزيل.', 'success');
+                        
+                    }, mimeType, 0.9); // 0.9 هي جودة الصورة (مهمة لـ JPEG و WEBP)
+                };
+                img.onerror = function() {
+                    alertUser('حدث خطأ في تحميل الصورة.', 'error');
+                }
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file); // قراءة الملف كـ Data URL
+        }
+
+        // *************** وظيفة بدء تنزيل الملف ***************
+        function downloadFile(url, fileName) {
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url); // مسح الرابط المؤقت
+        }
+        
+        // *************** وظيفة إشعار المستخدم ***************
+        function alertUser(message, type) {
+            const existingAlert = document.getElementById('custom-alert');
+            if (existingAlert) existingAlert.remove();
+            
+            const alertDiv = document.createElement('div');
+            alertDiv.id = 'custom-alert';
+            alertDiv.innerHTML = message;
+            
+            let bgColor = '#28a745'; 
+            if (type === 'error' || type === 'warning') bgColor = '#e91e63';
+            if (type === 'processing') bgColor = '#ffc107'; 
+            
+            alertDiv.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background-color: ${bgColor};
+                color: ${type === 'processing' ? 'black' : 'white'};
+                padding: 10px 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+                z-index: 1000;
+                font-family: 'Cairo', sans-serif;
+                opacity: 0;
+                transition: opacity 0.5s;
+                direction: rtl;
+            `;
+            
+            document.body.appendChild(alertDiv);
+            
+            setTimeout(() => { alertDiv.style.opacity = 1; }, 50);
+            
+            if (type !== 'processing') {
+                setTimeout(() => {
+                    alertDiv.style.opacity = 0;
+                    setTimeout(() => alertDiv.remove(), 500);
+                }, 3000);
+            }
+        }
+
+
+        // *************** منطق تبديل الثيم ***************
+        function toggleTheme() {
+            const body = document.body;
+            const icon = document.getElementById('theme-icon');
+            body.classList.toggle('light');
+
+            if (body.classList.contains('light')) {
+                icon.className = 'fas fa-moon'; 
+                localStorage.setItem('theme', 'light');
+            } else {
+                icon.className = 'fas fa-sun'; 
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // تطبيق الثيم المحفوظ عند التحميل
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            if (savedTheme === 'light') {
+                document.body.classList.add('light');
+                document.getElementById('theme-icon').className = 'fas fa-moon';
+            } else {
+                 document.getElementById('theme-icon').className = 'fas fa-sun';
+            }
+        });
+            function googleTranslateElementInit() {
+        new google.translate.TranslateElement({
+            pageLanguage: 'ar', 
+            includedLanguages: 'ar,en', 
+            autoDisplay: false
+        }, 'google_translate_element');
+    }
+
+    // 2. دالة التعامل مع الكوكيز (عشان يحفظ اللغة)
+    function setCookie(key, value, expiry) {
+        var expires = new Date();
+        expires.setTime(expires.getTime() + (expiry * 24 * 60 * 60 * 1000));
+        document.cookie = key + '=' + value + ';expires=' + expires.toUTCString() + ';path=/';
+    }
+
+    function getCookie(key) {
+        var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
+        return keyValue ? keyValue[2] : null;
+    }
+
+    // 3. دالة التبديل عند الضغط على الزر
+    function toggleLanguage() {
+        var currentLang = getCookie('googtrans');
+        
+        if (currentLang && currentLang.indexOf('/en') > -1) {
+            // لو هو إنجليزي -> رجعه عربي
+            setCookie('googtrans', '/ar/ar', 1);
+            window.location.reload();
+        } else {
+            // لو هو عربي -> خليه إنجليزي
+            setCookie('googtrans', '/ar/en', 1);
+            window.location.reload();
+        }
+    }
+
+    // 4. الكود اللي بيشتغل أول ما الصفحة تحمل
+    document.addEventListener('DOMContentLoaded', function() {
+        var currentLang = getCookie('googtrans');
+        var langText = document.getElementById('lang-text');
+        
+        // لو الكوكيز بتقول إننا إنجليزي
+        if (currentLang && currentLang.indexOf('/en') > -1) {
+            document.body.classList.add('ltr-mode'); // فعل كلاس الإنجليزي
+            if(langText) langText.innerText = "Ar";   // غير الكلمة لـ Ar
+        } else {
+            // لو عربي
+            document.body.classList.remove('ltr-mode');
+            if(langText) langText.innerText = "En";
+        }
+    });
+</script>
+
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    </script>
+</body>
+</html>
