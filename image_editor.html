@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>محرر الصور المتقدم - Advanced Editor</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Almarai:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="shortcut icon" href="logo-192x192.png" type="image/x-icon">
+    
+    <style>
+        /* الألوان والمتغيرات الأساسية من تصميم الموقع المرفوع */
+        :root {
+            --bg-dark: #0f2541;
+            --bg-light: #d8eaff;
+            --card-dark: rgb(7, 36, 75);
+            --card-light: rgba(255, 255, 255, 0.9);
+            --text-dark: #ffffff;
+            --text-light: #020f20;
+            --accent-dark: #007ce9;
+            --accent-light: #095faa;
+            --muted-dark: rgba(255, 255, 255, 0.85);
+            --muted-light: #555;
+            --transition-speed: .4s;
+            --primary-btn: var(--accent-dark);
+            --success-btn: #28a745;
+        }
+
+        /* Base Styles */
+        body {
+            font-family: 'Cairo', sans-serif;
+            margin: 0;
+            padding: 18px;
+            background: var(--bg-dark);
+            color: var(--text-dark);
+            transition: all var(--transition-speed) ease;
+            direction: rtl;
+            font-size: 16px;
+        }
+
+        body.light {
+            background: var(--bg-light);
+            color: var(--text-light);
+        }
+
+        .site {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header (تم نسخه من tools.html) */
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px;
+            border-radius: 14px;
+            background: rgba(2, 37, 90, 0);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all var(--transition-speed);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            margin-bottom: 20px;
+        }
+
+        body.light header {
+            background: rgba(255, 255, 255, 0.4);
+            border-color: #ddd;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: var(--accent-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            color: #000;
+        }
+
+        body.light .logo {
+            background: var(--accent-light);
+            color: #fff;
+        }
+
+        .brand h1 {
+            font-size: 18px;
+            margin: 0;
+        }
+        
+        .mode-btn {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 6px 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            color: inherit;
+            transition: all var(--transition-speed);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            font-size: 1.2rem;
+        }
+
+        /* Main Card */
+        .app-card {
+            background: var(--card-dark);
+            border-radius: 14px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin: 20px auto;
+        }
+
+        body.light .app-card {
+            background: var(--card-light);
+            border-color: #ddd;
+        }
+
+        h2 {
+            color: var(--accent-dark);
+            text-align: center;
+            margin-bottom: 5px;
+        }
+
+        body.light h2 {
+            color: var(--accent-light);
+        }
+
+        .muted {
+            color: var(--muted-dark);
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        /* Editor Layout */
+        .editor-layout {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        /* Controls Panel */
+        .controls-panel {
+            flex: 1 1 250px;
+            min-width: 250px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            align-self: flex-start;
+        }
+
+        body.light .controls-panel {
+            background: rgba(255, 255, 255, 0.5);
+            border-color: #eee;
+        }
+
+        .control-group {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+        }
+        
+        .control-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .control-group input[type="text"], 
+        .control-group select,
+        .control-group input[type="color"] {
+            width: 100%;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid var(--muted-dark);
+            background: #1a202c;
+            color: var(--text-dark);
+            box-sizing: border-box;
+        }
+
+        body.light .control-group input[type="text"],
+        body.light .control-group select {
+            background: #fff;
+            color: var(--text-light);
+        }
+        
+        .control-group button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background: var(--primary-btn);
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        /* Image Editor Canvas Area */
+        .image-editor-area {
+            flex: 2 1 600px;
+            max-width: 100%;
+            background: #222;
+            border-radius: 8px;
+            border: 1px solid var(--accent-dark);
+            box-shadow: 0 0 15px rgba(0, 124, 233, 0.5);
+            min-height: 400px;
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        /* Fabric Canvas Style */
+        #editor-canvas-container {
+            margin: 0 auto;
+            display: block;
+            border: 1px solid #555; /* حدود وهمية */
+        }
+        
+        /* Action Buttons */
+        .action-btns {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .action-btns button, .action-btns a {
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+            border: none;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        #upload-btn {
+            background: var(--primary-btn);
+            color: #fff;
+        }
+        
+        #download-btn {
+            background: var(--success-btn);
+            color: #fff;
+        }
+
+        #clear-btn {
+            background: #dc3545;
+            color: #fff;
+        }
+        .back-arrow-button {
+    /* جعل الزر مربعًا متساوي الأبعاد */
+    width: 50px;
+    height: 50px;
+    
+    /* توسيط محتوى السهم */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* خصائص النص (للسهم) */
+    font-size: 1.5rem; /* حجم السهم */
+    line-height: 1; /* للتأكد من توسيط الرمز */
+    
+    /* جعله دائريًا */
+    border-radius: 50%;
+    
+    /* تحديد موقع الزر (ثابت في الزاوية العلوية اليمنى) */
+.back-arrow-button {
+    position: fixed;
+    top: 20px;
+    left: 20px; /* <--- قم بتغييرها إلى LEFT */
+    /* قم بإزالة أو التعليق على خاصية right: 20px; */
+    z-index: 1000;
+}
+}
+
+/* ---------------------------------------------------- */
+/* تأثير Liquid Glass (تم تطبيقه على .liquid-glass) */
+/* ---------------------------------------------------- */
+.liquid-glass {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    
+    /* تأثير الزجاج: خلفية شبه شفافة مع تغبيش */
+    background: rgba(255, 255, 255, 0.15); /* أبيض شبه شفاف */
+    backdrop-filter: blur(10px) saturate(180%);
+    -webkit-backdrop-filter: blur(10px) saturate(180%);
+
+    /* الحدود والتظليل */
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2), 
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+
+    /* خصائص النص (السهم) */
+    color: white;
+    font-weight: bold;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+/* تأثير التفاعل (Hover) */
+.liquid-glass:hover {
+    backdrop-filter: blur(15px) saturate(200%);
+    -webkit-backdrop-filter: blur(15px) saturate(200%);
+    box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.3), 
+                0 0 0 1px rgba(255, 255, 255, 0.5);
+    transform: scale(1.05); /* تكبير بسيط عند المرور يعطي تأثير الحركة */
+}
+
+    </style>
+</head>
+<body class="dark">
+
+    <div class="site">
+        <header>
+            <div class="brand">
+                <div class="logo">Editor</div>
+                <h1>محرر الطبقات المتقدم</h1>
+            </div>
+     <div class="background-container">
+        <button class="back-arrow-button liquid-glass" onclick="history.back()">
+            &#10094; 
+        </button>
+    </div>
+        </header>
+
+        <div class="app-card">
+            
+            <h2>✨ محرر الصور بـ الطبقات والنصوص</h2>
+            <p class="muted">ارفع صورة، أضف نصوصاً بأشكال مختلفة، وحرّك العناصر بحرية.</p>
+
+            <div class="editor-layout">
+                
+                <div class="controls-panel">
+                    <h3>🖼️ رفع وتحميل</h3>
+                    <div class="control-group">
+                        <label>صورة الخلفية الأساسية</label>
+                        <input type="file" id="base-image-upload" accept="image/*">
+                    </div>
+
+                    <h3>✍️ إضافة نص</h3>
+                    <div class="control-group">
+                        <label for="text-input">النص الذي تريد إضافته:</label>
+                        <input type="text" id="text-input" placeholder="اكتب هنا...">
+                        
+                        <label for="font-select" style="margin-top: 10px;">اختر الخط:</label>
+                        <select id="font-select">
+                            <option value="Cairo" style="font-family: 'Cairo', sans-serif;">Cairo</option>
+                            <option value="Almarai" style="font-family: 'Almarai', sans-serif;">Almarai</option>
+                            <option value="Arial" style="font-family: Arial, sans-serif;">Arial</option>
+                        </select>
+                        
+                        <label for="text-color" style="margin-top: 10px;">لون النص:</label>
+                        <input type="color" id="text-color" value="#FFFFFF">
+                        
+                        <button onclick="addText()" style="margin-top: 15px;">
+                            <i class="fas fa-plus-circle"></i> إضافة النص
+                        </button>
+                    </div>
+                    
+                    <h3>🎁 إضافة ملصق/صورة</h3>
+                    <div class="control-group">
+                        <label>ملصق أو صورة إضافية (تظهر فوق الخلفية)</label>
+                        <input type="file" id="overlay-image-upload" accept="image/*">
+                    </div>
+                    
+                </div>
+                
+                <div class="image-editor-area">
+                    <canvas id="editor-canvas" width="700" height="500"></canvas>
+                </div>
+            </div>
+            
+            <div class="action-btns">
+                <button id="clear-btn" onclick="clearCanvas()">
+                    <i class="fas fa-eraser"></i> مسح كل العناصر
+                </button>
+                <a href="#" id="download-btn" onclick="downloadImage(event)">
+                    <i class="fas fa-download"></i> تحميل الصورة النهائية
+                </a>
+            </div>
+            
+        </div>
+    </div>
+
+    <script>
+        // ***************
+        // 1. وظائف الـ UI (Dark/Light Mode)
+        // ***************
+        function toggleMode() {
+            const body = document.body;
+            const icon = document.getElementById('mode-toggle').querySelector('i');
+            
+            if (body.classList.contains('light')) {
+                body.classList.remove('light');
+                localStorage.setItem('theme', 'dark');
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            } else {
+                body.classList.add('light');
+                localStorage.setItem('theme', 'light');
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            if (savedTheme === 'light') document.body.classList.add('light');
+        });
+
+        // ***************
+        // 2. إعداد Fabric.js
+        // ***************
+        const canvas = new fabric.Canvas('editor-canvas');
+
+        // ***************
+        // 3. وظيفة تحميل صورة الخلفية الأساسية
+        // ***************
+      // ***************
+// 3. وظيفة تحميل صورة الخلفية الأساسية (الكود المُصحَّح)
+// ***************
+document.getElementById('base-image-upload').onchange = function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(f) {
+        
+        fabric.Image.fromURL(f.target.result, function(img) {
+            
+            // تحديد أقصى حجم ممكن للـ Canvas (نفس حجمه الأصلي)
+            const maxWidth = 700;
+            const maxHeight = 500;
+            
+            // حساب عامل التكبير/التصغير للحفاظ على نسبة الصورة
+            let scale = Math.min(maxWidth / img.width, maxHeight / img.height);
+            
+            const newWidth = img.width * scale;
+            const newHeight = img.height * scale;
+            
+            // 1. تعديل أبعاد الـ Canvas لتناسب الصورة مع الحفاظ على التجاوب
+            canvas.setDimensions({width: newWidth, height: newHeight});
+            
+            // 2. إزالة جميع الطبقات العلوية (النصوص والملصقات)
+            canvas.remove(...canvas.getObjects());
+
+            // 3. وضع الصورة كخلفية ثابتة (ScaleX و ScaleY = 1 لأننا عدلنا أبعاد Canvas)
+            canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas), {
+                scaleX: scale,
+                scaleY: scale,
+                originX: 'left',
+                originY: 'top'
+            });
+        });
+    };
+    reader.readAsDataURL(file);
+};
+        function addText() {
+            const textContent = document.getElementById('text-input').value;
+            const font = document.getElementById('font-select').value;
+            const color = document.getElementById('text-color').value;
+
+            if (!textContent) {
+                alert('من فضلك أدخل النص أولاً!');
+                return;
+            }
+
+            // استخدام fabric.IText للسماح بالتعديل المباشر على النص بعد الإضافة
+            const text = new fabric.IText(textContent, {
+                fontFamily: font,
+                fill: color,
+                fontSize: 40,
+                left: 50,
+                top: 50,
+                textAlign: 'right' // ضبط المحاذاة للنص العربي
+            });
+            
+            canvas.add(text);
+            canvas.setActiveObject(text);
+            canvas.renderAll();
+        }
+        
+        // ***************
+        // 5. وظيفة إضافة الملصق/الصورة العائمة (Overlay)
+        // ***************
+        document.getElementById('overlay-image-upload').onchange = function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(f) {
+                fabric.Image.fromURL(f.target.result, function(img) {
+                    // تصغير الصورة لتناسب حجم الـ Canvas
+                    img.scaleToWidth(Math.min(img.width, canvas.getWidth() / 3)); 
+                    
+                    canvas.add(img);
+                    canvas.setActiveObject(img);
+                    canvas.renderAll();
+                });
+            };
+            reader.readAsDataURL(file);
+        };
+
+        // ***************
+        // 6. وظيفة مسح كل الطبقات
+        // ***************
+        function clearCanvas() {
+            const objects = canvas.getObjects();
+            if (objects.length > 0) {
+                if (confirm('هل أنت متأكد من مسح جميع النصوص والملصقات؟')) {
+                    canvas.remove(...objects);
+                    canvas.renderAll();
+                }
+            }
+        }
+        
+        // ***************
+        // 7. وظيفة تحميل الصورة النهائية
+        // ***************
+        function downloadImage(e) {
+            e.preventDefault();
+            if (!canvas.backgroundImage) {
+                alert('من فضلك ارفع صورة خلفية أولاً!');
+                return;
+            }
+            
+            // تحويل الـ Canvas كله إلى صورة (بما في ذلك الخلفية والطبقات)
+            const dataURL = canvas.toDataURL({
+                format: 'png',
+                quality: 1
+            });
+
+            // إنشاء لينك وتحميل الصورة
+            const link = document.createElement('a');
+            link.href = dataURL;
+            link.download = 'edited_image_with_layers.png';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({
+            pageLanguage: 'ar', 
+            includedLanguages: 'ar,en', 
+            autoDisplay: false
+        }, 'google_translate_element');
+    }
+
+    // 2. دالة التعامل مع الكوكيز (عشان يحفظ اللغة)
+    function setCookie(key, value, expiry) {
+        var expires = new Date();
+        expires.setTime(expires.getTime() + (expiry * 24 * 60 * 60 * 1000));
+        document.cookie = key + '=' + value + ';expires=' + expires.toUTCString() + ';path=/';
+    }
+
+    function getCookie(key) {
+        var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
+        return keyValue ? keyValue[2] : null;
+    }
+
+    // 3. دالة التبديل عند الضغط على الزر
+    function toggleLanguage() {
+        var currentLang = getCookie('googtrans');
+        
+        if (currentLang && currentLang.indexOf('/en') > -1) {
+            // لو هو إنجليزي -> رجعه عربي
+            setCookie('googtrans', '/ar/ar', 1);
+            window.location.reload();
+        } else {
+            // لو هو عربي -> خليه إنجليزي
+            setCookie('googtrans', '/ar/en', 1);
+            window.location.reload();
+        }
+    }
+
+    // 4. الكود اللي بيشتغل أول ما الصفحة تحمل
+    document.addEventListener('DOMContentLoaded', function() {
+        var currentLang = getCookie('googtrans');
+        var langText = document.getElementById('lang-text');
+        
+        // لو الكوكيز بتقول إننا إنجليزي
+        if (currentLang && currentLang.indexOf('/en') > -1) {
+            document.body.classList.add('ltr-mode'); // فعل كلاس الإنجليزي
+            if(langText) langText.innerText = "Ar";   // غير الكلمة لـ Ar
+        } else {
+            // لو عربي
+            document.body.classList.remove('ltr-mode');
+            if(langText) langText.innerText = "En";
+        }
+    });
+</script>
+
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    </script>
+</body>
+</html>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أهلاً بكم في شوال نوت</title>
+    <!-- تحميل Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- تحميل خط Cairo من جوجل فونتس -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="shortcut icon" href="logo-192x192.png" type="image/x-icon">
+    <style>
+        /* تعريف خط Cairo الأساسي والوضع الداكن النظيف */
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #030712; /* لون داكن جداً (Gray-950 تقريبا) */
+            color: #f3f4f6; /* لون النصوص الأساسي (Gray-100) */
+            transition: all 0.4s ease;
+        }
+        /* خلفية البطاقة الأساسية - أفتح قليلاً من الخلفية */
+        .main-card-bg {
+             background-color: #111827; /* Gray-900 */
+        }
+        /* تصميم الأقسام خطوة بخطوة مع تأثير الانبثاق */
+        .feature-step {
+            opacity: 0;
+            transform: translateY(15px);
+            transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+            position: absolute;
+            width: 100%;
+            padding: 1.5rem; /* p-6 */
+        }
+        .feature-step.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        /* كلاس CSS مخصص لزر الـ Next بلون Cyan جذاب */
+        .next-btn-style {
+            background-image: linear-gradient(to right, #06b6d4, #22d3ee); /* تدرج Cyan-500 إلى Cyan-400 */
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+        }
+        .next-btn-style:hover {
+            box-shadow: 0 10px 15px -3px rgba(6, 182, 212, 0.4), 0 4px 6px -2px rgba(6, 182, 212, 0.2);
+            transform: scale(1.02);
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8 min-h-screen flex items-center justify-center">
+    <!-- حاوية رئيسية للمحتوى - داكنة ومركزة -->
+    <div class="max-w-md w-full mx-auto main-card-bg shadow-2xl rounded-2xl overflow-hidden border border-gray-700">
+        
+        <!-- رأس الصفحة والشعار - أيقونة المفكرة الأساسية (SVG) -->
+        <header class="bg-gray-900 p-8 text-white text-center rounded-t-2xl border-b-4 border-cyan-500">
+            <!-- أيقونة المفكرة - أنيقة وواضحة -->
+            <svg class="mx-auto mb-4 w-16 h-16 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+                <polyline points="14 2 14 8 20 8" />
+                <line x1="16" y1="13" x2="8" y2="13" />
+                <line x1="16" y1="17" x2="8" y2="17" />
+            </svg>
+            <h1 class="text-3xl font-extrabold mb-1 text-white">شكراً لاختياركم شوال نوت!</h1>
+            <p class="text-cyan-400 text-lg font-medium">خطوة بخطوة لاكتشاف جودة مفكرتكم.</p>
+        </header>
+
+        <!-- جسم المحتوى وخطوات المميزات -->
+        <main class="p-6 sm:p-8">
+            
+            <!-- رسالة الترحيب والبداية -->
+            <section id="intro-text" class="mb-8 p-5 bg-gray-800 rounded-xl border border-gray-700 shadow-xl">
+                <p class="text-gray-200 text-xl leading-relaxed text-center font-semibold">
+                    نتمنى لكم أروع تجربة كتابة. لقد صُممت هذه المفكرة خصيصاً لتكون رفيقكم المثالي. 
+                    اضغطوا 'ابدأ الاكتشاف' لتتعرفوا على جميع مزاياها!
+                </p>
+            </section>
+            
+            <!-- قائمة المميزات - منطقة ثابتة لإظهار الخطوات -->
+            <section id="features-list" class="mb-6 h-40 relative flex items-center justify-center">
+
+                <!-- 1. الميزة الأولى: جودة الخامات النظيفة - SVG Star/Quality -->
+                <div class="feature-step bg-gray-800 rounded-xl shadow-lg border-r-4 border-green-500" data-index="0">
+                    <h3 class="font-bold text-xl text-green-400 mb-2 flex items-center">
+                        <svg class="w-6 h-6 ml-2 text-green-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 18.25l-6.18 3.73 1.18-6.88-5-4.87 6.91-1.01L12 2z" />
+                        </svg>
+                        جودة الخامات الاستثنائية
+                    </h3>
+                    <p class="text-gray-300 text-base">
+                        يتميز الورق بوزن وجودة عالية جداً، مما يمنع تسرب الحبر تماماً. ستبقى كتاباتكم واضحة ومريحة للعين مهما كان نوع القلم المستخدم.
+                    </p>
+                </div>
+
+                <!-- 2. الميزة الثانية: تصميم مخصص (Customized) - SVG Pen/Edit -->
+                <div class="feature-step bg-gray-800 rounded-xl shadow-lg border-r-4 border-cyan-400" data-index="1">
+                    <h3 class="font-bold text-xl text-cyan-400 mb-2 flex items-center">
+                        <svg class="w-6 h-6 ml-2 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
+                        </svg>
+                        تصميم شخصي ومخصص
+                    </h3>
+                    <p class="text-gray-300 text-base">
+                        صُممت كل تفصيلة في 'شوال نوت' بعناية فائقة لتلائم ذوقكم واحتياجاتكم الشخصية تماماً، مما يجعلها تحفة فنية فريدة لكم.
+                    </p>
+                </div>
+
+                <!-- 3. الميزة الثالثة: متانة الغلاف - SVG Shield -->
+                <div class="feature-step bg-gray-800 rounded-xl shadow-lg border-r-4 border-red-500" data-index="2">
+                    <h3 class="font-bold text-xl text-red-500 mb-2 flex items-center">
+                        <svg class="w-6 h-6 ml-2 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                        </svg>
+                        غلاف قوي ومقاوم
+                    </h3>
+                    <p class="text-gray-300 text-base">
+                        يتميز الغلاف بالمتانة ومقاومة الخدش، وهو مصمم ليصمد معكم لأطول فترة ممكنة. يمكنكم الاعتماد عليها في حقائبكم دون قلق من التلف أو الانثناء.
+                    </p>
+                </div>
+
+                <!-- 4. الميزة الرابعة: فتحة 180 درجة - SVG Open Book -->
+                <div class="feature-step bg-gray-800 rounded-xl shadow-lg border-r-4 border-yellow-400" data-index="3">
+                    <h3 class="font-bold text-xl text-yellow-400 mb-2 flex items-center">
+                        <svg class="w-6 h-6 ml-2 text-yellow-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                        </svg>
+                        انفتاح مسطح (180 درجة)
+                    </h3>
+                    <p class="text-gray-300 text-base">
+                        تُفتح المفكرة بالكامل بشكل مسطح بزاوية 180 درجة، مما يتيح لكم الكتابة بمنتهى السهولة والراحة على كامل مساحة الصفحتين دون عوائق.
+                    </p>
+                </div>
+            </section>
+            
+            <!-- زر الانتقال للميزة التالية -->
+            <div class="text-center mt-8">
+                <button id="next-feature-btn" class="next-btn-style w-full sm:w-5/6 px-8 py-3 text-lg font-extrabold rounded-full transition duration-300 shadow-xl focus:outline-none focus:ring-4 focus:ring-cyan-400 transform hover:scale-[1.02]">
+                    ابدأ الاكتشاف
+                </button>
+            </div>
+
+
+            <!-- رسالة الشكر الختامية (تظهر بعد عرض كل المميزات) -->
+            <section id="thank-you-section" class="hidden mt-10 p-6 bg-gray-700 rounded-xl border border-green-600 shadow-2xl">
+                <h3 class="text-2xl font-extrabold text-green-400 mb-3 text-center">وصلنا إلى الختام... شكراً لوجودكم!</h3>
+                <p class="text-gray-100 leading-relaxed text-center font-medium">
+                    شكراً جزيلاً لثقتكم بجودة "شوال نوت". دعمكم هو الدافع لاستمرارنا في تقديم الأفضل دائماً. 
+                    نتمنى لكم أياماً ملؤها الإبداع والإنجازات العظيمة برفقة مفكرتكم الجديدة!
+                </p>
+                <div class="mt-5 text-center">
+                    <a href="index.html" class="inline-block px-6 py-2 text-md font-bold text-white bg-green-600 rounded-full hover:bg-green-500 transition duration-300 shadow-lg transform hover:scale-105">
+                        زوروا موقعنا
+                    </a>
+                </div>
+            </section>
+            
+        </main>
+
+        <!-- تذييل الصفحة -->
+        <footer id="conclusion-section" class="hidden p-4 text-center text-gray-400 text-xs bg-gray-900 rounded-b-2xl">
+            <p>&copy; شكرا لكم على شراء المنتج</p>
+        </footer>
+        
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const featuresContainer = document.getElementById('features-list');
+            // جمع كل المميزات بترتيبها
+            const features = Array.from(featuresContainer.querySelectorAll('.feature-step')).sort((a, b) => a.dataset.index - b.dataset.index);
+            const nextButton = document.getElementById('next-feature-btn');
+            const thankYouSection = document.getElementById('thank-you-section');
+            const conclusionSection = document.getElementById('conclusion-section');
+            const introText = document.getElementById('intro-text');
+            
+            let currentFeatureIndex = -1; // -1 يشير إلى أننا قبل أول ميزة
+
+            // 1. إخفاء كل المميزات ورسالة الشكر عند التحميل
+            features.forEach(feature => {
+                feature.classList.add('hidden');
+                feature.classList.remove('active');
+            });
+            thankYouSection.classList.add('hidden');
+            conclusionSection.classList.add('hidden');
+            
+            // إظهار رسالة الترحيب فقط في البداية
+            introText.classList.remove('hidden');
+
+
+            // 2. دالة للتحكم في الضغط على زر "التالي"
+            nextButton.addEventListener('click', () => {
+                // إخفاء العنصر الحالي وتغيير حالته
+                if (currentFeatureIndex >= 0 && currentFeatureIndex < features.length) {
+                    features[currentFeatureIndex].classList.add('hidden');
+                    features[currentFeatureIndex].classList.remove('active');
+                }
+                
+                // الانتقال للخطوة التالية
+                currentFeatureIndex++;
+                
+                // إخفاء رسالة الترحيب بعد أول ضغطة
+                if (currentFeatureIndex === 0) {
+                    introText.classList.add('hidden');
+                    nextButton.textContent = 'الميزة التالية'; // تغيير نص الزر بعد البداية
+                }
+                
+                if (currentFeatureIndex < features.length) {
+                    // إظهار الميزة الجديدة
+                    features[currentFeatureIndex].classList.remove('hidden');
+                    // إضافة كلاس النشاط لتفعيل تأثير الـ transition/animation
+                    setTimeout(() => {
+                        features[currentFeatureIndex].classList.add('active');
+                    }, 50); 
+                    
+                    // تغيير نص الزر في الخطوة ما قبل الأخيرة
+                    if (currentFeatureIndex === features.length - 1) {
+                        nextButton.textContent = 'عرض رسالة الشكر والختام';
+                        // تغيير لون الزر للون الأخضر النهائي
+                        nextButton.classList.remove('next-btn-style', 'focus:ring-cyan-400');
+                        nextButton.classList.add('bg-green-600', 'hover:bg-green-500', 'focus:ring-green-400');
+                    }
+                } else {
+                    // إذا تم الانتهاء من عرض كل المميزات:
+                    
+                    // إخفاء زرار "التالي"
+                    nextButton.classList.add('hidden');
+                    
+                    // إظهار رسالة الشكر النهائية
+                    thankYouSection.classList.remove('hidden');
+                    conclusionSection.classList.remove('hidden');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

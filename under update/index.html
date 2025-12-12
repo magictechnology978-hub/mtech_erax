@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>جاري تصليح المنصة - برجاء الانتظار</title>
+    <!-- تحميل Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* استيراد خط القاهرة (Cairo) */
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #f0fdfa; /* خلفية فاتحة جداً تليق بالتيما Teal */
+        }
+        /* كود للـ Spinner بلون الـ Teal الداكن */
+        .spinner {
+            border: 4px solid rgba(0, 150, 136, 0.3); /* لون التيما الفاتح */
+            border-top: 4px solid #047857; /* لون التيما الداكن (teal-700) */
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* حركة بسيطة على الأيقونة الرئيسية */
+        .repair-icon-pulse {
+            animation: pulse-icon 2s infinite ease-in-out;
+        }
+        @keyframes pulse-icon {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+    </style>
+    
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <!-- بطاقة الصيانة الرئيسية -->
+    <div class="bg-white p-8 md:p-12 rounded-2xl shadow-2xl max-w-lg w-full text-center border-t-8 border-teal-600">
+        
+        <!-- الأيقونة الرئيسية (SVG Tools Icon) -->
+        <div class="mb-6 w-24 h-24 mx-auto p-4 rounded-full bg-teal-100 flex items-center justify-center repair-icon-pulse">
+            <!-- SVG: تصميم مفتاح الربط المدمج الأنيق باللون الأخضر-الأزرق (Teal) -->
+            <svg class="w-16 h-16 text-teal-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7 16V9C7 5.68629 9.68629 3 13 3C16.3137 3 19 5.68629 19 9V16M7 16H3.5C3.22386 16 3 16.2239 3 16.5V20.5C3 20.7761 3.22386 21 3.5 21H22.5C22.7761 21 23 20.7761 23 20.5V16.5C23 16.2239 22.7761 16 22.5 16H19M7 16V17C7 17.5523 7.44772 18 8 18H18C18.5523 18 19 17.5523 19 17V16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M13 3V11M13 11L14 10M13 11L12 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+
+        <!-- رسالة الصيانة بخط Cairo -->
+        <h1 class="text-3xl md:text-4xl font-extrabold text-gray-800 mb-4">جاري تصليح المنصة</h1>
+        
+        <p class="text-xl text-gray-600 mb-8 font-semibold">
+            برجاء الانتظار. تم حذف حسابنا من قِبل جوجل، ونعمل الآن على تغيير مفتاح الـ API لاستئناف الخدمة.
+            <br>
+            <span class="text-sm font-normal text-teal-700 mt-2 block">
+                المنصة ستكون معطلة من الساعة 5 مساء حتى الساعة 10 مساء.
+            </span>
+        </p>
+        
+        <!-- مؤشر التحميل (Spinner) -->
+        <div class="flex justify-center items-center space-x-3 mt-8">
+            <div class="spinner"></div>
+            <span class="text-teal-600 font-bold text-lg">العمل قيد التنفيذ...</span>
+        </div>
+
+        <!-- تذييل بسيط (تم تعديله) -->
+        <footer class="mt-10 pt-4 border-t border-gray-100">
+            <p class="text-sm text-gray-400">
+                &copy; MavixOS 26.0. شكراً لتفهمكم.
+            </p>
+        </footer>
+
+    </div>
+
+</body>
+</html>
+
