@@ -1,4 +1,5 @@
 // api/chat.js
+
 const express = require('express');
 const cors = require('cors'); 
 const { GoogleGenAI } = require('@google/genai'); 
@@ -10,6 +11,7 @@ const GEMINI_KEY = process.env.GEMINI_FLASH_KEY;
 let ai;
 if (GEMINI_KEY && GEMINI_KEY.length > 10) {
     try {
+        // تأكد من استخدام GoogleGenAI كلاس وليس GenAI
         ai = new GoogleGenAI({ apiKey: GEMINI_KEY }); 
         console.log("✅ Gemini AI Client initialized successfully.");
     } catch (e) {
@@ -19,27 +21,30 @@ if (GEMINI_KEY && GEMINI_KEY.length > 10) {
     console.error("❌ مفتاح GEMINI_FLASH_KEY مفقود أو غير صحيح.");
 }
 
-// 3. إنشاء تطبيق Express
+// 3. إنشاء تطبيق Express و Router
 const app = express();
+const router = express.Router(); // <== التعديل رقم 1: استخدام Router
+
 app.use(cors());
 app.use(express.json({ limit: '1mb' })); 
 
 // =========================================================================
-//  المسارات الرئيسية (Routes)
+//  المسارات الرئيسية (Routes) - هنستخدم router بدل app مباشرة
 // =========================================================================
 
-// مسار الاختبار: GET /api
-app.get('/', (req, res) => {
+// مسار الاختبار: GET /api/chat
+// ده هيشتغل لما حد يفتح اللينك في المتصفح مباشرة
+router.get('/', (req, res) => {
     res.json({
         status: "✅ Backend Serverless Function Ready",
         service_status: ai ? "Gemini AI Client Ready" : "❌ Gemini AI Key Failed (Check Vercel Logs)",
-        test_message: "Use POST /api/chat"
+        test_message: "Use POST /api/chat to send messages"
     });
 });
 
 // 🤖 مسار Gemini Chat: POST /api/chat
-// ✅ التعديل هنا: تغيير المسار من '/chat' إلى '/' لاستقبال الطلب الموجه للـ Function مباشرة
-app.post('/', async (req, res) => {
+// <== التعديل رقم 2: استخدام router.post('/')
+router.post('/', async (req, res) => {
     // التحقق أولاً من تهيئة الـ AI
     if (!ai) {
         return res.status(500).json({ 
@@ -76,12 +81,13 @@ app.post('/', async (req, res) => {
         } else {
              console.warn("Received empty or invalid text response from Gemini.");
              res.status(500).json({ 
-                error: "استجابة Gemini كانت فارغة أو غير صالحة. قد يكون بسبب فلترة المحتوى.", 
-                code: "EMPTY_GEMINI_RESPONSE"
-            });
+                 error: "استجابة Gemini كانت فارغة أو غير صالحة. قد يكون بسبب فلترة المحتوى.", 
+                 code: "EMPTY_GEMINI_RESPONSE"
+             });
         }
 
     } catch (error) {
+        // لو ظهر خطأ هنا يبقى المشكلة في الاتصال بـ Gemini API
         console.error("خطأ في الاتصال بـ Gemini:", error.message);
         res.status(500).json({ 
             error: `فشل في معالجة طلب Gemini. الخطأ الفعلي: ${error.message}`, 
@@ -89,6 +95,13 @@ app.post('/', async (req, res) => {
         });
     }
 });
+
+// <== التعديل رقم 3: ربط الـ Router بالـ Express App
+app.use('/api/chat', router); // لو كنا حاطين اسم الملف في الـ use دي ممكن نحلها 
+
+// الحل الأضمن: ربط الـ router مباشرة. Vercel هيعرف يربطها بالـ /api/chat
+app.use(router);
+
 
 // =========================================================================
 //  التصدير الخاص بـ Vercel Serverless Function
