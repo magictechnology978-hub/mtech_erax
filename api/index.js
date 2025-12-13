@@ -1,14 +1,22 @@
 // api/index.js
 
-// 1. استدعاء المكتبات الضرورية وقراءة مفاتيح .env محلياً (ضروري يكون أول سطر)
-require('dotenv').config(); 
+// 1. استدعاء المكتبات الضرورية وقراءة مفاتيح .env
+// سطر .env ده هيقرأ باقي المفاتيح (YouTube, ElevenLabs, etc.)، لكنه مش هيستخدم مفتاح Gemini الآن.
+require('dotenv').config();
+
 const express = require('express');
 const cors = require('cors'); 
 const axios = require('axios'); 
 const { GoogleGenAI } = require('@google/genai'); 
 
 // 2. قراءة المفاتيح السرية من البيئة (process.env)
-const GEMINI_KEY = process.env.GEMINI_FLASH_KEY;
+// **** 🚨 التعديل المؤقت هنا 🚨 ****
+// استخدم المفتاح مباشرةً لتخطي مشكلة قراءة .env محلياً.
+// يجب تغيير هذا السطر قبل النشر على Vercel وإعادته لقراءة process.env.
+const GEMINI_KEY = "AIzaSyBtYkgxI5BG2ok_jFhY5aFjknJTpInuPDE"; // <<< استبدل هذا النص بمفتاحك
+// ******************************
+
+// قراءة باقي المفاتيح من ملف .env
 const YOUTUBE_KEY = process.env.YOUTUBE_DATA_KEY; 
 const ELEVEN_LABS_KEY = process.env.ELEVEN_LABS_KEY;
 const EMAILJS_KEY = process.env.EMAILJS_KEY; 
@@ -18,12 +26,18 @@ const REMOVE_BG_KEY = process.env.REMOVE_BG_KEY;
 const app = express();
 const PORT = 3000; 
 
-// 4. تهيئة عميل Gemini
+// تهيئة عميل Gemini 
+if (!GEMINI_KEY || GEMINI_KEY.length < 39) {
+    console.error("❌❌❌ فشل تحميل مفتاح Gemini. يرجى التأكد من أن المفتاح صحيح وكامل.");
+    // إذا كان المفتاح غير صالح، لن نتمكن من تهيئة ai، وهذا يمنع الـ TypeError
+    process.exit(1); 
+}
+
 const ai = new GoogleGenAI(GEMINI_KEY);
 
-// 5. إعدادات السيرفر (Middlewares)
+
+// 4. إعدادات السيرفر (Middlewares)
 app.use(cors()); 
-// يسمح بقراءة البيانات بصيغة JSON ويسمح بحد أقصى 50MB للصور
 app.use(express.json({ limit: '50mb' })); 
 
 // =========================================================================
@@ -35,13 +49,14 @@ app.get('/', (req, res) => {
     res.json({
         message: "✅ سيرفر الـ Backend شغال بنجاح ومفاتيحك محمية.",
         status: "استخدم المسارات الأخرى للاتصال بالخدمات.",
-        key_status_check: !!GEMINI_KEY ? "Gemini Key Loaded" : "Gemini Key Missing in Environment"
+        key_status_check: !!GEMINI_KEY ? `Gemini Key is Hard-Coded (Length: ${GEMINI_KEY.length})` : "Gemini Key Missing"
     });
 });
 
 
 // 1. 🤖 مسار Gemini Chat: POST /api/chat
 app.post('/chat', async (req, res) => {
+    // المفتاح موجود (Hard Coded)، لكن نتحقق من صلاحيته
     if (!GEMINI_KEY) return res.status(500).json({ error: "مفتاح Gemini غير مُعد." });
     
     const { prompt } = req.body; 
@@ -57,7 +72,8 @@ app.post('/chat', async (req, res) => {
 
     } catch (error) {
         console.error("خطأ في الاتصال بـ Gemini:", error.message);
-        res.status(500).json({ error: "فشل في معالجة طلب Gemini. تأكد من أن المفتاح صحيح." });
+        // في حالة فشل الاتصال بسبب مفتاح غير صالح أو خطأ من API (زي 403 Forbidden)
+        res.status(500).json({ error: `فشل في معالجة طلب Gemini. تأكد من أن المفتاح صحيح وغير محظور. الخطأ الفعلي: ${error.message}` });
     }
 });
 
@@ -89,13 +105,12 @@ app.post('/remove-background', async (req, res) => {
             }
         );
         
-        // إرجاع الصورة الناتجة مباشرة للـ Frontend
         res.set('Content-Type', 'image/png');
         res.send(response.data);
 
     } catch (error) {
         console.error("خطأ في الاتصال بـ remove.bg:", error.message);
-        res.status(500).json({ error: "فشل في معالجة إزالة الخلفية. (Check Vercel Logs)" });
+        res.status(500).json({ error: "فشل في معالجة إزالة الخلفية." });
     }
 });
 
@@ -124,21 +139,16 @@ app.post('/tts', (req, res) => {
     if (!ELEVEN_LABS_KEY) return res.status(500).json({ error: "مفتاح Eleven Labs غير مُعد." });
     
     const { text } = req.body; 
-
-    // هنا يجب إضافة كود اتصال Eleven Labs API الذي يستخدم مفتاح ELEVEN_LABS_KEY
     
     res.json({
         success: true,
-        message: "مسار Eleven Labs جاهز، يحتاج إضافة كود الاتصال الفعلي بالخدمة.",
-        // **هنا يتم إرجاع ملف الصوت أو رابط له**
+        message: "مسار Eleven Labs جاهز، يحتاج إضافة كود الاتصال الفعلي بالخدمة."
     });
 });
 
 
 // 5. ✉️ مسار EmailJS Proxy: POST /api/send-email
 app.post('/send-email', (req, res) => {
-    // بالرغم من أننا لا نستخدم مفتاح EMAILJS_KEY في هذا المثال، نضع المسار ليكون آمن
-    
     res.json({
         success: true,
         message: "مسار إرسال الإيميل جاهز. يستخدم الـ Backend كواجهة آمنة."
@@ -150,12 +160,13 @@ app.post('/send-email', (req, res) => {
 //  التصدير والتشغيل
 // =========================================================================
 
-// التصدير لـ Vercel (مهم جداً):
+// التصدير لـ Vercel:
 module.exports = app; 
 
 // تشغيل السيرفر محلياً:
 if (require.main === module) {
   app.listen(PORT, () => {
-    console.log(`السيرفر المحلي شغال على: http://localhost:${PORT}`);
+    console.log(`✅ السيرفر المحلي شغال على: http://localhost:${PORT}`);
+    console.log(`حالة مفتاح Gemini: Hard-Coded`);
   });
 }

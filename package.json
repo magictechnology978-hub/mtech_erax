@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@google/genai": "^1.33.0",
     "dotenv-cli": "^11.0.0"
   }
 }
