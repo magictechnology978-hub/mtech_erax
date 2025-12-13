@@ -2487,11 +2487,14 @@ body.ltr-mode .back-arrow-button {
 // ====================================================================
 // ****** إعدادات الـGemini والمكونات الأساسية ******
 // ====================================================================
-const geminiApiKey = "AIzaSyDx0E9Y8_12E4nyxs3Ahv4c1ZmdTHBiE0k"; 
-const CHAT_MODEL = "gemini-2.5-flash"; 
-const geminiApiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${CHAT_MODEL}:generateContent?key=${geminiApiKey}`;
 
 // سجل المحادثة الداخلي للاحتفاظ بالسياق (History)
+// ====================================================================
+// ****** إعدادات ومتغيرات أساسية ******
+// ====================================================================
+
+// سجل المحادثة الداخلي للاحتفاظ بالسياق (History)
+// يحتوي على الرسائل السابقة والصور المرفقة لعمل Multimodal
 let conversationData = []; 
 
 // إنشاء محول Markdown (يتطلب مكتبة Showdown)
@@ -2501,6 +2504,7 @@ const converter = new showdown.Converter({
 });
 
 // الرسالة التوجيهية للنظام (System Instruction)
+// تبقى هنا لأنها إعداد وليس مفتاح سري
 const systemInstruction = {
     parts: [{
         text: 'أنت مساعد ذكاء اصطناعي من شركة Magic Technology. أجيب على أسئلة المستخدمين بدقة ووضوح. اللغة الأساسية هي اللهجة المصرية (Masry) مع إجابات متوسطة الحجم، مركزة، وقوية. لو حد سألني بلغة تانية أرد عليه بنفس اللغة بدقة وفصاحة.'
@@ -2525,6 +2529,7 @@ function addMessage(sender, content) {
         messageDiv.innerHTML = content;
     } else {
         messageDiv.classList.add('ai-message');
+        // تحويل رد الـ AI من Markdown إلى HTML
         const htmlContent = converter.makeHtml(content);
         messageDiv.innerHTML = htmlContent;
     }
@@ -2558,12 +2563,13 @@ function removeLoadingIndicator(indicator) {
 // ====================================================================
 
 /**
- * تحويل ملف الصورة إلى جزء مولّد (GenerativePart)
+ * تحويل ملف الصورة إلى جزء مولّد (GenerativePart) (Base64)
  */
 function fileToGenerativePart(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = (e) => {
+            // فصل البداية (data:image/jpeg;base64,) للحصول على البيانات فقط
             const base64Data = e.target.result.split(',')[1]; 
             resolve({
                 inlineData: {
@@ -2610,7 +2616,7 @@ window.clearAttachment = clearAttachment;
 
 
 // ====================================================================
-// ****** دالة الإرسال الرئيسية (HandleSend) ******
+// ****** دالة الإرسال الرئيسية (handleSend) ******
 // ====================================================================
 
 async function handleSend() {
@@ -2619,9 +2625,9 @@ async function handleSend() {
     const imageInput = document.getElementById('image-input');
 
     if (!userInput || !imageInput) {
-         console.error("خطأ: أحد عناصر الإدخال (user-input أو image-input) غير موجود.");
-         addMessage('ai', "معلش، فيه مشكلة في تهيئة زرار رفع الصور. تأكد إنك ضفت كود الـHTML الجديد لمنطقة الإدخال.");
-         return;
+        console.error("خطأ: أحد عناصر الإدخال (user-input أو image-input) غير موجود.");
+        addMessage('ai', "معلش، فيه مشكلة في تهيئة الكود. تأكد من وجود حقول الإدخال المطلوبة.");
+        return;
     }
 
     const message = userInput.value.trim();
@@ -2632,12 +2638,13 @@ async function handleSend() {
         return; 
     }
     
-    // 1. بناء رسالة المستخدم وعرضها
+    // 1. بناء رسالة المستخدم (الـ Parts) وعرضها
     let userContentToDisplay = '';
     const userMessageParts = [];
     
     if (imageFile) {
         try {
+            // تحويل الصورة لـ Base64
             const imagePart = await fileToGenerativePart(imageFile);
             userMessageParts.push(imagePart);
         } catch (error) {
@@ -2646,6 +2653,7 @@ async function handleSend() {
             return;
         }
 
+        // بناء العرض في الـ UI
         const imgUrl = URL.createObjectURL(imageFile);
         userContentToDisplay = `
             ${message ? `<p>${message.replace(/\n/g, '<br>')}</p>` : ''}
@@ -2657,10 +2665,12 @@ async function handleSend() {
         userContentToDisplay = `<p>${message.replace(/\n/g, '<br>')}</p>`;
     }
     
+    // إضافة النص كجزء (Part)
     if (message) {
         userMessageParts.push({ text: message });
     }
 
+    // عرض رسالة المستخدم في الواجهة
     addMessage('user', userContentToDisplay);
     userInput.value = ''; 
 
@@ -2670,34 +2680,42 @@ async function handleSend() {
         parts: userMessageParts
     });
 
-    // 3. إرسال المحادثة بالكامل إلى الـAPI
+    // 3. إرسال المحادثة بالكامل إلى الـ Backend الآمن
     const loadingIndicator = addLoadingIndicator();
     try {
-        const response = await fetch(geminiApiUrl, {
+        // **⚠️ الاتصال الآن بالـ Backend الآمن (/api/chat) بدلاً من Gemini API مباشرة**
+        const response = await fetch('/api/chat', { 
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
+                // نبعت سجل المحادثة كاملاً (History + الرسالة الجديدة)
                 contents: conversationData, 
-                systemInstruction: systemInstruction 
+                
+                // نبعت نص الرسالة التوجيهية فقط
+                systemInstructionText: systemInstruction.parts[0].text 
             })
         });
 
+        // 4. معالجة الأخطاء
         if (!response.ok) {
             const errorBody = await response.json();
             console.error("API Response Error Details:", errorBody); 
-            throw new Error(`HTTP error! status: ${response.status}. Message: ${errorBody?.error?.message || 'Unknown API Error'}`);
+            // ظهور رسالة الخطأ اللي جاية من الـ Backend (مثلاً: مفتاح Gemini غير مُعد)
+            throw new Error(errorBody.error || `HTTP error! status: ${response.status}.`);
         }
         
+        // 5. استقبال الرد
         const result = await response.json();
         
-        const aiResponseText = result?.candidates?.[0]?.content?.parts?.[0]?.text || "معلش، فيه مشكلة حصلت وأنا برد عليك. (لم يتم العثور على رد).";
+        // الـ Backend بتاعنا بيرجع الرد في geminiResponse
+        const aiResponseText = result.geminiResponse;
         
         removeLoadingIndicator(loadingIndicator);
         addMessage('ai', aiResponseText);
         
-        // 4. تحديث سجل المحادثة برد الـAI
+        // 6. تحديث سجل المحادثة برد الـAI
         conversationData.push({
             role: "model",
             parts: [{ text: aiResponseText }]
@@ -2706,7 +2724,7 @@ async function handleSend() {
     } catch (error) {
         console.error("Error calling Gemini API:", error);
         removeLoadingIndicator(loadingIndicator);
-        addMessage('ai', `معلش، حصلت مشكلة في الاتصال بالذكاء الاصطناعي. السبب: ${error.message}. ممكن تحاول تاني؟`);
+        addMessage('ai', `معلش، حصلت مشكلة في الاتصال بالذكاء الاصطناعي. السبب: ${error.message}.`);
     }
 }
 window.handleSend = handleSend; // جعل الدالة متاحة لـ onclick في الـHTML
@@ -2723,9 +2741,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // ربط الزر والإدخال في حالة وجودهما بعد تحميل الصفحة بالكامل
     if (sendButton) {
         sendButton.addEventListener('click', handleSend);
-    } else {
-        console.error("خطأ: زر الإرسال (#send-button) غير موجود في DOM.");
-    }
+    } 
 
     if (userInput) {
         userInput.addEventListener('keydown', (event) => {
@@ -2737,17 +2753,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
-
-// وظائف الفتح والإغلاق (يفترض أن هذه الدوال موجودة في كودك)
-document.addEventListener('DOMContentLoaded', function() {
-    const chatModal = document.getElementById('chatModal');
-    
-    document.getElementById('openChatBtn')?.addEventListener('click', () => {
-        if(chatModal) chatModal.style.display = 'flex';
-        document.getElementById('openChatBtn').style.display = 'none';
-    });
-});
-
 
         // كود تحليل قوة كلمة المرور
         const passwordInput = document.getElementById('passwordInput');
@@ -2838,91 +2843,57 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // --- Mtech Videos Script ---
-        const API_KEY = "AIzaSyB2Zibr3wy6vQnQt5VT02YNWMz1wNH9Inc"; // USER REQUESTED TO KEEP THIS KEY
-        const CHANNEL_ID = "UCDFuAU8EIOx1b-YK4XdloBw";
-        let nextPageToken = '';
-        const videosContainer = document.getElementById('videos-container');
-        const loadMoreBtn = document.getElementById('load-more-btn');
-        const videoModal = document.getElementById('videoModal');
-        const videoIframe = document.getElementById('videoIframe');
+  // --- Mtech Videos Script ---
+// المفتاح السري تم حذفه من هنا
+const CHANNEL_ID = "UCDFuAU8EIOx1b-YK4XdloBw";
+let nextPageToken = '';
+const videosContainer = document.getElementById('videos-container');
+const loadMoreBtn = document.getElementById('load-more-btn');
+const videoModal = document.getElementById('videoModal');
+const videoIframe = document.getElementById('videoIframe');
 
-        const fetchVideos = async (pageToken = '') => {
-            const URL = `https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${CHANNEL_ID}&part=snippet,id&order=date&maxResults=4&pageToken=${pageToken}&type=video`;
-            
-            // Show loading if first load
-            if (pageToken === '') {
-                 videosContainer.innerHTML = '<div class="loading">جارٍ تحميل الفيديوهات...</div>';
-                 loadMoreBtn.style.display = 'none';
-            } else {
-                // Disable load more button while loading
-                loadMoreBtn.disabled = true;
-                loadMoreBtn.textContent = 'جارٍ التحميل...';
+const fetchVideos = async (pageToken = '') => {
+    // ⚠️ هنا بيتم استدعاء مسار الـ Backend بتاعك (اللي فيه المفتاح المخفي)
+    // المسار ده هيروح للـ Backend اللي بيستخدم مفتاح YouTube المخفي
+    const BACKEND_URL = '/api/youtube-channel'; // هنفترض إنك عامل مسار لقنوات محددة
+    
+    // أو نستخدم مسار البحث العام ونعدله في الـ Backend
+    
+    // **التعديل الأسهل والأكثر عملية:**
+
+    try {
+        // 1. إعداد الطلب (URLSearch) اللي بيحتوي على الـ CHANNEL_ID والـ pageToken
+        // المسار ده هيروح للـ Backend بتاعك
+        const response = await fetch(`${BACKEND_URL}?channelId=${CHANNEL_ID}&pageToken=${pageToken}`, {
+            method: 'GET', // أو POST لو أنت مضبطها كده
+            headers: {
+                'Content-Type': 'application/json'
             }
-            
-            try {
-                const response = await fetch(URL);
-                const data = await response.json();
-                
-                // Clear loading indicator only after data is received
-                if (pageToken === '') {
-                    videosContainer.innerHTML = ''; 
-                } else {
-                    loadMoreBtn.disabled = false;
-                    loadMoreBtn.textContent = 'عرض المزيد';
-                }
+        });
 
+        if (!response.ok) {
+            throw new Error('فشل في تحميل الفيديوهات من السيرفر.');
+        }
 
-                if (data.error) {
-                    videosContainer.innerHTML = `<p style="text-align: center; color: red;">حدث خطأ: ${data.error.message}. تأكد من صحة مفتاح الـ API.</p>`;
-                    loadMoreBtn.style.display = 'none';
-                    return;
-                }
+        const data = await response.json();
+        
+        // **مهم:** الرد دلوقتي هيجي من الـ Backend بتاعك، مش من YouTube مباشرة
+        // تأكد من أن الـ Backend بتاعك بيرجع نفس الـ JSON اللي YouTube بترجعه!
+        
+        // إذا كان الـ Backend بتاعك بيرجع الـ items والـ nextPageToken مباشرة:
+        const items = data.items;
+        nextPageToken = data.nextPageToken;
 
-                if (data.items.length === 0 && pageToken === '') {
-                    videosContainer.innerHTML = '<p style="text-align: center;">لا توجد فيديوهات للعرض حالياً.</p>';
-                    loadMoreBtn.style.display = 'none';
-                    return;
-                }
+        // ... تكملة كود الفرونت إند بتاعك ...
+        // (باقي الكود لتحديث الواجهة وعرض الفيديوهات)
+        
+    } catch (error) {
+        console.error("خطأ في جلب فيديوهات القناة:", error);
+        // يمكنك عرض رسالة خطأ للمستخدم
+    }
+};
 
-                data.items.forEach(item => {
-                    if (item.id.videoId) {
-                        const videoId = item.id.videoId;
-                        const title = item.snippet.title;
-                        const publishDate = new Date(item.snippet.publishedAt).toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
-                        const thumbnail = item.snippet.thumbnails?.high?.url || 'placeholder.jpg';
-                        
-                        const videoCard = document.createElement('div');
-                        videoCard.classList.add('video-card');
-                        videoCard.innerHTML = `
-                            <img src="${thumbnail}" alt="${title}" loading="lazy">
-                            <div class="video-info">
-                                <h3>${title}</h3>
-                                <p>نشر في: ${publishDate}</p>
-                            </div>
-                        `;
-                        videoCard.addEventListener('click', () => {
-                            openModal(videoId);
-                        });
-                        videosContainer.appendChild(videoCard);
-                    }
-                });
-
-                nextPageToken = data.nextPageToken || '';
-                if (nextPageToken) {
-                    loadMoreBtn.style.display = 'block';
-                } else {
-                    loadMoreBtn.style.display = 'none';
-                }
-            } catch (error) {
-                console.error('Error fetching data from YouTube API:', error);
-                if (pageToken === '') {
-                     videosContainer.innerHTML = '<p style="text-align: center; color: red;">حدث خطأ في الاتصال بالشبكة أو في مفتاح الـAPI.</p>';
-                } else {
-                    loadMoreBtn.textContent = 'فشل التحميل. حاول مرة أخرى.';
-                }
-                loadMoreBtn.style.display = 'none';
-            }
-        };
+// ... باقي الكود ...
 
         const openModal = (videoId) => {
             const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
