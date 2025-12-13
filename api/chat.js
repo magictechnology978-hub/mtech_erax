@@ -1,23 +1,16 @@
 // api/chat.js
 const express = require('express');
-const cors = require =('cors');
-const axios = require('axios');
-// تأكد من أن هذه هي المكتبة الصحيحة المثبتة لديك
+const cors = require('cors'); 
 const { GoogleGenAI } = require('@google/genai'); 
 
-// 1. قراءة المفاتيح السرية: نركز فقط على مفتاح Gemini
+// 1. قراءة المفاتيح السرية
 const GEMINI_KEY = process.env.GEMINI_FLASH_KEY;
-// تم تعطيل قراءة المفاتيح الأخرى مؤقتاً لتجنب أي Crash
-// const YOUTUBE_KEY = process.env.YOUTUBE_DATA_KEY;
-// const REMOVE_BG_KEY = process.env.REMOVE_BG_KEY;
-// const ELEVEN_LABS_KEY = process.env.ELEVEN_LABS_KEY;
 
 // 2. تهيئة عميل Gemini
 let ai;
 if (GEMINI_KEY && GEMINI_KEY.length > 10) {
     try {
-        // يتم التأكد من أن المفتاح يعمل هنا
-        ai = new GoogleGenAI(GEMINI_KEY);
+        ai = new GoogleGenAI({ apiKey: GEMINI_KEY }); 
         console.log("✅ Gemini AI Client initialized successfully.");
     } catch (e) {
         console.error("⛔ فشل تهيئة Gemini AI (خطأ في المكتبة): ", e.message);
@@ -29,7 +22,6 @@ if (GEMINI_KEY && GEMINI_KEY.length > 10) {
 // 3. إنشاء تطبيق Express
 const app = express();
 app.use(cors());
-// تقليل الـ limit لتقليل الحمل إذا لم تكن تعالج ملفات كبيرة
 app.use(express.json({ limit: '1mb' })); 
 
 // =========================================================================
@@ -46,39 +38,57 @@ app.get('/', (req, res) => {
 });
 
 // 🤖 مسار Gemini Chat: POST /api/chat
-app.post('/chat', async (req, res) => {
+// ✅ التعديل هنا: تغيير المسار من '/chat' إلى '/' لاستقبال الطلب الموجه للـ Function مباشرة
+app.post('/', async (req, res) => {
+    // التحقق أولاً من تهيئة الـ AI
     if (!ai) {
-        // إذا فشلت التهيئة، يتم الرد برسالة مخصصة بدلاً من الـ 500 HTML
         return res.status(500).json({ 
             error: "فشل في تهيئة خدمة Gemini AI. تأكد من أن GEMINI_FLASH_KEY صحيح ومحفوظ في Vercel.",
             code: "KEY_MISSING_OR_INVALID"
         });
     }
     
-    const { prompt } = req.body;
-    if (!prompt) {
-        return res.status(400).json({ error: "الـ prompt مطلوب.", code: "BAD_REQUEST" });
+    // نستقبل 'contents' و 'systemInstruction' من الفرونت إند
+    const { contents, systemInstruction } = req.body;
+
+    // التحقق من الـ contents (سجل المحادثة)
+    if (!contents || contents.length === 0) {
+        return res.status(400).json({ error: "الـ contents (سجل المحادثة) مطلوب.", code: "BAD_REQUEST" });
     }
 
     try {
-        const response = await ai.models.generateContent({
+        // بناء الـ Configuration للـ API
+        const config = {};
+        if (systemInstruction) {
+            config.systemInstruction = systemInstruction; 
+        }
+
+        // إرسال الـ contents بالكامل (History + الرسالة الجديدة)
+        const response = await ai.generateContent({
             model: "gemini-2.5-flash", 
-            contents: prompt,
+            contents: contents, 
+            config: config
         });
 
-        res.json({ success: true, geminiResponse: response.text });
+        // التأكد من أن الاستجابة موجودة قبل إرسالها
+        if (response && response.text) {
+             res.json({ success: true, geminiResponse: response.text });
+        } else {
+             console.warn("Received empty or invalid text response from Gemini.");
+             res.status(500).json({ 
+                error: "استجابة Gemini كانت فارغة أو غير صالحة. قد يكون بسبب فلترة المحتوى.", 
+                code: "EMPTY_GEMINI_RESPONSE"
+            });
+        }
 
     } catch (error) {
         console.error("خطأ في الاتصال بـ Gemini:", error.message);
-        // إرجاع الخطأ الفعلي للمساعدة في التشخيص
         res.status(500).json({ 
             error: `فشل في معالجة طلب Gemini. الخطأ الفعلي: ${error.message}`, 
             code: "GEMINI_API_FAILURE"
         });
     }
 });
-
-// ... تم تعطيل مسارات YouTube و Remove BG وغيرها مؤقتاً ...
 
 // =========================================================================
 //  التصدير الخاص بـ Vercel Serverless Function
