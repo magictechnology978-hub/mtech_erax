@@ -1,66 +1,61 @@
-// api/index.js
-
-// 1. استدعاء المكتبات الضرورية وقراءة مفاتيح .env
-// سطر .env ده هيقرأ باقي المفاتيح (YouTube, ElevenLabs, etc.)، لكنه مش هيستخدم مفتاح Gemini الآن.
-require('dotenv').config();
-
+// api/chat.js
 const express = require('express');
-const cors = require('cors'); 
-const axios = require('axios'); 
-const { GoogleGenAI } = require('@google/genai'); 
+const cors = require('cors');
+const axios = require('axios');
+// تأكد من تثبيت المكتبة الصحيحة لـ Gemini (هنا @google/genai)
+const { GoogleGenAI } = require('@google/genai');
+const removeBg = require('remove.bg'); // إذا كنت تستخدم هذه المكتبة
 
-// 2. قراءة المفاتيح السرية من البيئة (process.env)
-// **** 🚨 التعديل المؤقت هنا 🚨 ****
-// استخدم المفتاح مباشرةً لتخطي مشكلة قراءة .env محلياً.
-// يجب تغيير هذا السطر قبل النشر على Vercel وإعادته لقراءة process.env.
-const GEMINI_KEY = "AIzaSyBtYkgxI5BG2ok_jFhY5aFjknJTpInuPDE"; // <<< استبدل هذا النص بمفتاحك
-// ******************************
+// 1. قراءة المفاتيح السرية من متغيرات البيئة (Vercel Env Vars)
+// يتم التحقق من وجود المفاتيح قبل الاستخدام لعدم حدوث Crash
+const GEMINI_KEY = process.env.GEMINI_FLASH_KEY;
+const YOUTUBE_KEY = process.env.YOUTUBE_DATA_KEY;
+const REMOVE_BG_KEY = process.env.REMOVE_BG_KEY;
+const ELEVEN_LABS_KEY = process.env.ELEVEN_LABS_KEY; // إذا كنت تستخدمها
 
-// قراءة باقي المفاتيح من ملف .env
-const YOUTUBE_KEY = process.env.YOUTUBE_DATA_KEY; 
-const ELEVEN_LABS_KEY = process.env.ELEVEN_LABS_KEY;
-const EMAILJS_KEY = process.env.EMAILJS_KEY; 
-const REMOVE_BG_KEY = process.env.REMOVE_BG_KEY; 
-
-// 3. تهيئة التطبيق والسيرفر
-const app = express();
-const PORT = 3000; 
-
-// تهيئة عميل Gemini 
-if (!GEMINI_KEY || GEMINI_KEY.length < 39) {
-    console.error("❌❌❌ فشل تحميل مفتاح Gemini. يرجى التأكد من أن المفتاح صحيح وكامل.");
-    // إذا كان المفتاح غير صالح، لن نتمكن من تهيئة ai، وهذا يمنع الـ TypeError
-    process.exit(1); 
+// 2. تهيئة عميل Gemini
+let ai;
+if (GEMINI_KEY && GEMINI_KEY.length > 10) {
+    try {
+        ai = new GoogleGenAI(GEMINI_KEY);
+    } catch (e) {
+        console.error("⛔ فشل تهيئة Gemini AI: ", e.message);
+    }
+} else {
+    console.error("❌ مفتاح GEMINI_FLASH_KEY مفقود أو غير صحيح.");
 }
 
-const ai = new GoogleGenAI(GEMINI_KEY);
-
-
-// 4. إعدادات السيرفر (Middlewares)
-app.use(cors()); 
+// 3. إنشاء تطبيق Express
+const app = express();
+app.use(cors());
 app.use(express.json({ limit: '50mb' })); 
 
 // =========================================================================
-//  مسارات الـ API (الـ Routes)
+//  المسارات الرئيسية (Routes)
 // =========================================================================
 
-// مسار رئيسي للاختبار: GET /api
+// مسار الاختبار: GET /api
 app.get('/', (req, res) => {
     res.json({
-        message: "✅ سيرفر الـ Backend شغال بنجاح ومفاتيحك محمية.",
-        status: "استخدم المسارات الأخرى للاتصال بالخدمات.",
-        key_status_check: !!GEMINI_KEY ? `Gemini Key is Hard-Coded (Length: ${GEMINI_KEY.length})` : "Gemini Key Missing"
+        status: "✅ Backend Serverless Function Ready",
+        service_status: ai ? "Gemini AI Client Ready" : "❌ Gemini AI Key Failed",
+        test_message: "Use POST /api/chat or other specific API endpoints."
     });
 });
 
-
-// 1. 🤖 مسار Gemini Chat: POST /api/chat
+// 🤖 1. مسار Gemini Chat: POST /api/chat
 app.post('/chat', async (req, res) => {
-    // المفتاح موجود (Hard Coded)، لكن نتحقق من صلاحيته
-    if (!GEMINI_KEY) return res.status(500).json({ error: "مفتاح Gemini غير مُعد." });
+    if (!ai) {
+        return res.status(500).json({ 
+            error: "فشل في تهيئة خدمة Gemini AI. تأكد من أن GEMINI_FLASH_KEY صحيح ومحفوظ في Vercel.",
+            code: "KEY_MISSING_OR_INVALID"
+        });
+    }
     
-    const { prompt } = req.body; 
-    if (!prompt) return res.status(400).json({ error: "الـ prompt مطلوب." });
+    const { prompt } = req.body;
+    if (!prompt) {
+        return res.status(400).json({ error: "الـ prompt مطلوب.", code: "BAD_REQUEST" });
+    }
 
     try {
         const response = await ai.models.generateContent({
@@ -72,101 +67,63 @@ app.post('/chat', async (req, res) => {
 
     } catch (error) {
         console.error("خطأ في الاتصال بـ Gemini:", error.message);
-        // في حالة فشل الاتصال بسبب مفتاح غير صالح أو خطأ من API (زي 403 Forbidden)
-        res.status(500).json({ error: `فشل في معالجة طلب Gemini. تأكد من أن المفتاح صحيح وغير محظور. الخطأ الفعلي: ${error.message}` });
+        // إرجاع الخطأ الفعلي للمساعدة في التشخيص
+        res.status(500).json({ 
+            error: `فشل في معالجة طلب Gemini. الخطأ الفعلي: ${error.message}`, 
+            code: "GEMINI_API_FAILURE"
+        });
+    }
+});
+
+// 🎬 2. مسار YouTube Channel Info: GET /api/youtube-channel?channelId=...
+app.get('/youtube-channel', async (req, res) => {
+    if (!YOUTUBE_KEY) return res.status(500).json({ error: "مفتاح YOUTUBE_DATA_KEY مفقود." });
+    
+    const { channelId } = req.query; 
+    if (!channelId) return res.status(400).json({ error: "Channel ID مطلوب." });
+
+    const URL = `https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&id=${channelId}&key=${YOUTUBE_KEY}`;
+    
+    try {
+        const response = await axios.get(URL);
+        res.json(response.data);
+    } catch (error) {
+        console.error("خطأ في الاتصال بـ YouTube:", error.message);
+        res.status(error.response ? error.response.status : 500).json({ error: "فشل في جلب بيانات قناة يوتيوب." });
     }
 });
 
 
-// 2. 🖼️ مسار Remove.bg: POST /api/remove-background
+// 🖼️ 3. مسار Remove Background: POST /api/remove-background
 app.post('/remove-background', async (req, res) => {
-    if (!REMOVE_BG_KEY) return res.status(500).json({ error: "مفتاح Remove.bg غير مُعد." });
+    if (!REMOVE_BG_KEY) return res.status(500).json({ error: "مفتاح REMOVE_BG_KEY مفقود." });
     
-    const { imageUrl, base64_image } = req.body; 
+    const { imageUrl } = req.body;
+    if (!imageUrl) return res.status(400).json({ error: "رابط الصورة مطلوب." });
 
-    if (!imageUrl && !base64_image) {
-        return res.status(400).json({ error: "يجب إرسال رابط صورة (imageUrl) أو كود (base64_image)." });
-    }
-    
     try {
-        const response = await axios.post(
-            'https://api.remove.bg/v1.0/removebg',
-            { 
-                image_url: imageUrl, 
-                image_file_b64: base64_image,
-                size: 'auto'
-            },
-            {
-                headers: {
-                    'X-Api-Key': REMOVE_BG_KEY,
-                    'Content-Type': 'application/json'
-                },
-                responseType: 'arraybuffer' 
-            }
-        );
-        
-        res.set('Content-Type', 'image/png');
-        res.send(response.data);
+        // إذا كنت تستخدم مكتبة 'remove.bg' بشكل مباشر
+        const result = await removeBg.removeBackground({
+            apiKey: REMOVE_BG_KEY,
+            url: imageUrl,
+            outputFile: null // لا نحفظ ملف، نرجع بيانات الصورة
+        });
+
+        // غالباً remove.bg بترجع البايتات (Buffer) أو Base64
+        // هنا يجب تعديل الرد حسب ما تتوقعه المكتبة
+        res.json({ success: true, base64Image: result.base64img });
 
     } catch (error) {
-        console.error("خطأ في الاتصال بـ remove.bg:", error.message);
+        console.error("خطأ في خدمة إزالة الخلفية:", error.message);
         res.status(500).json({ error: "فشل في معالجة إزالة الخلفية." });
     }
 });
 
-
-// 3. 📺 مسار YouTube Search: POST /api/youtube
-app.post('/youtube', async (req, res) => {
-    if (!YOUTUBE_KEY) return res.status(500).json({ error: "مفتاح YouTube غير مُعد." });
-    
-    const { query } = req.body; 
-    if (!query) return res.status(400).json({ error: "الـ query مطلوب للبحث." });
-
-    const YOUTUBE_SEARCH_URL = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&key=${YOUTUBE_KEY}`;
-    
-    try {
-        const result = await axios.get(YOUTUBE_SEARCH_URL);
-        res.json({ success: true, items: result.data.items });
-    } catch (error) {
-        console.error("خطأ في الاتصال بـ YouTube:", error.message);
-        res.status(500).json({ error: "فشل في الاتصال بخدمة YouTube." });
-    }
-});
-
-
-// 4. 🔊 مسار Eleven Labs (TTS): POST /api/tts
-app.post('/tts', (req, res) => {
-    if (!ELEVEN_LABS_KEY) return res.status(500).json({ error: "مفتاح Eleven Labs غير مُعد." });
-    
-    const { text } = req.body; 
-    
-    res.json({
-        success: true,
-        message: "مسار Eleven Labs جاهز، يحتاج إضافة كود الاتصال الفعلي بالخدمة."
-    });
-});
-
-
-// 5. ✉️ مسار EmailJS Proxy: POST /api/send-email
-app.post('/send-email', (req, res) => {
-    res.json({
-        success: true,
-        message: "مسار إرسال الإيميل جاهز. يستخدم الـ Backend كواجهة آمنة."
-    });
-});
-
+// ... هنا ممكن تضيف مسارات أخرى زي /api/tts لـ Eleven Labs
 
 // =========================================================================
-//  التصدير والتشغيل
+//  التصدير الخاص بـ Vercel Serverless Function
 // =========================================================================
 
-// التصدير لـ Vercel:
-module.exports = app; 
-
-// تشغيل السيرفر محلياً:
-if (require.main === module) {
-  app.listen(PORT, () => {
-    console.log(`✅ السيرفر المحلي شغال على: http://localhost:${PORT}`);
-    console.log(`حالة مفتاح Gemini: Hard-Coded`);
-  });
-}
+// تصدير تطبيق Express مباشرة دون استخدام app.listen
+module.exports = app;
