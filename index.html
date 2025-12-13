@@ -2354,23 +2354,7 @@ body.ltr-mode .back-arrow-button {
 
  
         </div>
-        <div class="app-card content-section scroll-animation" id="videos">
-            <div class="header-card" style="max-width: unset;">
-                <div class="header-icon">📺</div>
-                <h3>Mtech Videos</h3>
-                <p class="muted">أحدث الفيديوهات من قناتنا على يوتيوب</p>
-            </div>
-            <div id="videos-container">
-                <div class="loading">جارٍ تحميل الفيديوهات...</div>
-            </div>
-            <button id="load-more-btn" class="load-more-btn" style="display: none;">عرض المزيد</button>
-        </div>
-        <div id="videoModal" class="video-player-modal">
-            <span class="close-btn" onclick="closeModal()">×</span>
-            <div class="video-player-modal-content">
-               <iframe id="videoIframe" width="100%" height="100%" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>
-        </div>
+ 
         
         <div class="app-card content-section scroll-animation" id="links">
             <h2>روابطنا</h2>
@@ -2684,7 +2668,7 @@ async function handleSend() {
     const loadingIndicator = addLoadingIndicator();
     try {
         // ✅ التعديل هنا: إرسال الـ Payload الصحيح للـ Backend
-        const response = await fetch('/api/chat', { 
+        const response = await fetch('/api/chat.js', { 
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -2850,84 +2834,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 feedbackDiv.innerHTML = '<p style="margin: 0;">ابدأ بكتابة كلمة المرور لفحصها.</p>';
             }
         }
-
-        // --- Mtech Videos Script ---
-  // --- Mtech Videos Script ---
-// المفتاح السري تم حذفه من هنا
-const CHANNEL_ID = "UCDFuAU8EIOx1b-YK4XdloBw";
-let nextPageToken = '';
-const videosContainer = document.getElementById('videos-container');
-const loadMoreBtn = document.getElementById('load-more-btn');
-const videoModal = document.getElementById('videoModal');
-const videoIframe = document.getElementById('videoIframe');
-
-const fetchVideos = async (pageToken = '') => {
-    // ⚠️ هنا بيتم استدعاء مسار الـ Backend بتاعك (اللي فيه المفتاح المخفي)
-    // المسار ده هيروح للـ Backend اللي بيستخدم مفتاح YouTube المخفي
-    const BACKEND_URL = '/api/youtube-channel'; // هنفترض إنك عامل مسار لقنوات محددة
-    
-    // أو نستخدم مسار البحث العام ونعدله في الـ Backend
-    
-    // **التعديل الأسهل والأكثر عملية:**
-
-    try {
-        // 1. إعداد الطلب (URLSearch) اللي بيحتوي على الـ CHANNEL_ID والـ pageToken
-        // المسار ده هيروح للـ Backend بتاعك
-        const response = await fetch(`${BACKEND_URL}?channelId=${CHANNEL_ID}&pageToken=${pageToken}`, {
-            method: 'GET', // أو POST لو أنت مضبطها كده
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error('فشل في تحميل الفيديوهات من السيرفر.');
-        }
-
-        const data = await response.json();
-        
-        // **مهم:** الرد دلوقتي هيجي من الـ Backend بتاعك، مش من YouTube مباشرة
-        // تأكد من أن الـ Backend بتاعك بيرجع نفس الـ JSON اللي YouTube بترجعه!
-        
-        // إذا كان الـ Backend بتاعك بيرجع الـ items والـ nextPageToken مباشرة:
-        const items = data.items;
-        nextPageToken = data.nextPageToken;
-
-        // ... تكملة كود الفرونت إند بتاعك ...
-        // (باقي الكود لتحديث الواجهة وعرض الفيديوهات)
-        
-    } catch (error) {
-        console.error("خطأ في جلب فيديوهات القناة:", error);
-        // يمكنك عرض رسالة خطأ للمستخدم
-    }
-};
-
-// ... باقي الكود ...
-
-        const openModal = (videoId) => {
-            const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
-            videoIframe.setAttribute('src', embedUrl);
-            videoModal.style.display = 'flex';
-        };
-
-        const closeModal = () => {
-            videoIframe.src = ''; // Stop video playback
-            videoModal.style.display = 'none';
-        };
-
-        window.onclick = function(event) {
-            if (event.target == videoModal) {
-                closeModal();
-            }
-        }
-
-        // Event listener for the "Load More" button
-        loadMoreBtn.addEventListener('click', () => {
-            fetchVideos(nextPageToken);
-        });
-
-        // Initial call to fetch videos when the page loads
-        fetchVideos();
 
     // --- كود تغيير الثيم الشامل V3 ---
 
