@@ -2479,273 +2479,194 @@ body.ltr-mode .back-arrow-button {
 
 // سجل المحادثة الداخلي للاحتفاظ بالسياق (History)
 // يحتوي على الرسائل السابقة والصور المرفقة لعمل Multimodal
+// سجل المحادثة لتخزين الذاكرة (Memory)
 let conversationData = []; 
 
-// إنشاء محول Markdown (يتطلب مكتبة Showdown)
+// تهيئة محول Markdown (تأكد من استدعاء مكتبة Showdown في الـ HTML)
 const converter = new showdown.Converter({
-    tables: true,
-    simplifiedAutoLink: true
+    tables: true,
+    simplifiedAutoLink: true
 });
 
-// الرسالة التوجيهية للنظام (System Instruction)
-// تبقى هنا لأنها إعداد وليس مفتاح سري
+// التعليمات البرمجية للنظام
 const systemInstruction = {
-    parts: [{
-        text: 'أنت مساعد ذكاء اصطناعي من شركة Magic Technology. أجيب على أسئلة المستخدمين بدقة ووضوح. اللغة الأساسية هي اللهجة المصرية (Masry) مع إجابات متوسطة الحجم، مركزة، وقوية. لو حد سألني بلغة تانية أرد عليه بنفس اللغة بدقة وفصاحة.'
-    }]
+    parts: [{
+        text: 'أنت مساعد ذكاء اصطناعي من شركة Magic Technology. أجيب على أسئلة المستخدمين بدقة ووضوح. اللغة الأساسية هي اللهجة المصرية (Masry) مع إجابات متوسطة الحجم، مركزة، وقوية. لو حد سألني بلغة تانية أرد عليه بنفس اللغة بدقة وفصاحة.'
+    }]
 };
 
-
 // ====================================================================
-// ****** وظائف الـUI المساعدة ******
+// ****** وظائف الواجهة (UI) ******
 // ====================================================================
 
-// دالة إضافة رسالة جديدة لسجل الدردشة 
 function addMessage(sender, content) {
-    const chatHistory = document.getElementById('chat-history');
-    if (!chatHistory) return;
-    
-    const messageDiv = document.createElement('div');
-    messageDiv.classList.add('chat-message');
-    
-    if (sender === 'user') {
-        messageDiv.classList.add('user-message');
-        messageDiv.innerHTML = content;
-    } else {
-        messageDiv.classList.add('ai-message');
-        // تحويل رد الـ AI من Markdown إلى HTML
-        const htmlContent = converter.makeHtml(content);
-        messageDiv.innerHTML = htmlContent;
-    }
-    
-    chatHistory.appendChild(messageDiv);
-    chatHistory.scrollTop = chatHistory.scrollHeight; 
+    const chatHistory = document.getElementById('chat-history');
+    if (!chatHistory) return;
+    
+    const messageDiv = document.createElement('div');
+    messageDiv.classList.add('chat-message');
+    
+    if (sender === 'user') {
+        messageDiv.classList.add('user-message');
+        messageDiv.innerHTML = content;
+    } else {
+        messageDiv.classList.add('ai-message');
+        // تحويل Markdown إلى HTML
+        const htmlContent = converter.makeHtml(content);
+        messageDiv.innerHTML = htmlContent;
+    }
+    
+    chatHistory.appendChild(messageDiv);
+    chatHistory.scrollTop = chatHistory.scrollHeight; 
 }
 
-// دالة إضافة مؤشر التحميل (...)
 function addLoadingIndicator() {
-    const chatHistory = document.getElementById('chat-history');
-    if (!chatHistory) return;
-    
-    const loadingDiv = document.createElement('div');
-    loadingDiv.id = 'loading-indicator';
-    loadingDiv.classList.add('ai-message', 'chat-message');
-    loadingDiv.innerHTML = `<p style="margin:0;">جاري الرد <span class="dot">.</span><span class="dot">.</span><span class="dot">.</span></p>`;
-    chatHistory.appendChild(loadingDiv);
-    chatHistory.scrollTop = chatHistory.scrollHeight;
-    return loadingDiv;
+    const chatHistory = document.getElementById('chat-history');
+    const loadingDiv = document.createElement('div');
+    loadingDiv.id = 'loading-indicator';
+    loadingDiv.classList.add('ai-message', 'chat-message');
+    loadingDiv.innerHTML = `<p style="margin:0;">جاري الرد <span class="dot">.</span><span class="dot">.</span><span class="dot">.</span></p>`;
+    chatHistory.appendChild(loadingDiv);
+    chatHistory.scrollTop = chatHistory.scrollHeight;
+    return loadingDiv;
 }
 
-// دالة إزالة مؤشر التحميل
 function removeLoadingIndicator(indicator) {
-    indicator?.remove();
+    indicator?.remove();
 }
 
-
 // ====================================================================
-// ****** الدوال الخاصة برفع الصور (Multimodal) ******
+// ****** وظائف الصور (Multimodal) ******
 // ====================================================================
 
-/**
- * تحويل ملف الصورة إلى جزء مولّد (GenerativePart) (Base64)
- */
 function fileToGenerativePart(file) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            // فصل البداية (data:image/jpeg;base64,) للحصول على البيانات فقط
-            const base64Data = e.target.result.split(',')[1]; 
-            resolve({
-                inlineData: {
-                    data: base64Data,
-                    mimeType: file.type,
-                },
-            });
-        };
-        reader.onerror = (error) => reject(error);
-        reader.readAsDataURL(file);
-    });
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const base64Data = e.target.result.split(',')[1]; 
+            resolve({
+                inlineData: {
+                    data: base64Data,
+                    mimeType: file.type,
+                },
+            });
+        };
+        reader.onerror = (error) => reject(error);
+        reader.readAsDataURL(file);
+    });
 }
 
-/**
- * تحديث حالة الملف المرفق في واجهة المستخدم.
- */
 function updateAttachmentStatus() {
-    const fileInput = document.getElementById('image-input');
-    const statusDiv = document.getElementById('attachment-status');
-    const nameSpan = document.getElementById('attachment-name');
-    
-    if (fileInput && statusDiv && nameSpan && fileInput.files.length > 0) {
-        const file = fileInput.files[0];
-        nameSpan.textContent = `صورة مرفقة: ${file.name}`;
-        statusDiv.style.display = 'flex';
-    } else if (statusDiv) {
-        statusDiv.style.display = 'none';
-        nameSpan.textContent = '';
-    }
+    const fileInput = document.getElementById('image-input');
+    const statusDiv = document.getElementById('attachment-status');
+    const nameSpan = document.getElementById('attachment-name');
+    
+    if (fileInput?.files.length > 0) {
+        nameSpan.textContent = `صورة مرفقة: ${fileInput.files[0].name}`;
+        statusDiv.style.display = 'flex';
+    } else if (statusDiv) {
+        statusDiv.style.display = 'none';
+    }
 }
 window.updateAttachmentStatus = updateAttachmentStatus;
 
-/**
- * إزالة الملف المرفق من حقل الإدخال.
- */
 function clearAttachment() {
-    const fileInput = document.getElementById('image-input');
-    if (fileInput) {
-        fileInput.value = ''; 
-        updateAttachmentStatus();
-    }
+    const fileInput = document.getElementById('image-input');
+    if (fileInput) {
+        fileInput.value = ''; 
+        updateAttachmentStatus();
+    }
 }
 window.clearAttachment = clearAttachment;
-
 
 // ====================================================================
 // ****** دالة الإرسال الرئيسية (handleSend) ******
 // ====================================================================
 
 async function handleSend() {
-    // جلب العناصر داخل الدالة لضمان الوصول إليها
-    const userInput = document.getElementById('user-input');
-    const imageInput = document.getElementById('image-input');
+    const userInput = document.getElementById('user-input');
+    const imageInput = document.getElementById('image-input');
 
-    if (!userInput || !imageInput) {
-        console.error("خطأ: أحد عناصر الإدخال (user-input أو image-input) غير موجود.");
-        addMessage('ai', "معلش، فيه مشكلة في تهيئة الكود. تأكد من وجود حقول الإدخال المطلوبة.");
-        return;
-    }
+    const message = userInput.value.trim();
+    const imageFile = imageInput.files.length > 0 ? imageInput.files[0] : null; 
 
-    const message = userInput.value.trim();
-    const imageFile = imageInput.files.length > 0 ? imageInput.files[0] : null; 
+    if (!message && !imageFile) return; 
+    
+    let userMessageParts = [];
+    let userContentToDisplay = '';
 
-    if (!message && !imageFile) {
-        addMessage('ai', "من فضلك اكتب رسالة أو أرفق صورة.");
-        return; 
-    }
-    
-    // 1. بناء رسالة المستخدم (الـ Parts) وعرضها
-    let userContentToDisplay = '';
-    const userMessageParts = [];
-    
-    if (imageFile) {
-        try {
-            // تحويل الصورة لـ Base64
-            const imagePart = await fileToGenerativePart(imageFile);
-            userMessageParts.push(imagePart);
-        } catch (error) {
-            console.error("Error converting file to part:", error);
-            addMessage('ai', "معلش، حصلت مشكلة في تحويل الصورة للإرسال.");
-            return;
-        }
+    // معالجة الصورة لو موجودة
+    if (imageFile) {
+        try {
+            const imagePart = await fileToGenerativePart(imageFile);
+            userMessageParts.push(imagePart);
+            const imgUrl = URL.createObjectURL(imageFile);
+            userContentToDisplay += `<img src="${imgUrl}" style="max-width: 100%; border-radius: 8px; margin-top: 5px;"/>`;
+        } catch (e) {
+            console.error("Image Error:", e);
+        }
+    }
 
-        // بناء العرض في الـ UI
-        const imgUrl = URL.createObjectURL(imageFile);
-        userContentToDisplay = `
-            ${message ? `<p>${message.replace(/\n/g, '<br>')}</p>` : ''}
-            <img src="${imgUrl}" style="max-width: 100%; height: auto; border-radius: 8px; margin-top: 5px;" alt="صورة مرفقة"/>
-        `;
-        
-        clearAttachment();
-    } else if (message) {
-        userContentToDisplay = `<p>${message.replace(/\n/g, '<br>')}</p>`;
-    }
-    
-    // إضافة النص كجزء (Part)
-    if (message) {
-        userMessageParts.push({ text: message });
-    }
+    // معالجة النص
+    if (message) {
+        userMessageParts.push({ text: message });
+        userContentToDisplay = `<p>${message.replace(/\n/g, '<br>')}</p>` + userContentToDisplay;
+    }
 
-    // عرض رسالة المستخدم في الواجهة
-    addMessage('user', userContentToDisplay);
-    userInput.value = ''; 
+    // عرض رسالة المستخدم وتحديث السجل
+    addMessage('user', userContentToDisplay);
+    userInput.value = '';
+    clearAttachment();
 
-    // 2. تحديث سجل المحادثة
-    conversationData.push({
-        role: "user",
-        parts: userMessageParts
-    });
+    conversationData.push({ role: "user", parts: userMessageParts });
 
-    // 3. إرسال المحادثة بالكامل إلى الـ Backend الآمن
-    const loadingIndicator = addLoadingIndicator();
-    try {
-        // ✅ التعديل هنا: إرسال الـ Payload الصحيح للـ Backend
-        const response = await fetch('/api/chat.js', { 
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                // نبعت سجل المحادثة كاملاً باسم 'contents' (ده الـ Backend مستنيه)
-                contents: conversationData, 
-                
-                // ✅ إرسال الـ systemInstruction كـ Object كامل
-                systemInstruction: systemInstruction 
-            })
-        });
+    const loadingIndicator = addLoadingIndicator();
 
-        // 4. معالجة الأخطاء
-        // ⚠️ التعديل المهم هنا: response.json() ممكن تفشل لو حصلت مشكلة الـ 'Unexpected end of JSON input'
-        // لكن الكود بتاع الـ Backend الجديد المفروض يمنع ده.
-        if (!response.ok) {
-            let errorBody;
-            try {
-                errorBody = await response.json();
-            } catch (e) {
-                // لو فشل قراءة JSON (وده اللي كان بيحصل في مشكلة الـ 'Unexpected end of JSON input')
-                console.error("Failed to parse error body as JSON:", e);
-                // بنحاول نطلع رسالة الخطأ من الـ response.statusText لو موجودة
-                throw new Error(response.statusText || `HTTP error! status: ${response.status}.`);
-            }
-            console.error("API Response Error Details:", errorBody); 
-            // ظهور رسالة الخطأ اللي جاية من الـ Backend (مثلاً: مفتاح Gemini غير مُعد)
-            throw new Error(errorBody.error || `HTTP error! status: ${response.status}.`);
-        }
-        
-        // 5. استقبال الرد
-        const result = await response.json();
-        
-        // الـ Backend بتاعنا بيرجع الرد في geminiResponse
-        const aiResponseText = result.geminiResponse;
-        
-        removeLoadingIndicator(loadingIndicator);
-        addMessage('ai', aiResponseText);
-        
-        // 6. تحديث سجل المحادثة برد الـAI
-        conversationData.push({
-            role: "model",
-            parts: [{ text: aiResponseText }]
-        });
-        
-    } catch (error) {
-        console.error("Error calling Gemini API:", error);
-        removeLoadingIndicator(loadingIndicator);
-        addMessage('ai', `معلش، حصلت مشكلة في الاتصال بالذكاء الاصطناعي. السبب: ${error.message}.`);
-    }
+    try {
+        // ✅ المسار الصحيح الموجه للـ API
+        const response = await fetch('/api/chat', { 
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: conversationData, 
+                systemInstruction: systemInstruction 
+            })
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || `Error ${response.status}`);
+        }
+        
+        const result = await response.json();
+        const aiResponseText = result.geminiResponse;
+        
+        removeLoadingIndicator(loadingIndicator);
+        addMessage('ai', aiResponseText);
+        
+        // حفظ رد الـ AI في الذاكرة
+        conversationData.push({ role: "model", parts: [{ text: aiResponseText }] });
+        
+    } catch (error) {
+        console.error("Fetch Error:", error);
+        removeLoadingIndicator(loadingIndicator);
+        addMessage('ai', `معلش، حصلت مشكلة: ${error.message}`);
+    }
 }
-window.handleSend = handleSend; // جعل الدالة متاحة لـ onclick في الـHTML
+window.handleSend = handleSend;
 
+// ربط الأحداث عند تحميل الصفحة
+document.addEventListener('DOMContentLoaded', () => {
+    const sendButton = document.getElementById('send-button');
+    const userInput = document.getElementById('user-input');
 
-// ====================================================================
-// ****** ربط الأحداث (الموثوق) ******
-// ====================================================================
-
-document.addEventListener('DOMContentLoaded', function() {
-    const sendButton = document.getElementById('send-button');
-    const userInput = document.getElementById('user-input');
-    
-    // ربط الزر والإدخال في حالة وجودهما بعد تحميل الصفحة بالكامل
-    if (sendButton) {
-        sendButton.addEventListener('click', handleSend);
-    } 
-
-    if (userInput) {
-        userInput.addEventListener('keydown', (event) => {
-            // التأكد من عدم الإرسال عند الضغط على Shift + Enter
-            if (event.key === 'Enter' && !event.shiftKey) { 
-                event.preventDefault();
-                handleSend();
-            }
-        });
-    }
+    sendButton?.addEventListener('click', handleSend);
+    userInput?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            handleSend();
+        }
+    });
 });
         // كود تحليل قوة كلمة المرور
         const passwordInput = document.getElementById('passwordInput');

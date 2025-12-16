@@ -1,95 +1,50 @@
-// api/chat.js
-
 const express = require('express');
-const cors = require('cors'); 
-const { GoogleGenerativeAI } = require('@google/generative-ai'); // التصحيح: اسم المكتبة والكلاس الرسمي
-
-// 1. قراءة المفتاح السري من متغيرات البيئة
-const GEMINI_KEY = process.env.GEMINI_FLASH_KEY;
-
-// 2. تهيئة عميل Gemini
-let genAI;
-if (GEMINI_KEY && GEMINI_KEY.length > 10) {
-    try {
-        genAI = new GoogleGenerativeAI(GEMINI_KEY); 
-        console.log("✅ Gemini AI Client initialized successfully.");
-    } catch (e) {
-        console.error("⛔ فشل تهيئة Gemini AI: ", e.message);
-    }
-} else {
-    console.error("❌ مفتاح GEMINI_FLASH_KEY مفقود أو غير صحيح.");
-}
+const cors = require('cors');
+const { GoogleGenerativeAI } = require('@google/generative-ai'); 
 
 const app = express();
-const router = express.Router();
-
 app.use(cors());
-app.use(express.json({ limit: '1mb' })); 
+app.use(express.json());
 
-// =========================================================================
-//  المسارات الرئيسية (Routes)
-// =========================================================================
+// تأكدي أن هذا المتغير مضاف في Vercel Settings أو ملف .env
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_FLASH_KEY);
 
-// مسار الاختبار للتأكد من الحالة
-router.get('/', (req, res) => {
-    res.json({
-        status: "✅ Backend Serverless Function Ready",
-        service_status: genAI ? "Gemini AI Client Ready" : "❌ Gemini AI Key Failed",
-        test_message: "Use POST /api/chat to send messages"
-    });
-});
-
-// 🤖 مسار المحادثة: POST /api/chat
-router.post('/', async (req, res) => {
-    if (!genAI) {
-        return res.status(500).json({ 
-            error: "فشل في تهيئة خدمة Gemini AI. تأكد من إعداد المفتاح في Vercel.",
-            code: "KEY_MISSING"
-        });
-    }
-    
-    const { contents, systemInstruction } = req.body;
-
-    if (!contents || !Array.isArray(contents)) {
-        return res.status(400).json({ error: "الـ contents مطلوبة ويجب أن تكون مصفوفة.", code: "BAD_REQUEST" });
-    }
-
+app.post('/api/chat', async (req, res) => {
     try {
-        // تحديد الموديل وإضافة تعليمات النظام (systemInstruction) إذا وجدت
-        // ملاحظة: تم استخدام "gemini-1.5-flash" لضمان الاستقرار وتجنب خطأ 404
-        const model = genAI.getGenerativeModel({ 
-            model: "gemini-1.5-flash", 
-            systemInstruction: systemInstruction 
-        });
+        const { contents } = req.body;
 
-        // إرسال الطلب لـ Gemini
-        const result = await model.generateContent({
-            contents: contents
-        });
-
-        const response = await result.response;
-        const text = response.text();
-
-        if (text) {
-             res.json({ success: true, geminiResponse: text });
-        } else {
-             res.status(500).json({ 
-                 error: "استجابة Gemini كانت فارغة.", 
-                 code: "EMPTY_RESPONSE"
-             });
+        // 1. التحقق من المدخلات
+        if (!contents) {
+            return res.status(400).json({ success: false, error: "المحتوى فارغ" });
         }
 
+        const model = genAI.getGenerativeModel({ 
+            model: "gemini-2.5-flash" // تأكدي من الاسم من AI Studio
+        });
+
+        const result = await model.generateContent({ contents });
+        const response = await result.response;
+        
+        res.json({ 
+            success: true, 
+            geminiResponse: response.text() 
+        });
+
     } catch (error) {
-        console.error("خطأ في الاتصال بـ Gemini:", error.message);
+        // 2. التعامل مع خطأ Quota (429) بشكل احترافي
+        if (error.message.includes("429")) {
+            return res.status(429).json({ 
+                success: false, 
+                error: "تجاوزت حد الطلبات المسموح به (20 طلب يومياً). حاول لاحقاً." 
+            });
+        }
+
+        console.error("⛔ Error:", error.message);
         res.status(500).json({ 
-            error: `فشل في معالجة الطلب: ${error.message}`, 
-            code: "GEMINI_API_FAILURE"
+            success: false, 
+            error: "فشل Gemini: " + error.message 
         });
     }
 });
 
-// ربط الـ Router
-app.use('/api/chat', router);
-
-// التصدير لـ Vercel
 module.exports = app;
