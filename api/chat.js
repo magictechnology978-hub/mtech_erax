@@ -1,27 +1,27 @@
 // api/chat.js
 const express = require('express');
 const cors = require('cors'); 
-const { GoogleGenerativeAI } = require('@google/generative-ai'); // التصحيح: اسم الكلاس الصحيح
+const { GoogleGenAI } = require('@google/genai'); 
 
 const GEMINI_KEY = process.env.GEMINI_FLASH_KEY;
 
-// 1. تهيئة Google Generative AI
 let genAI;
 if (GEMINI_KEY) {
-    genAI = new GoogleGenerativeAI(GEMINI_KEY);
+    // التصحيح: تمرير المفتاح مباشرة وليس كـ Object
+    genAI = new GoogleGenAI(GEMINI_KEY); 
 }
 
 const app = express();
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '1mb' })); 
 
-// مسار الاختبار
-app.get('/api/chat', (req, res) => {
-    res.json({ status: "Ready", ai_initialized: !!genAI });
+const router = express.Router();
+
+router.get('/', (req, res) => {
+    res.json({ status: "Backend Ready", ai_ready: !!genAI });
 });
 
-// المسار الرئيسي للمحادثة
-app.post('/api/chat', async (req, res) => {
+router.post('/', async (req, res) => {
     if (!genAI) {
         return res.status(500).json({ error: "API Key missing" });
     }
@@ -29,30 +29,27 @@ app.post('/api/chat', async (req, res) => {
     const { contents, systemInstruction } = req.body;
 
     try {
-        // 2. تحديد الموديل (تأكد من استخدام إصدار موجود مثل gemini-1.5-flash)
+        // إذا كنت متأكداً من وجود إصدار 2.5، ضعه هنا. 
+        // لكن الموصى به حالياً للاستقرار هو "gemini-1.5-flash"
         const model = genAI.getGenerativeModel({ 
-            model: "gemini-1.5-flash", // تم التصحيح من 2.5 إلى 1.5
+            model: "gemini-1.5-flash", 
             systemInstruction: systemInstruction 
         });
 
-        // 3. توليد المحتوى
-        // ملاحظة: contents يجب أن تكون مصفوفة بالتنسيق الصحيح [{ role: "user", parts: [{ text: "..." }] }]
-        const result = await model.generateContent({
-            contents: contents
-        });
-
+        // إرسال المحتوى
+        const result = await model.generateContent({ contents });
         const response = await result.response;
-        const text = response.text();
-
-        res.json({ success: true, geminiResponse: text });
+        
+        res.json({ success: true, geminiResponse: response.text() });
 
     } catch (error) {
-        console.error("Gemini Error:", error);
+        console.error("Gemini Error:", error.message);
         res.status(500).json({ 
-            error: "حدث خطأ أثناء الاتصال بـ Gemini", 
+            error: "Internal Server Error", 
             details: error.message 
         });
     }
 });
 
+app.use('/api/chat', router);
 module.exports = app;
