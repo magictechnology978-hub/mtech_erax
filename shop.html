@@ -3,31 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Professional Iframe with Back Button</title>
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="shortcut icon" href="logo-192x192.png" type="image/x-icon">
+    <title>Mtech Shop</title>
     <style>
-        /* إعدادات الصفحة الأساسية */
         body, html {
             margin: 0;
             padding: 0;
             height: 100%;
             width: 100%;
-            overflow: hidden;
-            background-color: #f0f2f5; /* لون خلفية مريح */
+            background-color: #f0f2f5;
+            /* السماح بالتمرير في الصفحة الأساسية إذا لزم الأمر */
+            overflow-y: auto; 
             font-family: sans-serif;
         }
 
-        /* حاوية الإطار */
         .iframe-container {
+            /* جعل الارتفاع مرن ليسمح بظهور كامل محتوى الموقع بما فيه الفوتر */
             width: 100vw;
-            height: 100vh;
+            height: 100vh; 
             display: flex;
-            align-items: center;
-            justify-content: center;
+            flex-direction: column;
             padding: 10px;
             box-sizing: border-box;
         }
 
         .responsive-iframe {
+            flex-grow: 1; /* يجعل الإطار يأخذ كل المساحة المتاحة */
             width: 100%;
             height: 100%;
             border: none;
@@ -36,7 +38,7 @@
             background-color: #fff;
         }
 
-        /* تصميم زر الرجوع */
+        /* زر الرجوع الزجاجي الواضح */
         .back-arrow-button {
             position: fixed;
             top: 25px;
@@ -46,53 +48,33 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 9999; /* لضمان ظهوره فوق كل شيء */
+            z-index: 9999;
             border: none;
             border-radius: 50%;
             cursor: pointer;
-            text-decoration: none;
-            
-            /* تأثير الزجاج السائل (Darker Liquid Glass ليكون واضحاً) */
-            background: rgba(0, 0, 0, 0.6); /* جعلته غامقاً ليظهر فوق المواقع الفاتحة */
+            background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            
             color: white;
             font-size: 20px;
-            transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: 0.3s;
         }
 
-        .back-arrow-button:hover {
-            transform: scale(1.1);
-            background: rgba(0, 0, 0, 0.8);
-        }
-
-        .back-arrow-button:active {
-            transform: scale(0.9);
-        }
-
-        /* تعديلات الموبايل */
         @media (max-width: 768px) {
             .iframe-container {
                 padding: 5px;
+                height: 100dvh; /* استخدام dvh لضمان القياس الصحيح على الموبايل مع اختفاء شريط المتصفح */
             }
             .responsive-iframe {
                 border-radius: 15px;
-            }
-            .back-arrow-button {
-                top: 15px;
-                left: 15px;
-                width: 45px;
-                height: 45px;
             }
         }
     </style>
 </head>
 <body>
 
-    <button class="back-arrow-button" onclick="window.history.back()" title="رجوع">
+    <button class="back-arrow-button" onclick="window.history.back()">
         &#10094;
     </button>
 
@@ -100,6 +82,7 @@
         <iframe 
             src="https://mtech.inyad.com/" 
             class="responsive-iframe"
+            id="myIframe"
             allowfullscreen>
         </iframe>
     </div>
