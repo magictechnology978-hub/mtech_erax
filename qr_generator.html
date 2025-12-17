@@ -7,6 +7,8 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.0.4/jsQR.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -432,170 +434,103 @@
 
     <script>
         // *************** إعدادات عامة ***************
-        let qrcode;
-        const qrDataInput = document.getElementById('qr-data');
-        const qrOutput = document.getElementById('qr-output');
-        const qrcodeContainer = document.getElementById('qrcode-container');
-        const scanResultDiv = document.getElementById('scan-result');
-        const scanDataSpan = document.getElementById('scan-data');
-        const imagePreview = document.getElementById('scanned-image-preview');
+    let qrcodeInstance;
+    const qrDataInput = document.getElementById('qr-data');
+    const qrOutput = document.getElementById('qr-output');
+    const qrcodeContainer = document.getElementById('qrcode-container');
+    const scanResultDiv = document.getElementById('scan-result');
+    const scanDataSpan = document.getElementById('scan-data');
+    const imagePreview = document.getElementById('scanned-image-preview');
 
-        // *************** منطق التبويبات (Tabs) ***************
-        function openTab(tabName) {
-            const contents = document.querySelectorAll('.tab-content');
-            const buttons = document.querySelectorAll('.tab-btn');
-
-            contents.forEach(content => content.classList.remove('active'));
-            buttons.forEach(button => button.classList.remove('active'));
-
-            document.getElementById(tabName).classList.add('active');
-            document.querySelector(`.tab-btn[onclick*="${tabName}"]`).classList.add('active');
-            
-            if (tabName === 'scanner') {
-                scanResultDiv.classList.add('hidden');
-                imagePreview.classList.add('hidden');
-                scanDataSpan.innerText = 'لم يتم قراءة أي كود بعد.';
-            }
-        }
-
-        // *************** 1. وظائف توليد الكود (Generator Functions) ***************
-        function generateQrCode() {
-            const data = qrDataInput.value.trim();
-            if (!data) {
-                alertUser('من فضلك أدخل نص أو رابط أولاً.', 'warning');
-                return;
-            }
-
-            qrcodeContainer.innerHTML = '';
-            qrOutput.classList.remove('hidden');
-
-            qrcode = new QRCode(qrcodeContainer, {
-                text: data,
-                width: 250,
-                height: 250,
-                colorDark: "#000000",
-                colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.H
-            });
-            
-            alertUser('تم توليد كود QR بنجاح!', 'success');
-        }
-
-        function downloadQrCode() {
-            if (!qrcode) return;
-            const canvas = qrcodeContainer.querySelector('canvas');
-            
-            if (canvas) {
-                const imageUrl = canvas.toDataURL("image/png");
-                const link = document.createElement('a');
-                link.href = imageUrl;
-                link.download = 'qrcode_mtech_vision.png';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            } else {
-                 alertUser('عفواً، لا يمكن تحميل الكود. حاول استخدام متصفح آخر.', 'error');
-            }
-        }
+    // *************** التنقل بين التبويبات ***************
+    function openTab(tabName) {
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         
-        // *************** 2. وظيفة قراءة الكود (Scanner Function) - تم تحديثها ***************
-        function readQrCode(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            
-            scanResultDiv.classList.remove('hidden');
-            scanDataSpan.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحليل...';
-            imagePreview.classList.add('hidden'); // إخفاء البريفيو حتى يتم تحميل الصورة الجديدة
+        document.getElementById(tabName).classList.add('active');
+        event.currentTarget.classList.add('active');
+    }
 
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const img = new Image();
-                img.onload = function() {
-                    // عرض الصورة المختارة
-                    imagePreview.src = img.src;
-                    imagePreview.classList.remove('hidden');
+    // *************** وظيفة التوليد ***************
+    function generateQrCode() {
+        const data = qrDataInput.value.trim();
+        if (!data) {
+            alertUser('يرجى إدخال نص أولاً', 'error');
+            return;
+        }
+        qrcodeContainer.innerHTML = "";
+        qrcodeInstance = new QRCode(qrcodeContainer, {
+            text: data,
+            width: 200,
+            height: 200
+        });
+        qrOutput.classList.remove('hidden');
+        alertUser('تم إنشاء الكود!', 'success');
+    }
 
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
-                    
-                    // تحديد حجم الكانفاس ليكون كبيراً (لتحسين دقة القراءة)
-                    canvas.width = img.width;
-                    canvas.height = img.height;
-                    
-                    // رسم الصورة على الكانفاس
-                    ctx.drawImage(img, 0, 0, img.width, img.height);
-                    
-                    // الحصول على بيانات البكسل
-                    const imageData = ctx.getImageData(0, 0, img.width, img.height);
-                    
-                    // استخدام مكتبة jsQR
-                    const code = jsQR(imageData.data, imageData.width, imageData.height, {
-                        // محاولة عكس الألوان لتحسين القراءة في بعض الحالات
-                        inversionAttempts: "attemptBoth", 
-                    });
+    function downloadQrCode() {
+        const canvas = qrcodeContainer.querySelector('canvas');
+        if (canvas) {
+            const link = document.createElement('a');
+            link.download = 'mtech-qr.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+    }
 
-                    scanResultDiv.classList.remove('hidden');
-                    
-                    if (code) {
-                        scanDataSpan.innerText = code.data;
-                        alertUser('تم قراءة الكود بنجاح!', 'success');
-                        
-                        // محاولة فتح الرابط إذا كان URL
-                        if (code.data.startsWith('http')) {
-                            scanDataSpan.innerHTML += `<br><a href="${code.data}" target="_blank" style="color: var(--accent-dark); font-weight: 600;">فتح الرابط</a>`;
-                        }
-                    } else {
-                        scanDataSpan.innerText = 'لم يتم العثور على كود QR في الصورة. تأكد أن الكود واضح وغير مشوش.';
-                        alertUser('فشل القراءة.', 'error');
+    // *************** وظيفة القراءة (الحقيقية) ***************
+    function readQrCode(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        scanResultDiv.classList.remove('hidden');
+        scanDataSpan.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحليل...';
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = new Image();
+            img.onload = function() {
+                imagePreview.src = img.src;
+                imagePreview.classList.remove('hidden');
+
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const code = jsQR(imageData.data, imageData.width, imageData.height, {
+                    inversionAttempts: "attemptBoth",
+                });
+
+                if (code) {
+                    scanDataSpan.innerText = code.data;
+                    alertUser('تمت القراءة بنجاح', 'success');
+                    if (code.data.startsWith('http')) {
+                        scanDataSpan.innerHTML += `<br><br><a href="${code.data}" target="_blank" style="color:#007ce9; text-decoration:none;">🔗 فتح الرابط</a>`;
                     }
-                };
-                img.onerror = function() {
-                    scanDataSpan.innerText = 'حدث خطأ في تحميل الصورة.';
-                    alertUser('خطأ في تحميل الصورة.', 'error');
+                } else {
+                    scanDataSpan.innerText = "تعذر العثور على كود QR واضح.";
+                    alertUser('فشل التحليل', 'error');
                 }
-                img.src = e.target.result;
             };
-            reader.readAsDataURL(file);
-        }
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
 
-        // *************** وظيفة إشعار المستخدم ***************
-        function alertUser(message, type) {
-            const existingAlert = document.getElementById('custom-alert');
-            if (existingAlert) existingAlert.remove();
-            
-            const alertDiv = document.createElement('div');
-            alertDiv.id = 'custom-alert';
-            alertDiv.innerText = message;
-            
-            const bgColor = type === 'success' ? '#28a745' : '#e91e63';
-            
-            alertDiv.style.cssText = `
-                position: fixed;
-                bottom: 20px;
-                right: 20px;
-                background-color: ${bgColor};
-                color: white;
-                padding: 10px 20px;
-                border-radius: 8px;
-                box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-                z-index: 1000;
-                font-family: 'Cairo', sans-serif;
-                opacity: 0;
-                transition: opacity 0.5s;
-                direction: rtl;
-            `;
-            
-            document.body.appendChild(alertDiv);
-            
-            setTimeout(() => {
-                alertDiv.style.opacity = 1;
-            }, 50);
-            
-            setTimeout(() => {
-                alertDiv.style.opacity = 0;
-                setTimeout(() => alertDiv.remove(), 500);
-            }, 3000);
-        }
+    // *************** نظام التنبيهات ***************
+    function alertUser(msg, type) {
+        const toast = document.createElement('div');
+        toast.innerText = msg;
+        toast.style.cssText = `position:fixed; bottom:20px; left:50%; transform:translateX(-50%); 
+                              background:${type==='success'?'#28a745':'#e91e63'}; color:white; 
+                              padding:10px 30px; border-radius:50px; z-index:9999;`;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+    }
+
 
         // *************** منطق تبديل الثيم ***************
         function toggleTheme() {
