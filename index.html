@@ -2061,7 +2061,71 @@ body.ltr-mode .back-arrow-button {
         #user-info-display {
             text-align: center;
         }
+.modern-alert {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%); /* عشان يجي في نص الشاشة بالظبط */
+    background: rgba(217, 48, 37, 0.95); /* أحمر مع شفافية بسيطة */
+    color: white;
+    min-width: 300px;
+    padding: 15px 25px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(5px); /* تأثير الزجاج الضبابي */
+    z-index: 9999;
+    direction: rtl;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    animation: slideDown 0.5s ease-out; /* حركة دخول ناعمة */
+}
 
+.alert-icon {
+    font-size: 24px;
+}
+
+.alert-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.alert-text strong {
+    font-size: 16px;
+    margin-bottom: 2px;
+}
+
+.alert-text span {
+    font-size: 13px;
+    opacity: 0.9;
+}
+
+.close-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+    margin-right: auto; /* يزق الـ X لآخر اليمين */
+}
+
+.close-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* أنيميشن الدخول */
+@keyframes slideDown {
+    from { top: -100px; opacity: 0; }
+    to { top: 20px; opacity: 1; }
+}
     </style>
 </head>
 
@@ -2304,6 +2368,14 @@ body.ltr-mode .back-arrow-button {
                 <p>أهلاً بك! أنا Mtech AI، الذكاء الاصطناعي الخاص بـMagic Technology. أقدر أساعدك إزاي؟</p>
             </div>
         </div>
+        <div id="image-alert" class="modern-alert">
+    <div class="alert-icon">⚠️</div>
+    <div class="alert-text">
+        <strong>تنبيه هام</strong>
+        <span>يمكنك استخدام الذكاء الاصطناعي ولكن يفضل عدم ارسال صور للذكاء الاصطناعي لتجنب خطأ الCrash من الServer</span>
+    </div>
+    <button class="close-btn" onclick="closeAlert()">&times;</button>
+</div>
 <div id="attachment-status" style="display: none; padding: 8px 10px; margin: 0 10px; border-radius: 8px; background: rgba(255, 255, 255, 0.1); align-items: center; justify-content: space-between; font-size: 14px; direction: rtl; color: var(--text-dark); /* تم تعديل هذا الستايل ليظهر بشكل صحيح داخل الـmodal */">
         <span id="attachment-name">صورة مرفقة:</span>
         <button type="button" onclick="clearAttachment()" style="background: var(--accent-dark); color: #000; padding: 5px 10px; border-radius: 8px; cursor: pointer; border: none; font-weight: 600; min-width: 50px;">إزالة</button>
@@ -2668,6 +2740,33 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+document.addEventListener('DOMContentLoaded', () => {
+    const alertBanner = document.getElementById('image-alert');
+    
+    // التأكد إذا كان المستخدم شاف الرسالة قبل كده ولا لأ
+    const isAlertSeen = localStorage.getItem('hideImageAlert');
+
+    if (!isAlertSeen) {
+        // لو مشفهاش، أظهرها بعد ثانية واحدة من تحميل الصفحة بشكل شيك
+        setTimeout(() => {
+            alertBanner.style.display = 'flex';
+        }, 1000);
+    }
+});
+
+function closeAlert() {
+    const alert = document.getElementById('image-alert');
+    
+    // 1. تسجيل إن المستخدم قفل الرسالة في المتصفح
+    localStorage.setItem('hideImageAlert', 'true');
+
+    // 2. حركة إغلاق ناعمة
+    alert.style.transition = "all 0.4s ease";
+    alert.style.opacity = "0";
+    alert.style.transform = "translateX(-50%) translateY(-20px)";
+    
+    setTimeout(() => alert.remove(), 400);
+}
         // كود تحليل قوة كلمة المرور
         const passwordInput = document.getElementById('passwordInput');
         const togglePassword = document.getElementById('togglePassword');

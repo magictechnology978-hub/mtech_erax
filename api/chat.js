@@ -19,7 +19,7 @@ app.post('/api/chat', async (req, res) => {
         }
 
         const model = genAI.getGenerativeModel({ 
-            model: "gemini-2.0-flash-exp" // تأكدي من الاسم من AI Studio
+            model: "gemini-2.5-flash" // تأكدي من الاسم من AI Studio
         });
 
         const result = await model.generateContent({ contents });
@@ -42,7 +42,7 @@ app.post('/api/chat', async (req, res) => {
         console.error("⛔ Error:", error.message);
         res.status(500).json({ 
             success: false, 
-            error: "فشل Gemini: " + error.message 
+            error: "فشل Mtech AI: " + error.message 
         });
     }
 });
