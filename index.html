@@ -1331,7 +1331,8 @@
     display: none;
     position: fixed;
     z-index: 1000;
-    right: 20px; 
+    right: auto;
+    left: 20px; 
     bottom: 100px; /* فوق الزر العائم */
     width: 90%;
     max-width: 380px;
@@ -1434,7 +1435,8 @@ body.light #user-input-container {
 #openChatBtn {
     position: fixed;
     bottom: 20px;
-    right: 20px;
+    right: auto;
+    left: 20px;
     width: 60px;
     height: 60px;
     border-radius: 50%;
@@ -2126,56 +2128,350 @@ body.ltr-mode .back-arrow-button {
     from { top: -100px; opacity: 0; }
     to { top: 20px; opacity: 1; }
 }
+:root {
+    --sidebar-width-full: 250px;
+    --sidebar-width-mini: 70px;
+    --bg-sidebar: #07244b;
+    --accent: #007ce9;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    background: var(--bg-sidebar);
+    width: var(--sidebar-width-mini); /* البداية وضع ضيق */
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid rgba(255,255,255,0.05);
+}
+
+/* حالة الفتح */
+.sidebar.expand {
+    width: var(--sidebar-width-full);
+}
+
+/* تنسيق العناصر الداخلية */
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    gap: 15px;
+    height: 70px;
+}
+
+.brand-text, .link-text, .mode-text, .sidebar-input {
+    opacity: 0; /* مخفي في الوضع الضيق */
+    transition: opacity 0.2s;
+    white-space: nowrap;
+}
+
+.sidebar.expand .brand-text,
+.sidebar.expand .link-text,
+.sidebar.expand .mode-text,
+.sidebar.expand .sidebar-input {
+    opacity: 1; /* يظهر لما يفتح */
+}
+
+/* روابط التنقل */
+.nav-link {
+    display: flex;
+    align-items: center;
+    padding: 15px 23px;
+    gap: 20px;
+    color: white;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.nav-link i {
+    font-size: 20px;
+    min-width: 24px;
+    text-align: center;
+}
+
+.nav-link:hover {
+    background: rgba(255,255,255,0.05);
+    color: var(--accent);
+}
+
+/* السيرش */
+.search-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 23px;
+    gap: 20px;
+}
+
+.sidebar-input {
+    background: rgba(255,255,255,0.1);
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    color: white;
+    width: 140px;
+}
+
+/* زر التبديل العائم */
+.sidebar-toggle-btn {
+    position: fixed;
+    right: 60px; /* مكان الأيقونة */
+    top: 80px;
+    z-index: 2100;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.sidebar.expand + .sidebar-toggle-btn {
+    right: 240px;
+    transform: rotate(180deg);
+}
+/* تنسيق المودال */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+    z-index: 3000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-card {
+    background: var(--card-dark);
+    width: 90%;
+    max-width: 400px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+    animation: slideUp 0.3s ease-out;
+}
+
+body.light .modal-card { background: var(--card-light); }
+
+.modal-header {
+    padding: 20px;
+    background: var(--accent-dark);
+    color: #000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-body { padding: 20px; }
+
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.setting-item.column { flex-direction: column; align-items: flex-start; gap: 10px; }
+
+.setting-info { display: flex; align-items: center; gap: 12px; font-weight: 600; }
+
+/* Switch Style */
+.switch { position: relative; width: 50px; height: 24px; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider {
+    position: absolute; cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #333;
+    transition: .4s; border-radius: 34px;
+}
+.slider:before {
+    position: absolute; content: "";
+    height: 18px; width: 18px; left: 4px; bottom: 3px;
+    background-color: white; transition: .4s; border-radius: 50%;
+}
+input:checked + .slider { background-color: var(--accent-dark); }
+input:checked + .slider:before { transform: translateX(24px); }
+
+.setting-range { width: 100%; cursor: pointer; accent-color: var(--accent-dark); }
+
+@keyframes slideUp {
+    from { transform: translateY(50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+/* --- تعديلات الموبايل --- */
+@media (max-width: 768px) {
+    .sidebar {
+        right: -100%; /* مخفي تماماً بره الشاشة في الموبايل */
+        width: 250px !important; /* نخليه بعرض كامل لما يفتح */
+        transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* لما يفتح في الموبايل */
+    .sidebar.expand {
+        right: 0 !important;
+    }
+
+    /* إظهار النصوص دايماً في الموبايل طالما المنيو مفتوحة */
+    .sidebar.expand .brand-text, 
+    .sidebar.expand .link-text, 
+    .sidebar.expand .mode-text, 
+    .sidebar.expand .sidebar-input {
+        opacity: 1 !important;
+        display: block !important;
+    }
+
+    /* زرار المنيو (البرجر) يظهر بس في الموبايل */
+    .sidebar-toggle-btn {
+        display: flex !important;
+        right: 20px !important;
+        top: 20px !important;
+        background: var(--accent-dark);
+        color: white;
+        width: 45px;
+        height: 45px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+}
+
+/* في الشاشات الكبيرة، نخفي زرار البرجر لو مش عاوزه */
+@media (min-width: 769px) {
+    /* لو عاوز السايد بار يفضل Mini في الكمبيوتر، سيب الكود القديم زي ما هو */
+}
+/* --- إعدادات الموبايل (أقل من 768px) --- */
+@media (max-width: 768px) {
+    .sidebar {
+        right: -280px; /* مخفي تماماً جهة اليمين */
+        width: 280px;
+        position: fixed;
+        transition: 0.4s ease-in-out;
+        z-index: 9999;
+    }
+
+    /* لما السايد بار يفتح في الموبايل */
+    .sidebar.expand {
+        right: 0;
+    }
+
+    /* إظهار النصوص دايماً لما يفتح في الموبايل */
+    .sidebar.expand .link-text, 
+    .sidebar.expand .brand-text {
+        display: inline-block !important;
+        opacity: 1 !important;
+    }
+
+    /* زرار البرجر منيو يظهر في الموبايل فقط */
+    .sidebar-toggle-btn {
+        display: flex;
+        position: fixed;
+        top: 15px;
+        right: 15px;
+        z-index: 10000;
+        background: var(--accent-color);
+        border-radius: 8px;
+        width: 40px;
+        height: 40px;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        border: none;
+    }
+}
+
+/* --- إعدادات الكمبيوتر (أكبر من 768px) --- */
+@media (min-width: 769px) {
+    .sidebar {
+        right: 0;
+        width: 70px; /* الوضع الضيق */
+    }
+    
+    .sidebar.expand {
+        width: 250px; /* الوضع المفتوح */
+    }
+
+    /* زرار الـ Toggle ممكن تخفيه في الكمبيوتر لو عاوز تعتمد على الـ Hover */
+    .sidebar-toggle-btn {
+        display: none; 
+    }
+}
+/* --- Sidebar Base Styles --- */
+.sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    background: var(--card-dark);
+    width: 70px; /* العرض وهو مقفول */
+    transition: width 0.3s ease, right 0.3s ease;
+    overflow: hidden;
+    z-index: 2000;
+    border-left: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar.expand { width: 250px; }
+
+/* إخفاء الكلام وهو مقفول */
+.link-text, .brand-text {
+    opacity: 0;
+    white-space: nowrap;
+    transition: 0.3s;
+}
+.sidebar.expand .link-text, .sidebar.expand .brand-text { opacity: 1; }
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    padding: 15px 23px;
+    gap: 20px;
+    color: white;
+    text-decoration: none;
+}
+.nav-link i { font-size: 20px; min-width: 24px; text-align: center; }
+
+/* زرار البرجر */
+.sidebar-toggle-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 2100;
+    width: 45px;
+    height: 45px;
+    background: var(--accent-dark) !important;
+    color: #000 !important;
+    border-radius: 10px;
+    display: none; /* مخفي في الكمبيوتر */
+    align-items: center;
+    justify-content: center;
+}
+
+/* --- Responsive (Mobile) --- */
+@media (max-width: 768px) {
+    .sidebar {
+        right: -250px; /* مخفي في الموبايل */
+        width: 250px;
+    }
+    .sidebar.expand { right: 0; }
+    .sidebar-toggle-btn { display: flex; } /* يظهر في الموبايل فقط */
+    
+    .link-text, .brand-text { opacity: 1; } /* دايما باين في الموبايل طالما المنيو اتفتحت */
+}
     </style>
 </head>
 
 <body>
     <div class="site">
-        <header>
-            <div class="brand">
-                <div class="logo">MT</div>
-                <div>
-                    <h1>Magic Technology</h1>
-                    <div class="tagline">حلول تقنية مبتكرة</div>
-                </div>
-            </div>
-            <div class="nav-container">
-                <input type="text" id="searchBox" placeholder="ابحث هنا..." oninput="filterContent(this.value)">
-                                <button id="toggle-login-btn">
-                        <i class="fas fa-user-circle"></i> 
-                        <div id="greeting-popup">
-                            مرحباً بك! اضغط لتسجيل الدخول.
-                        </div>
-                    </button>
-<div class="app-card content-section scroll-animation" id="user-profile-card">
-    <section class="panel">
-        <h2 id="welcome-title">تسجيل الدخول</h2>
-
-        <form id="login-form" class="order-form" style="max-width: 300px; margin: 0 auto; display: block;">
-            <label for="usernameInput">اسم المستخدم</label>
-            <input type="text" id="usernameInput" required placeholder="اكتب اسمك هنا">
-            <button type="submit" class="send" id="login-btn">تسجيل الدخول</button>
-        </form>
-
-        <div id="user-info-display" style="display: none; padding: 10px;">
-            <h3 id="welcome-message" style="margin-bottom: 10px;">مرحباً بك</h3>
-            <p style="font-size: 0.9em; color: #b6b6b6;">لقد سجلت دخولك بنجاح. نتمنى لك يوما سعيدا ☀️</p>
-        </div>
-    </section>
-</div>
-                <div id="google_translate_element" style="display:none;"></div>
-
-                <button id="lang-toggle" class="mode-btn" onclick="toggleLanguage()" aria-label="تغيير اللغة">
-                    <i class="fas fa-globe"></i> <span></span>
-                </button>
-                <div class="color-picker-container">
-                <label for="colorPicker" style="font-size: 14px; margin-left: 5px;">لون الموقع:</label>
-                <input type="color" id="colorPicker" value="#020f20">
-                 </div>
-
-         
-            </div>
-        </header>
+    
   
 <div class="ad-carousel-container swiper">
         <div class="swiper-wrapper" id="adCarousel">
@@ -2279,77 +2575,7 @@ body.ltr-mode .back-arrow-button {
                 </p>
             </section>
         </div>
-        <nav id="bottom-nav">
-
-        </a>
-        <a href="#about" aria-label="عنّا">
-            <i class="fas fa-rocket"></i>
-            <span>عنّا</span>
-        </a>
-        <a href="shop.html" aria-label="متجر">
-            <i class="fas fa-store"></i>
-            <span>متجر</span>
-        </a>
-            
-        <a href="#install" aria-label="برنامج">
-            <i class="fas fa-mobile-alt"></i>
-            <span>برنامج</span>
-        </a>
-        <a href="tools.html" aria-label="tools">
-            <i class="fas fa-star"></i>
-            <span>Tools</span>
-        </a>
-
-
-    </nav>
-        <div class="app-card content-section scroll-animation" id="security">
-            <h2>اهتمامنا بالأمن</h2>
-            <p>في Magic Technology، الأمان مش مجرد إضافة جانبية… ده جزء أساسي من شغلنا.
-                علشان كده خصصنا مجهود كبير لتأمين البنية التحتية عندنا، خصوصًا في نقطة حساسة زي API Keys.
-                إحنا مطبقين أنظمة حماية متقدمة بتضمن إن مفاتيح الربط والخدمات بتاعتنا مش بس محفوظة بشكل مشفّر، لكن كمان متقسّمة بصلاحيات دقيقة علشان تمنع أي استخدام غير مُصرّح بيه.
-                الاهتمام بالأمان عندنا معناه إن المستخدم يثق إن بياناته وخدماته دايمًا في أيدين آمنة، وده التزام ثابت مش هنفرّط فيه
-            </p>
-            <h2>سياسة الأمن والاستخدام</h2>
-            <ul class="links-list">
-                <li>
-                    <a href="Security and Usage Policy.html">
-                        <i class=""></i> سياسة الأمن والاستخدام – منصة Mtech EraX
-                    </a>
-                </li>
-            </ul>
-
-        </div>
-        <div class="app-card content-section scroll-animation" id="reviews">
-            <section class="panel reviews">
-                <h2>آراء المستخدمين</h2>
-                <div class="features-grid">
-                    <div class="feature-item review-card scroll-animation" style="text-align: right;">
-                        <i class="fas fa-star" style="color: gold; font-size: 1.2em;"></i>
-                        <i class="fas fa-star" style="color: gold; font-size: 1.2em;"></i>
-                        <i class="fas fa-star" style="color: gold; font-size: 1.2em;"></i>
-                        <i class="fas fa-star" style="color: gold; font-size: 1.2em;"></i>
-                        <i class="fas fa-star" style="color: gold; font-size: 1.2em;"></i>
-                        <p style="font-size: 15px;">"الموقع رائع وسهل الاستخدام!" - محمد*</p>
-                    </div>
-                    <div class="feature-item review-card scroll-animation" style="text-align: right;">
-                        <i class="fas fa-star" style="color: gold; font-size: 1.2em;"></i>
-                        <i class="fas fa-star" style="color: gold; font-size: 1.2em;"></i>
-                        <i class="fas fa-star" style="color: gold; font-size: 1.2em;"></i>
-                        <i class="fas fa-star" style="color: gold; font-size: 1.2em;"></i>
-                        <p style="font-size: 15px;">"حبيت المميزات الجديدة." - داليا*</p>
-                    </div>
-                    <div class="feature-item review-card scroll-animation" style="text-align: right;">
-                        <i class="fas fa-star" style="color: gold; font-size: 1.2em;"></i>
-                        <i class="fas fa-star" style="color: gold; font-size: 1.2em;"></i>
-                        <i class="fas fa-star" style="color: gold; font-size: 1.2em;"></i>
-                        <i class="fas fa-star" style="color: gold; font-size: 1.2em;"></i>
-                        <i class="fas fa-star-half-alt" style="color: gold; font-size: 1.2em;"></i>
-                        <p style="font-size: 15px;">"الموقع تحفههههه." - سمير صالح*</p>
-                    </div>
-                </div>
-            </section>
-        </div>
-    <button id="openChatBtn" aria-label="Open Mtech AI Chat">
+            <button id="openChatBtn" aria-label="Open Mtech AI Chat">
         <i class="fas fa-comment-dots"></i>
     </button>
     
@@ -2399,6 +2625,93 @@ body.ltr-mode .back-arrow-button {
 
     </div>
     </div>
+<button id="toggleSidebar" class="sidebar-toggle-btn">
+    <i class="fas fa-bars"></i>
+</button>
+
+<aside id="mainSidebar" class="sidebar mini-sidebar">
+    <div class="sidebar-header">
+        <div class="logo">M</div>
+        <span class="brand-text">Mtech EraX</span>
+    </div>
+
+    <div class="sidebar-content">
+
+
+        <nav class="sidebar-nav">
+            <a href="#about" class="nav-link" title="الرئيسية">
+                <i class="fas fa-home"></i>
+                <span class="link-text">الرئيسية</span>
+            </a>
+            <a href="#install" class="nav-link" title="برنامجنا">
+                <i class="fas fa-th-large"></i>
+                <span class="link-text">برنامجنا</span>
+            </a>
+            <a href="shop.html" class="nav-link" title="المتجر">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="link-text">المتجر</span>
+            </a>
+            <a href="tools.html" class="nav-link" title="الأدوات">
+                <i class="fas fa-tools"></i>
+                <span class="link-text">الأدوات</span>
+            </a>
+            <a href="#settings" class="nav-link" title="الأعدادات">
+                <i class="fas fa-star"></i>
+                <span class="link-text">الأعدادات</span>
+            </a>
+        </nav>
+
+
+    </div>
+</aside>
+        <div class="app-card content-section scroll-animation" id="security">
+            <h2>اهتمامنا بالأمن</h2>
+            <p>في Magic Technology، الأمان مش مجرد إضافة جانبية… ده جزء أساسي من شغلنا.
+                علشان كده خصصنا مجهود كبير لتأمين البنية التحتية عندنا، خصوصًا في نقطة حساسة زي API Keys.
+                إحنا مطبقين أنظمة حماية متقدمة بتضمن إن مفاتيح الربط والخدمات بتاعتنا مش بس محفوظة بشكل مشفّر، لكن كمان متقسّمة بصلاحيات دقيقة علشان تمنع أي استخدام غير مُصرّح بيه.
+                الاهتمام بالأمان عندنا معناه إن المستخدم يثق إن بياناته وخدماته دايمًا في أيدين آمنة، وده التزام ثابت مش هنفرّط فيه
+            </p>
+            <h2>سياسة الأمن والاستخدام</h2>
+            <ul class="links-list">
+                <li>
+                    <a href="Security and Usage Policy.html">
+                        <i class=""></i> سياسة الأمن والاستخدام – منصة Mtech EraX
+                    </a>
+                </li>
+            </ul>
+
+        </div>
+        <div class="app-card content-section scroll-animation" id="reviews">
+            <section class="panel reviews">
+                <h2>آراء المستخدمين</h2>
+                <div class="features-grid">
+                    <div class="feature-item review-card scroll-animation" style="text-align: right;">
+                        <i class="fas fa-star" style="color: gold; font-size: 1.2em;"></i>
+                        <i class="fas fa-star" style="color: gold; font-size: 1.2em;"></i>
+                        <i class="fas fa-star" style="color: gold; font-size: 1.2em;"></i>
+                        <i class="fas fa-star" style="color: gold; font-size: 1.2em;"></i>
+                        <i class="fas fa-star" style="color: gold; font-size: 1.2em;"></i>
+                        <p style="font-size: 15px;">"الموقع رائع وسهل الاستخدام!" - محمد*</p>
+                    </div>
+                    <div class="feature-item review-card scroll-animation" style="text-align: right;">
+                        <i class="fas fa-star" style="color: gold; font-size: 1.2em;"></i>
+                        <i class="fas fa-star" style="color: gold; font-size: 1.2em;"></i>
+                        <i class="fas fa-star" style="color: gold; font-size: 1.2em;"></i>
+                        <i class="fas fa-star" style="color: gold; font-size: 1.2em;"></i>
+                        <p style="font-size: 15px;">"حبيت المميزات الجديدة." - داليا*</p>
+                    </div>
+                    <div class="feature-item review-card scroll-animation" style="text-align: right;">
+                        <i class="fas fa-star" style="color: gold; font-size: 1.2em;"></i>
+                        <i class="fas fa-star" style="color: gold; font-size: 1.2em;"></i>
+                        <i class="fas fa-star" style="color: gold; font-size: 1.2em;"></i>
+                        <i class="fas fa-star" style="color: gold; font-size: 1.2em;"></i>
+                        <i class="fas fa-star-half-alt" style="color: gold; font-size: 1.2em;"></i>
+                        <p style="font-size: 15px;">"الموقع تحفههههه." - سمير صالح*</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
         <div class="app-card content-section scroll-animation" id="utility">
             <section class="panel">
                 <div class="header-icon" style="width:60px; height:60px; margin-bottom: 20px;">🛡️</div>
@@ -2426,7 +2739,23 @@ body.ltr-mode .back-arrow-button {
 
  
         </div>
- 
+         <div class="app-card content-section scroll-animation" id="settings">
+            <section class="panel">
+            <h2>الأعدادات</h2>
+                                <div class="color-picker-container">
+                <label for="colorPicker" style="font-size: 14px; margin-left: 5px;">لون الموقع:</label>
+                <input type="color" id="colorPicker" value="#020f20">
+                 </div>
+
+                <div class="nav-container">
+                <input type="text" id="searchBox" placeholder="ابحث هنا..." oninput="filterContent(this.value)"></div>
+
+                <div id="google_translate_element" style="display:none;"></div>
+
+                <button id="lang-toggle" class="mode-btn" onclick="toggleLanguage()" aria-label="تغيير اللغة">
+                    <i class="fas fa-globe"></i> <span></span>
+                </button>
+        </div>
         
         <div class="app-card content-section scroll-animation" id="links">
             <h2>روابطنا</h2>
@@ -2439,7 +2768,7 @@ body.ltr-mode .back-arrow-button {
                 <li><a href="https://www.youtube.com/channel/UCDFuAU8EIOx1b-YK4XdloBw" target="_blank"><i class="fab fa-youtube"></i> Youtube Channel</a></li>
             </ul>
         </div>
-        <footer>© Powered By MavixOS 26.1 ELITE</footer>
+        <footer>© Powered By MavixOS 26.5 ELITE</footer>
     </div>
     <script>
         // Intersection Observer for scroll animation
@@ -3216,6 +3545,33 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+});
+document.addEventListener('DOMContentLoaded', () => {
+    const sidebar = document.getElementById('mainSidebar');
+    const toggleBtn = document.getElementById('toggleSidebar');
+
+    // فتح وقفل المنيو
+    toggleBtn.onclick = (e) => {
+        e.stopPropagation();
+        sidebar.classList.toggle('expand');
+        
+        // تغيير الأيقونة
+        const icon = toggleBtn.querySelector('i');
+        icon.classList.toggle('fa-bars');
+        icon.classList.toggle('fa-times');
+    };
+
+    // قفل المنيو لو دوست بره (للموبايل)
+    document.addEventListener('click', (e) => {
+        if (window.innerWidth <= 768 && !sidebar.contains(e.target) && e.target !== toggleBtn) {
+            sidebar.classList.remove('expand');
+            toggleBtn.querySelector('i').className = 'fas fa-bars';
+        }
+    });
+
+    // لو الماوس جه عليه في الكمبيوتر يفتح لوحده (اختياري)
+    sidebar.onmouseenter = () => { if(window.innerWidth > 768) sidebar.classList.add('expand'); };
+    sidebar.onmouseleave = () => { if(window.innerWidth > 768) sidebar.classList.remove('expand'); };
 });
 </script>
 
