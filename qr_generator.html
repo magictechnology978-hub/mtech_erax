@@ -362,22 +362,388 @@
     transform: scale(1.05); /* تكبير بسيط عند المرور يعطي تأثير الحركة */
 }
 /* التأثير الأساسي للجسم (Body) */
+
+/* أنيميشن الدخول */
+@keyframes slideDown {
+    from { top: -100px; opacity: 0; }
+    to { top: 20px; opacity: 1; }
+}
+:root {
+    --sidebar-width-full: 250px;
+    --sidebar-width-mini: 70px;
+    --bg-sidebar: #07244b;
+    --accent: #007ce9;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    background: var(--bg-sidebar);
+    width: var(--sidebar-width-mini); /* البداية وضع ضيق */
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid rgba(255,255,255,0.05);
+}
+
+/* حالة الفتح */
+.sidebar.expand {
+    width: var(--sidebar-width-full);
+}
+
+/* تنسيق العناصر الداخلية */
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    gap: 15px;
+    height: 70px;
+}
+
+.brand-text, .link-text, .mode-text, .sidebar-input {
+    opacity: 0; /* مخفي في الوضع الضيق */
+    transition: opacity 0.2s;
+    white-space: nowrap;
+}
+
+.sidebar.expand .brand-text,
+.sidebar.expand .link-text,
+.sidebar.expand .mode-text,
+.sidebar.expand .sidebar-input {
+    opacity: 1; /* يظهر لما يفتح */
+}
+
+/* روابط التنقل */
+.nav-link {
+    display: flex;
+    align-items: center;
+    padding: 15px 23px;
+    gap: 20px;
+    color: white;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.nav-link i {
+    font-size: 20px;
+    min-width: 24px;
+    text-align: center;
+}
+
+.nav-link:hover {
+    background: rgba(255,255,255,0.05);
+    color: var(--accent);
+}
+
+/* السيرش */
+.search-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 23px;
+    gap: 20px;
+}
+
+.sidebar-input {
+    background: rgba(255,255,255,0.1);
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    color: white;
+    width: 140px;
+}
+
+/* زر التبديل العائم */
+.sidebar-toggle-btn {
+    position: fixed;
+    right: 60px; /* مكان الأيقونة */
+    top: 80px;
+    z-index: 2100;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.sidebar.expand + .sidebar-toggle-btn {
+    right: 240px;
+    transform: rotate(180deg);
+}
+/* تنسيق المودال */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+    z-index: 3000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-card {
+    background: var(--card-dark);
+    width: 90%;
+    max-width: 400px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+    animation: slideUp 0.3s ease-out;
+}
+
+body.light .modal-card { background: var(--card-light); }
+
+.modal-header {
+    padding: 20px;
+    background: var(--accent-dark);
+    color: #000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-body { padding: 20px; }
+
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.setting-item.column { flex-direction: column; align-items: flex-start; gap: 10px; }
+
+.setting-info { display: flex; align-items: center; gap: 12px; font-weight: 600; }
+
+/* Switch Style */
+.switch { position: relative; width: 50px; height: 24px; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider {
+    position: absolute; cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #333;
+    transition: .4s; border-radius: 34px;
+}
+.slider:before {
+    position: absolute; content: "";
+    height: 18px; width: 18px; left: 4px; bottom: 3px;
+    background-color: white; transition: .4s; border-radius: 50%;
+}
+input:checked + .slider { background-color: var(--accent-dark); }
+input:checked + .slider:before { transform: translateX(24px); }
+
+.setting-range { width: 100%; cursor: pointer; accent-color: var(--accent-dark); }
+
+@keyframes slideUp {
+    from { transform: translateY(50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+/* --- تعديلات الموبايل --- */
+@media (max-width: 768px) {
+    .sidebar {
+        right: -100%; /* مخفي تماماً بره الشاشة في الموبايل */
+        width: 250px !important; /* نخليه بعرض كامل لما يفتح */
+        transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* لما يفتح في الموبايل */
+    .sidebar.expand {
+        right: 0 !important;
+    }
+
+    /* إظهار النصوص دايماً في الموبايل طالما المنيو مفتوحة */
+    .sidebar.expand .brand-text, 
+    .sidebar.expand .link-text, 
+    .sidebar.expand .mode-text, 
+    .sidebar.expand .sidebar-input {
+        opacity: 1 !important;
+        display: block !important;
+    }
+
+    /* زرار المنيو (البرجر) يظهر بس في الموبايل */
+    .sidebar-toggle-btn {
+        display: flex !important;
+        right: 20px !important;
+        top: 20px !important;
+        background: var(--accent-dark);
+        color: white;
+        width: 45px;
+        height: 45px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+}
+
+/* في الشاشات الكبيرة، نخفي زرار البرجر لو مش عاوزه */
+@media (min-width: 769px) {
+    /* لو عاوز السايد بار يفضل Mini في الكمبيوتر، سيب الكود القديم زي ما هو */
+}
+/* --- إعدادات الموبايل (أقل من 768px) --- */
+@media (max-width: 768px) {
+    .sidebar {
+        right: -280px; /* مخفي تماماً جهة اليمين */
+        width: 280px;
+        position: fixed;
+        transition: 0.4s ease-in-out;
+        z-index: 9999;
+    }
+
+    /* لما السايد بار يفتح في الموبايل */
+    .sidebar.expand {
+        right: 0;
+    }
+
+    /* إظهار النصوص دايماً لما يفتح في الموبايل */
+    .sidebar.expand .link-text, 
+    .sidebar.expand .brand-text {
+        display: inline-block !important;
+        opacity: 1 !important;
+    }
+
+    /* زرار البرجر منيو يظهر في الموبايل فقط */
+    .sidebar-toggle-btn {
+        display: flex;
+        position: fixed;
+        top: 15px;
+        right: 15px;
+        z-index: 10000;
+        background: var(--accent-color);
+        border-radius: 8px;
+        width: 40px;
+        height: 40px;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        border: none;
+    }
+}
+
+/* --- إعدادات الكمبيوتر (أكبر من 768px) --- */
+@media (min-width: 769px) {
+    .sidebar {
+        right: 0;
+        width: 70px; /* الوضع الضيق */
+    }
+    
+    .sidebar.expand {
+        width: 250px; /* الوضع المفتوح */
+    }
+
+    /* زرار الـ Toggle ممكن تخفيه في الكمبيوتر لو عاوز تعتمد على الـ Hover */
+    .sidebar-toggle-btn {
+        display: none; 
+    }
+}
+/* --- Sidebar Base Styles --- */
+.sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    background: var(--card-dark);
+    width: 70px; /* العرض وهو مقفول */
+    transition: width 0.3s ease, right 0.3s ease;
+    overflow: hidden;
+    z-index: 2000;
+    border-left: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar.expand { width: 250px; }
+
+/* إخفاء الكلام وهو مقفول */
+.link-text, .brand-text {
+    opacity: 0;
+    white-space: nowrap;
+    transition: 0.3s;
+}
+.sidebar.expand .link-text, .sidebar.expand .brand-text { opacity: 1; }
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    padding: 15px 23px;
+    gap: 20px;
+    color: white;
+    text-decoration: none;
+}
+.nav-link i { font-size: 20px; min-width: 24px; text-align: center; }
+
+/* زرار البرجر */
+.sidebar-toggle-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 2100;
+    width: 45px;
+    height: 45px;
+    background: var(--accent-dark) !important;
+    color: #000 !important;
+    border-radius: 10px;
+    display: none; /* مخفي في الكمبيوتر */
+    align-items: center;
+    justify-content: center;
+}
+
+/* --- Responsive (Mobile) --- */
+@media (max-width: 768px) {
+    .sidebar {
+        right: -250px; /* مخفي في الموبايل */
+        width: 250px;
+    }
+    .sidebar.expand { right: 0; }
+    .sidebar-toggle-btn { display: flex; } /* يظهر في الموبايل فقط */
+    
+    .link-text, .brand-text { opacity: 1; } /* دايما باين في الموبايل طالما المنيو اتفتحت */
+}
     </style>
 </head>
 <body class="dark">
 
     <div class="site">
-        <header>
-            <div class="brand">
-                <div class="logo">QR</div>
-                <h1>QR Code</h1>
-            </div> 
-            <div class="background-container">
-            <button class="back-arrow-button liquid-glass" onclick="history.back()">
-            &#10094; 
-            </button>
+<button id="toggleSidebar" class="sidebar-toggle-btn">
+    <i class="fas fa-bars"></i>
+</button>
+
+<aside id="mainSidebar" class="sidebar mini-sidebar">
+    <div class="sidebar-header">
+        <div class="logo">M</div>
+        <span class="brand-text">Mtech EraX</span>
     </div>
-        </header>
+
+    <div class="sidebar-content">
+
+
+        <nav class="sidebar-nav">
+            <a href="index.html" class="nav-link" title="الرئيسية">
+                <i class="fas fa-home"></i>
+                <span class="link-text">الرئيسية</span>
+            </a>
+
+            <a href="shop.html" class="nav-link" title="المتجر">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="link-text">المتجر</span>
+            </a>
+            <a href="tools.html" class="nav-link" title="الأدوات">
+                <i class="fas fa-tools"></i>
+                <span class="link-text">الأدوات</span>
+            </a>
+
+        </nav>
+
+
+    </div>
+</aside>
 
         <div class="app-card">
             
@@ -608,6 +974,109 @@
             if(langText) langText.innerText = "En";
         }
     });
+        document.addEventListener('DOMContentLoaded', () => {
+    const sidebar = document.getElementById('mainSidebar');
+    const toggleBtn = document.getElementById('toggleSidebar');
+
+    // فتح وقفل المنيو
+    toggleBtn.onclick = (e) => {
+        e.stopPropagation();
+        sidebar.classList.toggle('expand');
+        
+        // تغيير الأيقونة
+        const icon = toggleBtn.querySelector('i');
+        icon.classList.toggle('fa-bars');
+        icon.classList.toggle('fa-times');
+    };
+
+    // قفل المنيو لو دوست بره (للموبايل)
+    document.addEventListener('click', (e) => {
+        if (window.innerWidth <= 768 && !sidebar.contains(e.target) && e.target !== toggleBtn) {
+            sidebar.classList.remove('expand');
+            toggleBtn.querySelector('i').className = 'fas fa-bars';
+        }
+    });
+
+    // لو الماوس جه عليه في الكمبيوتر يفتح لوحده (اختياري)
+    sidebar.onmouseenter = () => { if(window.innerWidth > 768) sidebar.classList.add('expand'); };
+    sidebar.onmouseleave = () => { if(window.innerWidth > 768) sidebar.classList.remove('expand'); };
+});
+    const CSS_VARIABLES = {
+        // اللون الأساسي للخلفية الداكنة (Default: #020f20)
+        '--bg-dark': '#020f20', 
+        // لون Card الخلفي (Default: rgba(255, 255, 255, 0.05))
+        '--bg-card': 'rgba(255, 255, 255, 0.05)', 
+        // لون الـHover للخلفية الداكنة (Default: rgba(255, 255, 255, 0.1))
+        '--bg-dark-hover': 'rgba(255, 255, 255, 0.1)' 
+        // لاحظ إن --text-dark مش هيتغير عشان النص يبقى مقروء دايماً
+    };
+   const colorPicker = document.getElementById('colorPicker');
+    const root = document.documentElement;
+
+    // اللون الافتراضي (لأنه تم تثبيته في الـCSS)
+    const DEFAULT_ACCENT_COLOR = '#007ce9';
+    const DEFAULT_LIGHT_ACCENT = '#095faa';
+
+    // ---------------------- دالة تطبيق الثيم الرئيسية ----------------------
+    
+    function applyCustomTheme(color) {
+        // نستخدم اللون المختار أو نرجع للون الافتراضي
+        const baseColor = color || localStorage.getItem('customAccentColor') || DEFAULT_ACCENT_COLOR;
+        
+        // 1. تطبيق اللون المخصص على الـAccent في الوضع الداكن
+        root.style.setProperty('--accent-dark', baseColor);
+        
+        // 2. تطبيق لون متناسق مع اللون المختار في الوضع الفاتح
+        // نستخدم اللون المختار مع تعديل بسيط (مثل التعتيم أو تغيير بسيط)
+        // في هذا التصحيح، سأفترض أن --accent-light هو نفس اللون المختار لتجربة بسيطة،
+        // أو يمكنك وضع أي لون فاتح تريده هنا. سأختار لون مختلف لتبدو التغييرات واضحة.
+        const lightModeColor = baseColor; // يمكنك تغييرها يدوياً إذا أردت لون مختلف لللايت مود
+        root.style.setProperty('--accent-light', lightModeColor);
+
+        // 3. تحديث مربع اختيار اللون ليعرض اللون الحالي
+        if (colorPicker) {
+            colorPicker.value = baseColor;
+        }
+    }
+
+    // ---------------------- دالة تغيير الوضع ----------------------
+
+    function toggleMode() {
+        const body = document.body;
+        const isLightMode = body.classList.toggle('light');
+
+        // حفظ الوضع المختار
+        localStorage.setItem('mode', isLightMode ? 'light' : 'dark');
+        
+        // لا نحتاج لإعادة تطبيق الثيم بالكامل هنا، التغييرات الأهم تتم في applyCustomTheme
+        // والـCSS يتولى باقي الألوان (bg, card)
+    }
+    window.toggleMode = toggleMode; // جعل الدالة متاحة للـ onclick
+
+    // ---------------------- التنفيذ الأولي ----------------------
+    
+    // 1. مستمع حدث لتغيير اللون وحفظه
+    if (colorPicker) {
+        // إعداد اللون الافتراضي عند أول زيارة
+        if (!localStorage.getItem('customAccentColor')) {
+            localStorage.setItem('customAccentColor', DEFAULT_ACCENT_COLOR);
+        }
+        
+        colorPicker.addEventListener('input', (event) => {
+            const newColor = event.target.value;
+            localStorage.setItem('customAccentColor', newColor);
+            applyCustomTheme(newColor); // تطبيق اللون الجديد فوراً
+        });
+    }
+
+    // 2. استرجاع الوضع المحفوظ (Dark/Light) عند تحميل الصفحة
+    const savedMode = localStorage.getItem('mode');
+    if (savedMode === 'light') { 
+        document.body.classList.add('light'); 
+    }
+
+    // 3. تطبيق الثيم عند تحميل الصفحة لأول مرة (لتحميل اللون المخصص)
+    applyCustomTheme(); 
 </script>
 
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
