@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ترقبوا الإطلاق الكبير | حدث استثنائي</title>
+    <!-- استدعاء خط كايرو من جوجل -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #fff5f7;
+            color: #1a1a1a;
+            scroll-behavior: smooth;
+        }
+
+        /* Hero Section Gradient */
+        .hero-bg {
+            background: linear-gradient(135deg, #fff5f7 0%, #fce4ec 100%);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 182, 193, 0.4);
+            box-shadow: 0 30px 60px -12px rgba(240, 98, 146, 0.1);
+        }
+
+        .text-gradient {
+            background: linear-gradient(to left, #d81b60, #f06292);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(240, 98, 146, 0.08);
+            z-index: -1;
+        }
+
+        .section-divider {
+            height: 100px;
+            background: linear-gradient(to bottom, #fce4ec, #ffffff);
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center justify-center hero-bg p-4 overflow-hidden">
+        <!-- عناصر ديكور -->
+        <div class="bg-circle w-80 h-80 -top-20 -right-20 animate-pulse"></div>
+        <div class="bg-circle w-[600px] h-[600px] -bottom-40 -left-40"></div>
+
+        <div class="container mx-auto text-center z-10">
+            <div class="glass-card max-w-3xl mx-auto rounded-[3rem] p-12 md:p-24 relative">
+                <div class="mb-10 opacity-60 font-medium tracking-[0.3em] text-xs uppercase text-gray-500">
+                    Premium Announcement
+                </div>
+
+                <h1 class="text-5xl md:text-8xl font-black text-gray-900 mb-8 leading-tight">
+                    <span class="text-gradient">حدث استثنائي</span><br>قادم إليكم
+                </h1>
+
+                <p class="text-xl md:text-2xl text-gray-600 mb-12 font-light max-w-lg mx-auto leading-relaxed">
+                    استعدوا للحظة ستغير كل شيء. نضع اللمسات الأخيرة على تجربة لا تُنسى.
+                </p>
+
+                <div class="flex flex-col items-center">
+                    <div class="inline-flex flex-col items-center p-8 bg-white/60 rounded-3xl shadow-sm border border-pink-100/50">
+                        <span class="text-gray-400 text-sm mb-1">الموعد المرتقب</span>
+                        <span class="text-pink-600 font-black text-4xl md:text-5xl block">يوم الخميس</span>
+                    </div>
+                </div>
+
+                <!-- سهم لأسفل للإشارة للـ Scroll -->
+                <div class="mt-16 animate-bounce">
+                    <svg class="w-6 h-6 mx-auto text-pink-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Divider -->
+    <div class="section-divider"></div>
+
+    <!-- Features/Details Section -->
+    <section class="py-24 bg-white px-4">
+        <div class="container mx-auto max-w-5xl">
+            <div class="text-center mb-20 reveal">
+                <h2 class="text-4xl font-black mb-6 text-gray-800">لماذا هذا الانتظار؟</h2>
+                <div class="h-1.5 w-24 bg-pink-500 mx-auto rounded-full"></div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-12">
+                <!-- الميزة 1 -->
+                <div class="reveal p-8 rounded-3xl bg-pink-50 border border-pink-100 transition-all hover:shadow-xl">
+                    <div class="w-14 h-14 bg-pink-500 text-white rounded-2xl flex items-center justify-center mb-6 text-2xl">
+                        ✦
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">جودة فائقة</h3>
+                    <p class="text-gray-500 leading-relaxed">لا نرضى بأقل من الكمال في كل تفصيلة من تفاصيل مشروعنا الجديد.</p>
+                </div>
+
+                <!-- الميزة 2 -->
+                <div class="reveal p-8 rounded-3xl bg-white border border-gray-100 shadow-sm transition-all hover:shadow-xl" style="transition-delay: 0.2s;">
+                    <div class="w-14 h-14 bg-gray-900 text-white rounded-2xl flex items-center justify-center mb-6 text-2xl">
+                        ⚡
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">ابتكار مستمر</h3>
+                    <p class="text-gray-500 leading-relaxed">نقدم حلولاً وأفكاراً نراها لأول مرة، مصممة خصيصاً لتناسب تطلعاتكم.</p>
+                </div>
+
+                <!-- الميزة 3 -->
+                <div class="reveal p-8 rounded-3xl bg-pink-50 border border-pink-100 transition-all hover:shadow-xl" style="transition-delay: 0.4s;">
+                    <div class="w-14 h-14 bg-pink-500 text-white rounded-2xl flex items-center justify-center mb-6 text-2xl">
+                        ♥
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">تجربة فريدة</h3>
+                    <p class="text-gray-500 leading-relaxed">الهدف هو خلق شعور بالتميز مع كل تفاعل، لأنكم تستحقون الأفضل.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Update: Instruction for Thursday -->
+    <section class="py-24 bg-pink-100/30 px-4">
+        <div class="container mx-auto text-center reveal">
+            <div class="max-w-3xl mx-auto p-10 rounded-[2.5rem] border-2 border-dashed border-pink-200 bg-white/50">
+                <h2 class="text-3xl font-black mb-6 text-gray-800">كيف تتابع الإعلان؟</h2>
+                <p class="text-xl text-gray-600 mb-8 leading-relaxed">
+                    لا داعي للبحث بعيداً، كل ما عليك هو الدخول على <span class="text-pink-600 font-bold underline">نفس هذا الرابط</span> يوم الخميس لمشاهدة الإطلاق الرسمي مباشرة.
+                </p>
+                <div class="flex justify-center items-center gap-3 text-pink-400">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11V7a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2z"/></svg>
+                    <span class="font-bold tracking-widest text-sm">احفظ الرابط لديك</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final Call Section -->
+    <section class="py-24 bg-white px-4">
+        <div class="container mx-auto text-center reveal">
+            <h2 class="text-4xl md:text-5xl font-black mb-8 text-gray-900">كونوا في الموعد</h2>
+            <p class="text-gray-600 text-lg mb-12 max-w-2xl mx-auto">
+                الخميس القادم هو البداية فقط. ترقبوا الإعلان الرسمي عبر منصاتنا.
+            </p>
+            <div class="flex justify-center items-center gap-6">
+                <span class="text-pink-500 font-bold tracking-[0.4em]">THURSDAY 2025</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 bg-white text-center border-t border-gray-100">
+        <div class="opacity-30 font-bold text-sm tracking-widest text-gray-400">
+            PREMIUM LAUNCH • COMING SOON
+        </div>
+    </footer>
+
+    <script>
+        // أنيميشن عند التمرير
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 150;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+
+        window.addEventListener("scroll", reveal);
+        // للتشغيل عند التحميل لأول مرة
+        window.onload = reveal;
+    </script>
+</body>
+</html>
